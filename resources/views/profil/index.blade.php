@@ -17,10 +17,10 @@
         <!-- Konten di tengah -->
         <div class="relative z-10 text-center px-4 sm:px-6 lg:px-8">
             <div class="max-w-4xl mx-auto">
-                <h1 class="text-5xl md:text-6xl font-bold mb-6 text-white leading-tight">
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 text-white leading-tight">
                     {{ $profilData['hero_title'] ?? 'Profil Sekolah' }}
                 </h1>
-                <p class="text-xl md:text-2xl text-white opacity-90 leading-relaxed">
+                <p class="text-lg sm:text-xl lg:text-2xl text-white opacity-90 leading-relaxed">
                     {{ $profilData['hero_subtitle'] ?? 'SMP Negeri 01 Namrole - Sekolah Unggul Berkarakter' }}
                 </p>
             </div>
