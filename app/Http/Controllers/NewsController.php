@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\News;
+use App\Models\HomeSection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -37,6 +38,9 @@ class NewsController extends Controller
 
         $news = $query->paginate(12);
 
+        // Get news section data
+        $newsSection = HomeSection::where('section_key', 'news')->first();
+
         // Get categories for filter
         $categories = [
             'akademik' => 'Akademik',
@@ -47,7 +51,7 @@ class NewsController extends Controller
             'lomba' => 'Lomba & Kompetisi'
         ];
 
-        return view('news.index', compact('news', 'categories'));
+        return view('news.index', compact('news', 'categories', 'newsSection'));
     }
 
     /**
@@ -68,7 +72,10 @@ class NewsController extends Controller
             ->limit(4)
             ->get();
 
-        return view('news.show', compact('news', 'relatedNews'));
+        // Get news section data
+        $newsSection = HomeSection::where('section_key', 'news')->first();
+
+        return view('news.show', compact('news', 'relatedNews', 'newsSection'));
     }
 
     /**

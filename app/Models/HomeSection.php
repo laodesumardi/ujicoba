@@ -28,4 +28,13 @@ class HomeSection extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    // Accessor for image URL
+    public function getImageUrlAttribute()
+    {
+        if ($this->image) {
+            return asset($this->image);
+        }
+        return null;
+    }
 }

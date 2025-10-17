@@ -100,8 +100,14 @@ class NewsSeeder extends Seeder
             ]
         ];
 
-        foreach ($newsData as $data) {
-            News::create($data);
-        }
+            foreach ($newsData as $data) {
+                $slug = \Illuminate\Support\Str::slug($data['title']);
+                $data['slug'] = $slug;
+                
+                News::updateOrCreate(
+                    ['slug' => $slug],
+                    $data
+                );
+            }
     }
 }

@@ -231,16 +231,91 @@ class NewsController extends Controller
         ]);
     }
 
-    /**
-     * Toggle pinned status.
-     */
-    public function togglePinned(News $news)
-    {
-        $news->update(['is_pinned' => !$news->is_pinned]);
+        /**
+         * Toggle pinned status.
+         */
+        public function togglePinned(News $news)
+        {
+            $news->update(['is_pinned' => !$news->is_pinned]);
 
-        return response()->json([
-            'success' => true,
-            'is_pinned' => $news->is_pinned
-        ]);
+            return response()->json([
+                'success' => true,
+                'is_pinned' => $news->is_pinned
+            ]);
+        }
+
+        /**
+         * Show the form for editing news section.
+         */
+        public function editSection()
+        {
+            // Get or create news section data
+            $newsSection = \App\Models\HomeSection::where('section_key', 'news')->first();
+            
+            if (!$newsSection) {
+                $newsSection = \App\Models\HomeSection::create([
+                    'section_key' => 'news',
+                    'title' => 'Berita & Pengumuman Terbaru',
+                    'subtitle' => 'Informasi terkini dari SMP Negeri 01 Namrole',
+                    'content' => 'Dapatkan informasi terbaru tentang kegiatan sekolah, pengumuman penting, dan berita terkini dari SMP Negeri 01 Namrole.',
+                    'is_active' => true,
+                    'sort_order' => 7
+                ]);
+            }
+
+            return view('admin.news.edit-section', compact('newsSection'));
+        }
+
+        /**
+         * Update news section.
+         */
+        public function updateSection(Request $request)
+        {
+            $request->validate([
+                'title' => 'required|string|max:255',
+                'subtitle' => 'nullable|string|max:255',
+                'content' => 'nullable|string',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+                'image_alt' => 'nullable|string|max:255',
+                'image_position' => 'nullable|string|in:top,center,bottom',
+                'is_active' => 'boolean'
+            ]);
+
+            $newsSection = \App\Models\HomeSection::where('section_key', 'news')->first();
+            
+            if ($newsSection) {
+                $data = [
+                    'title' => $request->title,
+                    'subtitle' => $request->subtitle,
+                    'content' => $request->content,
+                    'is_active' => $request->has('is_active')
+                ];
+
+                // Handle image upload
+                if ($request->hasFile('image')) {
+                    // Delete old image if exists
+                    if ($newsSection->image && Storage::disk('public')->exists($newsSection->image)) {
+                        Storage::disk('public')->delete($newsSection->image);
+                    }
+
+                    $image = $request->file('image');
+                    $filename = time() . '_news_section.' . $image->getClientOriginalExtension();
+                    $path = $image->storeAs('home-sections', $filename, 'public');
+                    $data['image'] = $path;
+                }
+
+                // Handle image metadata
+                if ($request->has('image_alt')) {
+                    $data['image_alt'] = $request->image_alt;
+                }
+                if ($request->has('image_position')) {
+                    $data['image_position'] = $request->image_position;
+                }
+
+                $newsSection->update($data);
+            }
+
+            return redirect()->route('admin.news.index')
+                           ->with('success', 'Section berita berhasil diperbarui!');
+        }
     }
-}

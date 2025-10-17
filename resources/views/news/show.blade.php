@@ -37,6 +37,29 @@
         </div>
     </div>
 
+    <!-- News Section Full Width Image -->
+    @if($newsSection && $newsSection->image)
+    <div class="relative h-96 overflow-hidden">
+        <img src="{{ asset('storage/' . $newsSection->image) }}" 
+             alt="{{ $newsSection->image_alt }}" 
+             class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+            <div class="text-center text-white px-4">
+                <h1 class="text-3xl md:text-4xl font-bold mb-2">
+                    @if($newsSection->title)
+                        {{ $newsSection->title }}
+                    @else
+                        Berita & Pengumuman
+                    @endif
+                </h1>
+                @if($newsSection->subtitle)
+                    <p class="text-lg md:text-xl text-gray-200">{{ $newsSection->subtitle }}</p>
+                @endif
+            </div>
+        </div>
+    </div>
+    @endif
+
     <!-- Article Content -->
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <article class="prose prose-lg max-w-none">

@@ -4,6 +4,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\PPDBController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\AcademicCalendarController;
+use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SchoolProfileController;
 use App\Http\Controllers\Admin\TeacherController;
@@ -11,12 +15,25 @@ use App\Http\Controllers\Admin\AchievementController;
 use App\Http\Controllers\Admin\HomeSectionController;
 use App\Http\Controllers\Admin\PPDBController as AdminPPDBController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\Admin\AcademicCalendarController as AdminAcademicCalendarController;
+use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
+use App\Http\Controllers\Admin\DocumentController as AdminDocumentController;
 use App\Http\Controllers\SetupController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
+Route::get('/kontak', [ContactController::class, 'index'])->name('contact');
+
+// Document Routes
+Route::prefix('download')->name('documents.')->group(function () {
+    Route::get('/', [DocumentController::class, 'index'])->name('index');
+    Route::get('/kategori/{category}', [DocumentController::class, 'category'])->name('category');
+    Route::get('/tipe/{type}', [DocumentController::class, 'type'])->name('type');
+    Route::get('/unggulan', [DocumentController::class, 'featured'])->name('featured');
+    Route::get('/download/{id}', [DocumentController::class, 'download'])->name('download');
+});
 
 // PPDB Routes
 Route::prefix('ppdb')->name('ppdb.')->group(function () {
@@ -34,6 +51,22 @@ Route::prefix('berita')->name('news.')->group(function () {
     Route::get('/{slug}', [NewsController::class, 'show'])->name('show');
     Route::get('/kategori/{category}', [NewsController::class, 'category'])->name('category');
     Route::get('/pengumuman', [NewsController::class, 'announcements'])->name('announcements');
+});
+
+// Academic Calendar Routes
+Route::prefix('kalender')->name('academic-calendar.')->group(function () {
+    Route::get('/', [AcademicCalendarController::class, 'index'])->name('index');
+    Route::get('/calendar', [AcademicCalendarController::class, 'calendar'])->name('calendar');
+    Route::get('/upcoming', [AcademicCalendarController::class, 'upcoming'])->name('upcoming');
+    Route::get('/download/{id}', [AcademicCalendarController::class, 'download'])->name('download');
+});
+
+// Gallery Routes
+Route::prefix('galeri')->name('gallery.')->group(function () {
+    Route::get('/', [GalleryController::class, 'index'])->name('index');
+    Route::get('/unggulan', [GalleryController::class, 'featured'])->name('featured');
+    Route::get('/kategori/{category}', [GalleryController::class, 'category'])->name('category');
+    Route::get('/{slug}', [GalleryController::class, 'show'])->name('show');
 });
 
 // Debug route
@@ -347,6 +380,24 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::resource('news', AdminNewsController::class);
         Route::post('news/{news}/toggle-featured', [AdminNewsController::class, 'toggleFeatured'])->name('news.toggle-featured');
         Route::post('news/{news}/toggle-pinned', [AdminNewsController::class, 'togglePinned'])->name('news.toggle-pinned');
+        Route::get('news-section/edit', [AdminNewsController::class, 'editSection'])->name('news.edit-section');
+        Route::put('news-section/update', [AdminNewsController::class, 'updateSection'])->name('news.update-section');
+        
+        // Academic Calendar Admin Routes
+        Route::resource('academic-calendar', AdminAcademicCalendarController::class);
+        Route::get('academic-calendar-section/edit', [AdminAcademicCalendarController::class, 'editSection'])->name('academic-calendar.edit-section');
+        Route::put('academic-calendar-section/update', [AdminAcademicCalendarController::class, 'updateSection'])->name('academic-calendar.update-section');
+        
+        // Gallery Admin Routes
+        Route::resource('gallery', AdminGalleryController::class);
+        Route::get('gallery-section/edit', [AdminGalleryController::class, 'editSection'])->name('gallery.edit-section');
+        Route::put('gallery-section/update', [AdminGalleryController::class, 'updateSection'])->name('gallery.update-section');
+
+        // Document Admin Routes
+        Route::resource('documents', AdminDocumentController::class);
+        Route::post('documents/{document}/toggle-featured', [AdminDocumentController::class, 'toggleFeatured'])->name('documents.toggle-featured');
+        Route::get('documents-section/edit', [AdminDocumentController::class, 'editSection'])->name('documents.edit-section');
+        Route::put('documents-section/update', [AdminDocumentController::class, 'updateSection'])->name('documents.update-section');
 });
 
 

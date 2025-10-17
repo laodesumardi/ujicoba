@@ -193,5 +193,136 @@
         </div>
                                 </div>
     @endauth
+
+    <!-- News Section -->
+    @if($latestNews->count() > 0)
+    <div class="bg-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                @if(isset($sections['news']) && $sections['news']->is_active)
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ $sections['news']->title }}</h2>
+                    @if($sections['news']->subtitle)
+                        <p class="text-lg text-gray-600 mb-4">{{ $sections['news']->subtitle }}</p>
+                    @endif
+                    @if($sections['news']->content)
+                        <p class="text-gray-600">{{ $sections['news']->content }}</p>
+                    @endif
+                @else
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Berita & Pengumuman Terbaru</h2>
+                    <p class="text-lg text-gray-600">Informasi terkini dari SMP Negeri 01 Namrole</p>
+                @endif
+            </div>
+
+            <!-- Featured News -->
+            @if($featuredNews->count() > 0)
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Berita Utama</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    @foreach($featuredNews as $news)
+                    <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                        @if($news->featured_image)
+                        <img src="{{ $news->featured_image_url }}" alt="{{ $news->title }}" class="w-full h-48 object-cover">
+                        @else
+                        <div class="w-full h-48 bg-gradient-to-r from-primary-500 to-primary-600 flex items-center justify-center">
+                            <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                            </svg>
+                        </div>
+                        @endif
+                        
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                                    {{ $news->getCategoryLabel() }}
+                                </span>
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $news->type == 'news' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' }}">
+                                    {{ $news->getTypeLabel() }}
+                                </span>
+                            </div>
+                            
+                            <h3 class="text-xl font-semibold text-gray-900 mb-3 line-clamp-2">
+                                <a href="{{ route('news.show', $news->slug) }}" class="hover:text-primary-600 transition-colors">
+                                    {{ $news->title }}
+                                </a>
+                            </h3>
+                            
+                            <p class="text-gray-600 mb-4 line-clamp-3">{{ $news->excerpt }}</p>
+                            
+                            <div class="flex items-center justify-between text-sm text-gray-500">
+                                <span>{{ $news->published_at->format('d M Y') }}</span>
+                                <span>{{ $news->views }} views</span>
+                            </div>
+                        </div>
+                    </article>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
+            <!-- Latest News -->
+            <div class="mb-12">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6">Berita Terbaru</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($latestNews->take(6) as $news)
+                    <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                        @if($news->featured_image)
+                        <img src="{{ $news->featured_image_url }}" alt="{{ $news->title }}" class="w-full h-32 object-cover">
+                        @else
+                        <div class="w-full h-32 bg-gradient-to-r from-primary-500 to-primary-600 flex items-center justify-center">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                            </svg>
+                        </div>
+                        @endif
+                        
+                        <div class="p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                                    {{ $news->getCategoryLabel() }}
+                                </span>
+                                <span class="text-xs text-gray-500">{{ $news->published_at->format('d M Y') }}</span>
+                            </div>
+                            
+                            <h4 class="font-semibold text-gray-900 mb-2 line-clamp-2">
+                                <a href="{{ route('news.show', $news->slug) }}" class="hover:text-primary-600 transition-colors">
+                                    {{ $news->title }}
+                                </a>
+                            </h4>
+                            
+                            <p class="text-sm text-gray-600 line-clamp-2">{{ $news->excerpt }}</p>
+                        </div>
+                    </article>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- View All News Button -->
+            <div class="text-center">
+                <a href="{{ route('news.index') }}" class="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+                    </svg>
+                    Lihat Semua Berita
+                </a>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>
+
+<style>
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
 @endsection

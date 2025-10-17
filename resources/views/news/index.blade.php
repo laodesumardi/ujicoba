@@ -4,7 +4,36 @@
 
 @section('content')
 <div class="bg-white">
-    <!-- Hero Section -->
+    <!-- Hero Section with Full Width Image -->
+    @if($newsSection && $newsSection->image)
+    <div class="relative h-96 overflow-hidden">
+        <img src="{{ asset('storage/' . $newsSection->image) }}" 
+             alt="{{ $newsSection->image_alt }}" 
+             class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="text-center text-white px-4">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                    @if($newsSection->title)
+                        {{ $newsSection->title }}
+                    @else
+                        Berita & Pengumuman
+                    @endif
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-200 mb-4">
+                    @if($newsSection->subtitle)
+                        {{ $newsSection->subtitle }}
+                    @else
+                        Informasi terbaru dari SMP Negeri 01 Namrole
+                    @endif
+                </p>
+                @if($newsSection->content)
+                    <p class="text-lg text-gray-300 max-w-3xl mx-auto">{{ $newsSection->content }}</p>
+                @endif
+            </div>
+        </div>
+    </div>
+    @else
+    <!-- Fallback Hero Section -->
     <div class="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
@@ -13,6 +42,7 @@
             </div>
         </div>
     </div>
+    @endif
 
     <!-- Filter Section -->
     <div class="bg-gray-50 py-8">

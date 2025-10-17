@@ -25,6 +25,9 @@ class DatabaseSeeder extends Seeder
             HomeSectionSeeder::class,
             SchoolProfileSeeder::class,
             NewsSeeder::class,
+            AcademicCalendarSeeder::class,
+            GallerySeeder::class,
+            DocumentSeeder::class,
         ]);
     }
 }
