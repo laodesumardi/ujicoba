@@ -13,11 +13,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Create admin user
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Admin SMP Namrole',
+            'email' => 'admin@smpnamrole.com',
+            'password' => bcrypt('admin123'),
+        ]);
+
+        // Seed home sections
+        $this->call([
+            HomeSectionSeeder::class,
         ]);
     }
 }
