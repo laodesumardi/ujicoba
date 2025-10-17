@@ -5,14 +5,18 @@
 @section('content')
 <div class="bg-white">
     <!-- Hero Section -->
-    <div class="bg-gradient-to-r from-primary-500 to-primary-600 text-white py-16" 
+    <div class="text-white py-16 relative" 
          @if(isset($profilData['hero_background']) && $profilData['hero_background'])
-         style="background-image: url('{{ asset($profilData['hero_background']) }}'); background-size: cover; background-position: center;"
+         style="background-image: url('{{ asset($profilData['hero_background']) }}'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 400px;"
+         @else
+         style="background: linear-gradient(135deg, #14213d 0%, #1e3a8a 100%); min-height: 400px;"
          @endif>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Overlay untuk kontras teks -->
+        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center">
-                <h1 class="text-4xl font-bold mb-4">{{ $profilData['hero_title'] ?? 'Profil Sekolah' }}</h1>
-                <p class="text-xl text-primary-100">{{ $profilData['hero_subtitle'] ?? 'SMP Negeri 01 Namrole - Sekolah Unggul Berkarakter' }}</p>
+                <h1 class="text-4xl font-bold mb-4 text-white">{{ $profilData['hero_title'] ?? 'Profil Sekolah' }}</h1>
+                <p class="text-xl text-white opacity-90">{{ $profilData['hero_subtitle'] ?? 'SMP Negeri 01 Namrole - Sekolah Unggul Berkarakter' }}</p>
             </div>
         </div>
     </div>
