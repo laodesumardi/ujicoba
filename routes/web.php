@@ -26,6 +26,14 @@ Route::prefix('ppdb')->name('ppdb.')->group(function () {
     Route::post('/check-status', [PPDBController::class, 'checkStatus'])->name('check-status.post');
 });
 
+// News Routes
+Route::prefix('berita')->name('news.')->group(function () {
+    Route::get('/', [NewsController::class, 'index'])->name('index');
+    Route::get('/{slug}', [NewsController::class, 'show'])->name('show');
+    Route::get('/kategori/{category}', [NewsController::class, 'category'])->name('category');
+    Route::get('/pengumuman', [NewsController::class, 'announcements'])->name('announcements');
+});
+
 // Debug route
 Route::get('/debug', function() {
     echo '<h1>Debug Route Working!</h1>';
@@ -325,13 +333,18 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('achievements', AchievementController::class);
     Route::resource('home-sections', HomeSectionController::class);
     
-    // PPDB Admin Routes
-    Route::resource('ppdb', AdminPPDBController::class);
-    Route::get('ppdb-registrations', [AdminPPDBController::class, 'registrations'])->name('ppdb.registrations');
-    Route::get('ppdb-registrations/{registration}', [AdminPPDBController::class, 'showRegistration'])->name('ppdb.show-registration');
-    Route::put('ppdb-registrations/{registration}/status', [AdminPPDBController::class, 'updateRegistrationStatus'])->name('ppdb.update-registration-status');
-    Route::get('ppdb-registrations/{registration}/download/{type}', [AdminPPDBController::class, 'downloadDocument'])->name('ppdb.download-document');
-    Route::get('ppdb-export', [AdminPPDBController::class, 'exportRegistrations'])->name('ppdb.export');
+        // PPDB Admin Routes
+        Route::resource('ppdb', AdminPPDBController::class);
+        Route::get('ppdb-registrations', [AdminPPDBController::class, 'registrations'])->name('ppdb.registrations');
+        Route::get('ppdb-registrations/{registration}', [AdminPPDBController::class, 'showRegistration'])->name('ppdb.show-registration');
+        Route::put('ppdb-registrations/{registration}/status', [AdminPPDBController::class, 'updateRegistrationStatus'])->name('ppdb.update-registration-status');
+        Route::get('ppdb-registrations/{registration}/download/{type}', [AdminPPDBController::class, 'downloadDocument'])->name('ppdb.download-document');
+        Route::get('ppdb-export', [AdminPPDBController::class, 'exportRegistrations'])->name('ppdb.export');
+        
+        // News Admin Routes
+        Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
+        Route::post('news/{news}/toggle-featured', [\App\Http\Controllers\Admin\NewsController::class, 'toggleFeatured'])->name('news.toggle-featured');
+        Route::post('news/{news}/toggle-pinned', [\App\Http\Controllers\Admin\NewsController::class, 'togglePinned'])->name('news.toggle-pinned');
 });
 
 

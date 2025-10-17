@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
         // Seed home sections
         $this->call([
             HomeSectionSeeder::class,
+            SchoolProfileSeeder::class,
+            NewsSeeder::class,
         ]);
     }
 }

@@ -30,15 +30,15 @@
                     </div>
 
                     <!-- Navigation -->
-                    <nav class="hidden md:flex space-x-8">
-                        <a href="{{ route('home') }}" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Beranda</a>
-                        <a href="{{ route('profil') }}" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Profil</a>
-                        <a href="{{ route('ppdb.index') }}" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">PPDB</a>
-                        <a href="#" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Akademik</a>
-                        <a href="#" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Prestasi</a>
-                        <a href="#" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Berita</a>
-                        <a href="#" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Kontak</a>
-                    </nav>
+        <nav class="hidden md:flex space-x-8">
+            <a href="{{ route('home') }}" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Beranda</a>
+            <a href="{{ route('profil') }}" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Profil</a>
+            <a href="{{ route('ppdb.index') }}" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">PPDB</a>
+            <a href="#" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Akademik</a>
+            <a href="#" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Prestasi</a>
+            <a href="{{ route('news.index') }}" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Berita</a>
+            <a href="#" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Kontak</a>
+        </nav>
 
                     <!-- Auth Links -->
                     <div class="hidden md:flex items-center space-x-4">
@@ -76,13 +76,13 @@
                 <div class="md:hidden hidden" id="mobile-menu">
                     <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-primary-600 rounded-lg mt-2">
                         <!-- Main Navigation -->
-                        <a href="{{ route('home') }}" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Beranda</a>
-                        <a href="{{ route('profil') }}" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Profil</a>
-                        <a href="{{ route('ppdb.index') }}" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">PPDB</a>
-                        <a href="#" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Akademik</a>
-                        <a href="#" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Prestasi</a>
-                        <a href="#" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Berita</a>
-                        <a href="#" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Kontak</a>
+            <a href="{{ route('home') }}" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Beranda</a>
+            <a href="{{ route('profil') }}" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Profil</a>
+            <a href="{{ route('ppdb.index') }}" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">PPDB</a>
+            <a href="#" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Akademik</a>
+            <a href="#" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Prestasi</a>
+            <a href="{{ route('news.index') }}" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Berita</a>
+            <a href="#" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Kontak</a>
                         
                         <!-- Auth Section -->
                         <div class="border-t border-primary-500 pt-2 mt-2">
