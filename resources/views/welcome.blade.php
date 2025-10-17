@@ -34,8 +34,8 @@
                 
                 <!-- Content -->
                 <div class="max-w-4xl mx-auto">
-                    <h1 class="text-6xl font-bold mb-6 leading-tight">{{ $sections['hero']->title ?? 'Selamat Datang di SMP Negeri 01 Namrole' }}</h1>
-                    <p class="text-2xl {{ $sections['hero']->text_color ?? 'text-primary-100' }} mb-12 leading-relaxed">{{ $sections['hero']->subtitle ?? 'Sekolah Unggul Berkarakter, Berprestasi, dan Berdaya Saing Global' }}</p>
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 md:mb-4 leading-tight">{{ $sections['hero']->title ?? 'Selamat Datang di SMP Negeri 01 Namrole' }}</h1>
+                    <p class="text-base sm:text-lg lg:text-xl {{ $sections['hero']->text_color ?? 'text-primary-100' }} mb-8 leading-relaxed">{{ $sections['hero']->subtitle ?? 'Sekolah Unggul Berkarakter, Berprestasi, dan Berdaya Saing Global' }}</p>
                     
                     @if($sections['hero']->button_text)
                     <div class="flex flex-col sm:flex-row gap-6 justify-center">
