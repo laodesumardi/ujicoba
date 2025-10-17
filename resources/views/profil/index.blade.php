@@ -5,11 +5,14 @@
 @section('content')
 <div class="bg-white">
     <!-- Hero Section -->
-    <div class="bg-gradient-to-r from-primary-500 to-primary-600 text-white py-16">
+    <div class="bg-gradient-to-r from-primary-500 to-primary-600 text-white py-16" 
+         @if(isset($profilData['hero_background']) && $profilData['hero_background'])
+         style="background-image: url('{{ asset($profilData['hero_background']) }}'); background-size: cover; background-position: center;"
+         @endif>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center">
-                <h1 class="text-4xl font-bold mb-4">Profil Sekolah</h1>
-                <p class="text-xl text-primary-100">SMP Negeri 01 Namrole - Sekolah Unggul Berkarakter</p>
+                <h1 class="text-4xl font-bold mb-4">{{ $profilData['hero_title'] ?? 'Profil Sekolah' }}</h1>
+                <p class="text-xl text-primary-100">{{ $profilData['hero_subtitle'] ?? 'SMP Negeri 01 Namrole - Sekolah Unggul Berkarakter' }}</p>
             </div>
         </div>
     </div>

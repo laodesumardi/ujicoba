@@ -17,6 +17,9 @@ class ProfilController extends Controller
         
         // Data profil sekolah dari database
         $profilData = [
+            'hero_title' => $sections->get('hero')->title ?? 'Profil Sekolah',
+            'hero_subtitle' => $sections->get('hero')->subtitle ?? $sections->get('hero')->content ?? 'SMP Negeri 01 Namrole - Sekolah Unggul Berkarakter',
+            'hero_background' => $sections->get('hero')->image ?? null,
             'sejarah' => [
                 'judul' => $sections->get('sejarah')->title ?? 'Sejarah Singkat SMP Negeri 01 Namrole',
                 'konten' => $sections->get('sejarah')->content ?? 'SMP Negeri 01 Namrole didirikan pada tahun 1985 sebagai salah satu sekolah menengah pertama negeri di Kabupaten Maluku Tengah. Sekolah ini dibangun dengan tujuan untuk memberikan akses pendidikan yang berkualitas kepada masyarakat di wilayah Namrole dan sekitarnya. Sejak berdiri, sekolah ini telah mengalami berbagai perkembangan dan peningkatan fasilitas untuk mendukung proses pembelajaran yang optimal.',
