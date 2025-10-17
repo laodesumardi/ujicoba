@@ -33,6 +33,7 @@
                     <nav class="hidden md:flex space-x-8">
                         <a href="{{ route('home') }}" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Beranda</a>
                         <a href="{{ route('profil') }}" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Profil</a>
+                        <a href="{{ route('ppdb.index') }}" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">PPDB</a>
                         <a href="#" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Akademik</a>
                         <a href="#" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Prestasi</a>
                         <a href="#" class="text-white hover:text-primary-200 px-3 py-2 rounded-md text-sm font-medium transition-colors">Berita</a>
@@ -77,6 +78,7 @@
                         <!-- Main Navigation -->
                         <a href="{{ route('home') }}" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Beranda</a>
                         <a href="{{ route('profil') }}" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Profil</a>
+                        <a href="{{ route('ppdb.index') }}" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">PPDB</a>
                         <a href="#" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Akademik</a>
                         <a href="#" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Prestasi</a>
                         <a href="#" class="text-white hover:text-primary-200 block px-3 py-2 rounded-md text-base font-medium">Berita</a>
