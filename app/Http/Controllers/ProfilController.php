@@ -3,21 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\SchoolProfile;
 
 class ProfilController extends Controller
 {
     public function index()
     {
-        // Data profil sekolah
+        // Ambil data dari database
+        $sections = SchoolProfile::where('is_active', true)
+                                ->orderBy('sort_order')
+                                ->get()
+                                ->keyBy('section_key');
+        
+        // Data profil sekolah dari database
         $profilData = [
             'sejarah' => [
-                'judul' => 'Sejarah Singkat SMP Negeri 01 Namrole',
-                'konten' => 'SMP Negeri 01 Namrole didirikan pada tahun 1985 sebagai salah satu sekolah menengah pertama negeri di Kabupaten Maluku Tengah. Sekolah ini dibangun dengan tujuan untuk memberikan akses pendidikan yang berkualitas kepada masyarakat di wilayah Namrole dan sekitarnya. Sejak berdiri, sekolah ini telah mengalami berbagai perkembangan dan peningkatan fasilitas untuk mendukung proses pembelajaran yang optimal.',
+                'judul' => $sections->get('sejarah')->title ?? 'Sejarah Singkat SMP Negeri 01 Namrole',
+                'konten' => $sections->get('sejarah')->content ?? 'SMP Negeri 01 Namrole didirikan pada tahun 1985 sebagai salah satu sekolah menengah pertama negeri di Kabupaten Maluku Tengah. Sekolah ini dibangun dengan tujuan untuk memberikan akses pendidikan yang berkualitas kepada masyarakat di wilayah Namrole dan sekitarnya. Sejak berdiri, sekolah ini telah mengalami berbagai perkembangan dan peningkatan fasilitas untuk mendukung proses pembelajaran yang optimal.',
                 'tahun_berdiri' => '1985',
                 'lokasi' => 'Namrole, Maluku Tengah'
             ],
             'visi_misi' => [
-                'visi' => 'Menjadi sekolah unggul yang menghasilkan lulusan berkarakter, berprestasi, dan berdaya saing global',
+                'visi' => $sections->get('visi-misi')->content ?? 'Menjadi sekolah unggul yang menghasilkan lulusan berkarakter, berprestasi, dan berdaya saing global',
                 'misi' => [
                     'Menyelenggarakan pendidikan yang berkualitas dengan mengintegrasikan nilai-nilai karakter',
                     'Mengembangkan potensi siswa melalui pembelajaran yang kreatif dan inovatif',
@@ -27,11 +34,12 @@ class ProfilController extends Controller
                 ]
             ],
             'struktur_organisasi' => [
-                'gambar' => 'Struktur Organisasi.png',
-                'judul' => 'Struktur Organisasi SMP Negeri 01 Namrole',
-                'deskripsi' => 'Struktur organisasi sekolah yang menunjukkan hierarki kepemimpinan dan pembagian tugas di SMP Negeri 01 Namrole.'
+                'gambar' => $sections->get('struktur')->image ?? 'Struktur Organisasi.png',
+                'judul' => $sections->get('struktur')->title ?? 'Struktur Organisasi SMP Negeri 01 Namrole',
+                'deskripsi' => $sections->get('struktur')->content ?? 'Struktur organisasi sekolah yang menunjukkan hierarki kepemimpinan dan pembagian tugas di SMP Negeri 01 Namrole.'
             ],
             'tenaga_pendidik' => [
+                'content' => $sections->get('tenaga-pendidik')->content ?? 'SMP Negeri 01 Namrole memiliki tenaga pendidik yang berkualitas dan berpengalaman. Semua guru telah memenuhi kualifikasi akademik dan memiliki sertifikasi pendidik. Mereka berkomitmen untuk memberikan pendidikan terbaik kepada siswa.',
                 'guru_mata_pelajaran' => [
                     ['nama' => 'Dr. Maria Magdalena, M.Pd', 'mata_pelajaran' => 'Matematika', 'pendidikan' => 'S3 Pendidikan Matematika'],
                     ['nama' => 'Ahmad Fauzi, S.Pd', 'mata_pelajaran' => 'Bahasa Indonesia', 'pendidikan' => 'S1 Pendidikan Bahasa Indonesia'],
@@ -50,6 +58,7 @@ class ProfilController extends Controller
                 ]
             ],
             'akreditasi' => [
+                'content' => $sections->get('akreditasi')->content ?? 'SMP Negeri 01 Namrole telah terakreditasi A dengan skor 95. Akreditasi ini menunjukkan kualitas pendidikan yang tinggi dan komitmen sekolah dalam memberikan pelayanan terbaik kepada siswa dan masyarakat.',
                 'status' => 'Terakreditasi A',
                 'nomor_akreditasi' => 'BAN-SM-2023-001',
                 'tahun_akreditasi' => '2023',
