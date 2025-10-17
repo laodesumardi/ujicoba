@@ -57,8 +57,8 @@
                             @enderror
                         </div>
 
-                        <!-- Image Upload -->
-                        <div class="md:col-span-2">
+                        <!-- Image Upload - Only for Hero Section -->
+                        <div class="md:col-span-2" id="image-fields" style="display: none;">
                             <label for="image" class="block text-sm font-medium text-gray-700 mb-2">Image</label>
                             <input type="file" id="image" name="image" accept="image/*"
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('image') border-red-500 @enderror">
@@ -68,8 +68,8 @@
                             <p class="mt-1 text-sm text-gray-500">Max size: 5MB. Supported formats: JPEG, PNG, JPG, GIF, SVG, WEBP</p>
                         </div>
 
-                        <!-- Image Alt Text -->
-                        <div>
+                        <!-- Image Alt Text - Only for Hero Section -->
+                        <div id="image-alt-field" style="display: none;">
                             <label for="image_alt" class="block text-sm font-medium text-gray-700 mb-2">Image Alt Text</label>
                             <input type="text" id="image_alt" name="image_alt" value="{{ old('image_alt') }}" 
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('image_alt') border-red-500 @enderror"
@@ -79,8 +79,8 @@
                             @enderror
                         </div>
 
-                        <!-- Image Position -->
-                        <div>
+                        <!-- Image Position - Only for Hero Section -->
+                        <div id="image-position-field" style="display: none;">
                             <label for="image_position" class="block text-sm font-medium text-gray-700 mb-2">Image Position</label>
                             <select id="image_position" name="image_position" 
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('image_position') border-red-500 @enderror">
@@ -172,3 +172,32 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sectionKeyInput = document.getElementById('section_key');
+    const imageFields = document.getElementById('image-fields');
+    const imageAltField = document.getElementById('image-alt-field');
+    const imagePositionField = document.getElementById('image-position-field');
+    
+    function toggleImageFields() {
+        const sectionKey = sectionKeyInput.value.toLowerCase();
+        if (sectionKey === 'hero') {
+            imageFields.style.display = 'block';
+            imageAltField.style.display = 'block';
+            imagePositionField.style.display = 'block';
+        } else {
+            imageFields.style.display = 'none';
+            imageAltField.style.display = 'none';
+            imagePositionField.style.display = 'none';
+        }
+    }
+    
+    sectionKeyInput.addEventListener('input', toggleImageFields);
+    
+    // Check on page load
+    toggleImageFields();
+});
+</script>
+@endpush

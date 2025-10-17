@@ -7,6 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class SchoolProfile extends Model
 {
     protected $fillable = [
+        'school_name',
+        'history',
+        'established_year',
+        'location',
+        'vision',
+        'mission',
+        'headmaster_name',
+        'headmaster_position',
+        'headmaster_education',
+        'accreditation_status',
+        'accreditation_number',
+        'accreditation_year',
+        'accreditation_score',
+        'accreditation_valid_until',
         'section_key',
         'title',
         'content',

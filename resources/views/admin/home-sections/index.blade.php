@@ -43,10 +43,14 @@
                                     <div class="text-sm text-gray-900">{{ $section->title ?? 'No title' }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($section->image)
-                                        <img src="{{ asset($section->image) }}" alt="{{ $section->image_alt }}" class="h-12 w-12 object-cover rounded-lg">
+                                    @if($section->section_key === 'hero')
+                                        @if($section->image)
+                                            <img src="{{ asset($section->image) }}" alt="{{ $section->image_alt }}" class="h-12 w-12 object-cover rounded-lg">
+                                        @else
+                                            <span class="text-gray-400 text-sm">No image</span>
+                                        @endif
                                     @else
-                                        <span class="text-gray-400 text-sm">No image</span>
+                                        <span class="text-gray-400 text-sm">-</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">

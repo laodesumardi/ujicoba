@@ -52,8 +52,8 @@ class HomeSectionController extends Controller
 
         $data = $request->all();
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
+        // Handle image upload - only for hero section
+        if ($request->hasFile('image') && $data['section_key'] === 'hero') {
             $image = $request->file('image');
             
             // Validate file
@@ -86,6 +86,9 @@ class HomeSectionController extends Controller
             } catch (Exception $e) {
                 return redirect()->back()->withErrors(['image' => 'Failed to upload image: ' . $e->getMessage()]);
             }
+        } else {
+            // Remove image field for non-hero sections
+            unset($data['image']);
         }
 
         HomeSection::create($data);
@@ -137,8 +140,8 @@ class HomeSectionController extends Controller
 
         $data = $request->all();
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
+        // Handle image upload - only for hero section
+        if ($request->hasFile('image') && $data['section_key'] === 'hero') {
             $image = $request->file('image');
             
             // Validate file
@@ -184,6 +187,9 @@ class HomeSectionController extends Controller
             } catch (Exception $e) {
                 return redirect()->back()->withErrors(['image' => 'Failed to upload image: ' . $e->getMessage()]);
             }
+        } else {
+            // Remove image field for non-hero sections
+            unset($data['image']);
         }
 
         $homeSection->update($data);
