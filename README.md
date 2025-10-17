@@ -1,66 +1,191 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Website SMP Negeri 01 Namrole
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Website resmi SMP Negeri 01 Namrole yang dibangun dengan Laravel dan Tailwind CSS.
 
-## About Laravel
+## 🚀 Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Frontend (Public)
+- **Homepage** - Halaman utama dengan informasi sekolah
+- **Profil Sekolah** - Sejarah, visi-misi, struktur organisasi
+- **Tenaga Pendidik** - Daftar guru dan staff
+- **Prestasi** - Pencapaian sekolah
+- **Akreditasi** - Informasi akreditasi sekolah
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Backend (Admin)
+- **Dashboard Admin** - Panel kontrol untuk mengelola konten
+- **School Profile Management** - Kelola profil sekolah
+- **Teacher Management** - Kelola data guru dan staff
+- **Achievement Management** - Kelola prestasi sekolah
+- **Authentication** - Sistem login/register yang aman
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🛠️ Teknologi yang Digunakan
 
-## Learning Laravel
+- **Laravel 11** - PHP Framework
+- **Tailwind CSS** - CSS Framework
+- **Laravel Breeze** - Authentication scaffolding
+- **Vite** - Build tool
+- **MySQL** - Database
+- **Blade Templates** - Templating engine
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🎨 Design Features
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- **Responsive Design** - Mobile-first approach
+- **Custom Color Scheme** - Warna konsisten #14213d
+- **Professional Layout** - Clean dan modern
+- **User-Friendly Navigation** - Intuitive menu system
+- **Admin Dashboard** - Easy content management
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📦 Instalasi
 
-## Laravel Sponsors
+### Prerequisites
+- PHP 8.2+
+- Composer
+- Node.js & NPM
+- MySQL
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Setup
+1. Clone repository:
+```bash
+git clone https://github.com/laodesumardi/namrole.git
+cd namrole
+```
 
-### Premium Partners
+2. Install dependencies:
+```bash
+composer install
+npm install
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+3. Setup environment:
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## Contributing
+4. Configure database di `.env`:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=namrole
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+5. Run migrations:
+```bash
+php artisan migrate
+```
 
-## Code of Conduct
+6. Create admin user:
+```bash
+php artisan admin:create "Admin SMP Namrole" admin@smpnamrole.com admin123
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+7. Build assets:
+```bash
+npm run build
+```
 
-## Security Vulnerabilities
+8. Start server:
+```bash
+php artisan serve
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🔐 Login Admin
 
-## License
+**Email:** `admin@smpnamrole.com`  
+**Password:** `admin123`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 📁 Struktur Project
+
+```
+namrole/
+├── app/
+│   ├── Http/Controllers/
+│   │   ├── Admin/          # Admin controllers
+│   │   └── ProfilController.php
+│   └── Models/             # Eloquent models
+├── database/
+│   ├── migrations/         # Database migrations
+│   └── seeders/           # Database seeders
+├── resources/
+│   ├── views/
+│   │   ├── admin/         # Admin views
+│   │   ├── auth/         # Authentication views
+│   │   ├── layouts/      # Layout templates
+│   │   └── profil/       # Public views
+│   └── css/app.css       # Tailwind CSS
+├── routes/
+│   ├── web.php           # Web routes
+│   └── auth.php          # Auth routes
+└── public/
+    ├── logo.png          # School logo
+    └── build/            # Compiled assets
+```
+
+## 🎯 Fitur Admin Dashboard
+
+### School Profile Management
+- Edit informasi sekolah
+- Update visi dan misi
+- Kelola struktur organisasi
+- Update data akreditasi
+
+### Teacher Management
+- Tambah/edit data guru
+- Kelola staff sekolah
+- Update informasi pendidikan
+
+### Achievement Management
+- Tambah prestasi baru
+- Edit prestasi existing
+- Kategorisasi prestasi
+
+## 🚀 Deployment
+
+### Production Build
+```bash
+npm run build
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+### Environment Setup
+- Set `APP_ENV=production`
+- Configure database credentials
+- Set up web server (Apache/Nginx)
+- Configure SSL certificate
+
+## 📱 Responsive Design
+
+Website fully responsive untuk:
+- **Desktop** (1024px+)
+- **Tablet** (768px - 1023px)
+- **Mobile** (320px - 767px)
+
+## 🎨 Customization
+
+### Colors
+Primary color: `#14213d` (dapat diubah di `tailwind.config.js`)
+
+### Logo
+Ganti file `public/logo.png` dengan logo sekolah
+
+### Content
+Semua konten dapat diubah melalui admin dashboard
+
+## 📞 Support
+
+Untuk pertanyaan atau bantuan, silakan hubungi:
+- **Email:** admin@smpnamrole.com
+- **Website:** [SMP Negeri 01 Namrole](http://localhost:8000)
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+**Dibuat dengan ❤️ untuk SMP Negeri 01 Namrole**
