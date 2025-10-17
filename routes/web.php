@@ -3,12 +3,14 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\PPDBController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SchoolProfileController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\AchievementController;
 use App\Http\Controllers\Admin\HomeSectionController;
 use App\Http\Controllers\Admin\PPDBController as AdminPPDBController;
+use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\SetupController;
 use Illuminate\Support\Facades\Route;
 
@@ -342,9 +344,9 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::get('ppdb-export', [AdminPPDBController::class, 'exportRegistrations'])->name('ppdb.export');
         
         // News Admin Routes
-        Route::resource('news', \App\Http\Controllers\Admin\NewsController::class);
-        Route::post('news/{news}/toggle-featured', [\App\Http\Controllers\Admin\NewsController::class, 'toggleFeatured'])->name('news.toggle-featured');
-        Route::post('news/{news}/toggle-pinned', [\App\Http\Controllers\Admin\NewsController::class, 'togglePinned'])->name('news.toggle-pinned');
+        Route::resource('news', AdminNewsController::class);
+        Route::post('news/{news}/toggle-featured', [AdminNewsController::class, 'toggleFeatured'])->name('news.toggle-featured');
+        Route::post('news/{news}/toggle-pinned', [AdminNewsController::class, 'togglePinned'])->name('news.toggle-pinned');
 });
 
 
