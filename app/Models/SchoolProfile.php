@@ -28,6 +28,10 @@ class SchoolProfile extends Model
         'description',
         'image',
         'image_alt',
+        'button_text',
+        'button_link',
+        'background_color',
+        'text_color',
         'is_active',
         'sort_order',
         'extra_data'

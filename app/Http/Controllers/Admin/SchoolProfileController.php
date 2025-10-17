@@ -144,4 +144,111 @@ class SchoolProfileController extends Controller
         return redirect()->route('admin.school-profile.index')
             ->with('success', 'Profil sekolah berhasil dihapus!');
     }
+
+    /**
+     * Edit hero section specifically
+     */
+    public function editHero()
+    {
+        $heroSection = SchoolProfile::where('section_key', 'hero')->first();
+        
+        if (!$heroSection) {
+            // Create hero section if doesn't exist
+            $heroSection = SchoolProfile::create([
+                'section_key' => 'hero',
+                'title' => 'Hero Section',
+                'content' => 'Welcome to SMP Negeri 01 Namrole',
+                'is_active' => true,
+                'sort_order' => 0
+            ]);
+        }
+        
+        return view('admin.school-profile.edit-hero', compact('heroSection'));
+    }
+
+    /**
+     * Update hero section
+     */
+    public function updateHero(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'nullable|string',
+            'subtitle' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'image_alt' => 'nullable|string|max:255',
+            'button_text' => 'nullable|string|max:255',
+            'button_link' => 'nullable|string|max:255',
+            'background_color' => 'nullable|string|max:50',
+            'text_color' => 'nullable|string|max:50',
+            'is_active' => 'boolean'
+        ], [
+            'image.file' => 'The image must be a valid file.',
+            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif, svg, webp.',
+            'image.max' => 'The image may not be greater than 5MB.',
+        ]);
+
+        $heroSection = SchoolProfile::where('section_key', 'hero')->first();
+        
+        if (!$heroSection) {
+            return redirect()->back()->withErrors(['error' => 'Hero section not found.']);
+        }
+
+        $data = $request->all();
+
+        // Handle image upload for hero section
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            
+            // Validate file
+            if (!$image->isValid()) {
+                return redirect()->back()->withErrors(['image' => 'Invalid file upload.']);
+            }
+            
+            // Delete old image if exists
+            if ($heroSection->image) {
+                $oldImagePath = public_path($heroSection->image);
+                $oldStoragePath = storage_path('app/public/school-profiles/' . basename($heroSection->image));
+                
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+                if (file_exists($oldStoragePath)) {
+                    unlink($oldStoragePath);
+                }
+            }
+            
+            // Generate safe filename
+            $originalName = $image->getClientOriginalName();
+            $extension = $image->getClientOriginalExtension();
+            $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', pathinfo($originalName, PATHINFO_FILENAME));
+            $imageName = time() . '_' . $safeName . '.' . $extension;
+            
+            try {
+                // Store in uploads directory
+                $uploadsPath = public_path('uploads/school-profiles');
+                if (!is_dir($uploadsPath)) {
+                    mkdir($uploadsPath, 0755, true);
+                }
+                $image->move($uploadsPath, $imageName);
+                
+                // Store in storage directory
+                $storagePath = storage_path('app/public/school-profiles');
+                if (!is_dir($storagePath)) {
+                    mkdir($storagePath, 0755, true);
+                }
+                copy($uploadsPath . '/' . $imageName, $storagePath . '/' . $imageName);
+                
+                $data['image'] = 'storage/school-profiles/' . $imageName;
+            } catch (Exception $e) {
+                return redirect()->back()->withErrors(['image' => 'Failed to upload image: ' . $e->getMessage()]);
+            }
+        }
+
+        $heroSection->update($data);
+
+        return redirect()->route('admin.school-profile.index')
+            ->with('success', 'Hero section updated successfully.');
+    }
 }

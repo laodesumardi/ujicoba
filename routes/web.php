@@ -301,6 +301,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('school-profile', SchoolProfileController::class);
+    Route::get('school-profile/hero/edit', [SchoolProfileController::class, 'editHero'])->name('school-profile.edit-hero');
+    Route::put('school-profile/hero/update', [SchoolProfileController::class, 'updateHero'])->name('school-profile.update-hero');
     Route::resource('teachers', TeacherController::class);
     Route::resource('achievements', AchievementController::class);
     Route::resource('home-sections', HomeSectionController::class);
