@@ -9,7 +9,7 @@
             <div class="p-6 text-gray-900">
                 <h2 class="text-2xl font-bold text-primary-900 mb-6">Create New Home Section</h2>
 
-                <form method="POST" action="{{ route('admin.home-sections.store') }}">
+                <form method="POST" action="{{ route('admin.home-sections.store') }}" enctype="multipart/form-data">
                     @csrf
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -65,7 +65,7 @@
                             @error('image')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
-                            <p class="mt-1 text-sm text-gray-500">Max size: 2MB. Supported formats: JPEG, PNG, JPG, GIF, SVG</p>
+                            <p class="mt-1 text-sm text-gray-500">Max size: 5MB. Supported formats: JPEG, PNG, JPG, GIF, SVG, WEBP</p>
                         </div>
 
                         <!-- Image Alt Text -->

@@ -32,4 +32,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('home-sections', HomeSectionController::class);
 });
 
+
+
 require __DIR__.'/auth.php';

@@ -35,7 +35,7 @@ class HomeSectionController extends Controller
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
             'image_alt' => 'nullable|string|max:255',
             'image_position' => 'nullable|string|in:center,left,right,top,bottom',
             'button_text' => 'nullable|string|max:255',
@@ -44,6 +44,10 @@ class HomeSectionController extends Controller
             'text_color' => 'nullable|string|max:50',
             'is_active' => 'boolean',
             'sort_order' => 'integer|min:0'
+        ], [
+            'image.file' => 'The image must be a valid file.',
+            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif, svg, webp.',
+            'image.max' => 'The image may not be greater than 5MB.',
         ]);
 
         $data = $request->all();
@@ -88,7 +92,7 @@ class HomeSectionController extends Controller
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
             'image_alt' => 'nullable|string|max:255',
             'image_position' => 'nullable|string|in:center,left,right,top,bottom',
             'button_text' => 'nullable|string|max:255',
@@ -97,6 +101,10 @@ class HomeSectionController extends Controller
             'text_color' => 'nullable|string|max:50',
             'is_active' => 'boolean',
             'sort_order' => 'integer|min:0'
+        ], [
+            'image.file' => 'The image must be a valid file.',
+            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif, svg, webp.',
+            'image.max' => 'The image may not be greater than 5MB.',
         ]);
 
         $data = $request->all();
