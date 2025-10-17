@@ -241,6 +241,52 @@ Route::get('/fix-database', function() {
     }
 });
 
+// Test upload functionality with detailed diagnostics
+Route::get('/test-upload-detailed', function() {
+    $html = '<h1>Detailed Upload Test</h1>';
+    
+    // PHP settings
+    $html .= '<h3>PHP Settings:</h3>';
+    $html .= '<p>upload_max_filesize: ' . ini_get('upload_max_filesize') . '</p>';
+    $html .= '<p>post_max_size: ' . ini_get('post_max_size') . '</p>';
+    $html .= '<p>max_execution_time: ' . ini_get('max_execution_time') . '</p>';
+    $html .= '<p>memory_limit: ' . ini_get('memory_limit') . '</p>';
+    
+    // Directory check
+    $html .= '<h3>Directory Check:</h3>';
+    $directories = [
+        'public/uploads/home-sections',
+        'storage/app/public/home-sections',
+        'public/storage/home-sections'
+    ];
+    
+    foreach ($directories as $dir) {
+        if (is_dir($dir)) {
+            $writable = is_writable($dir) ? 'Yes' : 'No';
+            $html .= '<p>✅ ' . $dir . ' - Writable: ' . $writable . '</p>';
+        } else {
+            $html .= '<p>❌ ' . $dir . ' - does not exist</p>';
+        }
+    }
+    
+    // Test file creation
+    $html .= '<h3>File Creation Test:</h3>';
+    $testFile = 'storage/app/public/home-sections/test_' . time() . '.txt';
+    if (file_put_contents($testFile, 'test content')) {
+        $html .= '<p>✅ Can create files in storage</p>';
+        if (unlink($testFile)) {
+            $html .= '<p>✅ Can delete files from storage</p>';
+        }
+    } else {
+        $html .= '<p>❌ Cannot create files in storage</p>';
+    }
+    
+    $html .= '<p><a href="/admin/home-sections">Go to Admin Panel</a></p>';
+    $html .= '<p><a href="/">Go to Homepage</a></p>';
+    
+    return response($html);
+});
+
 Route::get('/dashboard', function () {
     return redirect()->route('home');
 })->middleware(['auth', 'verified'])->name('dashboard');

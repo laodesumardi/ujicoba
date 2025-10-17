@@ -55,13 +55,37 @@ class HomeSectionController extends Controller
         // Handle image upload
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
             
-            // Store in both uploads and storage directories
-            $image->move(public_path('uploads/home-sections'), $imageName);
-            $image->move(storage_path('app/public/home-sections'), $imageName);
+            // Validate file
+            if (!$image->isValid()) {
+                return redirect()->back()->withErrors(['image' => 'Invalid file upload.']);
+            }
             
-            $data['image'] = 'storage/home-sections/' . $imageName;
+            // Generate safe filename
+            $originalName = $image->getClientOriginalName();
+            $extension = $image->getClientOriginalExtension();
+            $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', pathinfo($originalName, PATHINFO_FILENAME));
+            $imageName = time() . '_' . $safeName . '.' . $extension;
+            
+            try {
+                // Store in uploads directory
+                $uploadsPath = public_path('uploads/home-sections');
+                if (!is_dir($uploadsPath)) {
+                    mkdir($uploadsPath, 0755, true);
+                }
+                $image->move($uploadsPath, $imageName);
+                
+                // Store in storage directory
+                $storagePath = storage_path('app/public/home-sections');
+                if (!is_dir($storagePath)) {
+                    mkdir($storagePath, 0755, true);
+                }
+                copy($uploadsPath . '/' . $imageName, $storagePath . '/' . $imageName);
+                
+                $data['image'] = 'storage/home-sections/' . $imageName;
+            } catch (Exception $e) {
+                return redirect()->back()->withErrors(['image' => 'Failed to upload image: ' . $e->getMessage()]);
+            }
         }
 
         HomeSection::create($data);
@@ -115,6 +139,13 @@ class HomeSectionController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            
+            // Validate file
+            if (!$image->isValid()) {
+                return redirect()->back()->withErrors(['image' => 'Invalid file upload.']);
+            }
+            
             // Delete old image if exists
             if ($homeSection->image) {
                 $oldImagePath = public_path($homeSection->image);
@@ -127,15 +158,32 @@ class HomeSectionController extends Controller
                     unlink($oldStoragePath);
                 }
             }
-
-            $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
             
-            // Store in both uploads and storage directories
-            $image->move(public_path('uploads/home-sections'), $imageName);
-            $image->move(storage_path('app/public/home-sections'), $imageName);
+            // Generate safe filename
+            $originalName = $image->getClientOriginalName();
+            $extension = $image->getClientOriginalExtension();
+            $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', pathinfo($originalName, PATHINFO_FILENAME));
+            $imageName = time() . '_' . $safeName . '.' . $extension;
             
-            $data['image'] = 'storage/home-sections/' . $imageName;
+            try {
+                // Store in uploads directory
+                $uploadsPath = public_path('uploads/home-sections');
+                if (!is_dir($uploadsPath)) {
+                    mkdir($uploadsPath, 0755, true);
+                }
+                $image->move($uploadsPath, $imageName);
+                
+                // Store in storage directory
+                $storagePath = storage_path('app/public/home-sections');
+                if (!is_dir($storagePath)) {
+                    mkdir($storagePath, 0755, true);
+                }
+                copy($uploadsPath . '/' . $imageName, $storagePath . '/' . $imageName);
+                
+                $data['image'] = 'storage/home-sections/' . $imageName;
+            } catch (Exception $e) {
+                return redirect()->back()->withErrors(['image' => 'Failed to upload image: ' . $e->getMessage()]);
+            }
         }
 
         $homeSection->update($data);
