@@ -23,6 +23,29 @@ Route::get('/debug', function() {
     echo '<p><a href="/">Go to Homepage</a></p>';
 });
 
+// Simple debug route
+Route::get('/ping', function() {
+    return response('PONG - ' . now());
+});
+
+// Test route with controller
+Route::get('/test-route', function() {
+    return response('<h1>Test Route Working!</h1><p>Time: ' . now() . '</p>');
+});
+
+// Clear cache route
+Route::get('/clear-cache', function() {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        \Illuminate\Support\Facades\Artisan::call('route:clear');
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+        return response('<h1>Cache Cleared!</h1><p>✅ All caches cleared</p><p><a href="/">Home</a></p>');
+    } catch (Exception $e) {
+        return response('<h1>Error!</h1><p>Error: ' . $e->getMessage() . '</p>');
+    }
+});
+
 // Simple test route
 Route::get('/test', function() {
     return response('<h1>Test Route Working!</h1><p><a href="/">Home</a></p>');
@@ -73,10 +96,51 @@ Route::get('/test-storage', function() {
     return response($html);
 });
 
-// Setup routes using controller
-Route::get('/generate', [SetupController::class, 'generate']);
-Route::get('/setup', [SetupController::class, 'setup']);
-Route::get('/test-images', [SetupController::class, 'testImages']);
+// Simple setup routes
+Route::get('/generate', function() {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('storage:link');
+        return response('<h1>Storage Link Created!</h1><p>✅ Storage link created</p><p><a href="/">Home</a></p>');
+    } catch (Exception $e) {
+        return response('<h1>Error!</h1><p>Error: ' . $e->getMessage() . '</p>');
+    }
+});
+
+Route::get('/setup', function() {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('storage:link');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        \Illuminate\Support\Facades\Artisan::call('config:clear');
+        return response('<h1>Setup Complete!</h1><p>✅ Storage link created</p><p>✅ Caches cleared</p><p><a href="/">Home</a></p>');
+    } catch (Exception $e) {
+        return response('<h1>Error!</h1><p>Error: ' . $e->getMessage() . '</p>');
+    }
+});
+
+Route::get('/test-images', function() {
+    $html = '<h1>Image Test</h1>';
+    
+    if (is_dir('public/storage/home-sections')) {
+        $files = scandir('public/storage/home-sections');
+        $html .= '<h3>Images Found:</h3><ul>';
+        foreach ($files as $file) {
+            if ($file != '.' && $file != '..') {
+                $html .= '<li><a href="/storage/home-sections/' . $file . '" target="_blank">' . $file . '</a></li>';
+            }
+        }
+        $html .= '</ul>';
+    } else {
+        $html .= '<p>❌ Storage directory not found</p>';
+    }
+    
+    $html .= '<p><a href="/">Home</a></p>';
+    return response($html);
+});
+
+// Setup routes using controller (backup)
+Route::get('/generate-controller', [SetupController::class, 'generate']);
+Route::get('/setup-controller', [SetupController::class, 'setup']);
+Route::get('/test-images-controller', [SetupController::class, 'testImages']);
 
 Route::get('/dashboard', function () {
     return redirect()->route('home');
