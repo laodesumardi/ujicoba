@@ -35,6 +35,9 @@ class HomeSectionController extends Controller
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image_alt' => 'nullable|string|max:255',
+            'image_position' => 'nullable|string|in:center,left,right,top,bottom',
             'button_text' => 'nullable|string|max:255',
             'button_link' => 'nullable|string|max:255',
             'background_color' => 'nullable|string|max:50',
@@ -43,7 +46,17 @@ class HomeSectionController extends Controller
             'sort_order' => 'integer|min:0'
         ]);
 
-        HomeSection::create($request->all());
+        $data = $request->all();
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('uploads/home-sections'), $imageName);
+            $data['image'] = 'uploads/home-sections/' . $imageName;
+        }
+
+        HomeSection::create($data);
 
         return redirect()->route('admin.home-sections.index')
             ->with('success', 'Home section created successfully.');
@@ -75,6 +88,9 @@ class HomeSectionController extends Controller
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string',
             'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image_alt' => 'nullable|string|max:255',
+            'image_position' => 'nullable|string|in:center,left,right,top,bottom',
             'button_text' => 'nullable|string|max:255',
             'button_link' => 'nullable|string|max:255',
             'background_color' => 'nullable|string|max:50',
@@ -83,7 +99,22 @@ class HomeSectionController extends Controller
             'sort_order' => 'integer|min:0'
         ]);
 
-        $homeSection->update($request->all());
+        $data = $request->all();
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($homeSection->image && file_exists(public_path($homeSection->image))) {
+                unlink(public_path($homeSection->image));
+            }
+
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('uploads/home-sections'), $imageName);
+            $data['image'] = 'uploads/home-sections/' . $imageName;
+        }
+
+        $homeSection->update($data);
 
         return redirect()->route('admin.home-sections.index')
             ->with('success', 'Home section updated successfully.');

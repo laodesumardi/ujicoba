@@ -7,23 +7,37 @@
     <!-- Hero Section -->
     @if(isset($sections['hero']) && $sections['hero']->is_active)
     <div class="{{ $sections['hero']->background_color ?? 'bg-gradient-to-r from-primary-500 to-primary-600' }} {{ $sections['hero']->text_color ?? 'text-white' }} py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-5xl font-bold mb-6">{{ $sections['hero']->title ?? 'Selamat Datang di SMP Negeri 01 Namrole' }}</h1>
-            <p class="text-xl {{ $sections['hero']->text_color ?? 'text-primary-100' }} mb-8">{{ $sections['hero']->subtitle ?? 'Sekolah Unggul Berkarakter, Berprestasi, dan Berdaya Saing Global' }}</p>
-            @if($sections['hero']->button_text)
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ $sections['hero']->button_link ?? route('profil') }}" class="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
-                    {{ $sections['hero']->button_text }}
-                </a>
-                @if($sections['hero']->description)
-                <a href="#" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors">
-                    Informasi Pendaftaran
-                                        </a>
-                                    @endif
-            </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center justify-between">
+                <!-- Content -->
+                <div class="lg:w-1/2 text-center lg:text-left mb-8 lg:mb-0">
+                    <h1 class="text-5xl font-bold mb-6">{{ $sections['hero']->title ?? 'Selamat Datang di SMP Negeri 01 Namrole' }}</h1>
+                    <p class="text-xl {{ $sections['hero']->text_color ?? 'text-primary-100' }} mb-8">{{ $sections['hero']->subtitle ?? 'Sekolah Unggul Berkarakter, Berprestasi, dan Berdaya Saing Global' }}</p>
+                    @if($sections['hero']->button_text)
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="{{ $sections['hero']->button_link ?? route('profil') }}" class="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
+                            {{ $sections['hero']->button_text }}
+                        </a>
+                        @if($sections['hero']->description)
+                        <a href="#" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors">
+                            Informasi Pendaftaran
+                        </a>
                         @endif
-                                </div>
-                                        </div>
+                    </div>
+                    @endif
+                </div>
+                
+                <!-- Image -->
+                @if($sections['hero']->image)
+                <div class="lg:w-1/2 flex justify-center">
+                    <img src="{{ asset($sections['hero']->image) }}" 
+                         alt="{{ $sections['hero']->image_alt ?? 'Hero Image' }}" 
+                         class="max-w-md w-full h-auto rounded-lg shadow-2xl">
+                </div>
+                @endif
+            </div>
+        </div>
+    </div>
     @else
     <!-- Default Hero Section -->
     <div class="bg-gradient-to-r from-primary-500 to-primary-600 text-white py-20">

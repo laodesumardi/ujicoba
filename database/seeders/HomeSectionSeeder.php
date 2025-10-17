@@ -19,6 +19,9 @@ class HomeSectionSeeder extends Seeder
                 'title' => 'Selamat Datang di SMP Negeri 01 Namrole',
                 'subtitle' => 'Sekolah Unggul Berkarakter, Berprestasi, dan Berdaya Saing Global',
                 'description' => 'Bergabunglah dengan kami dalam perjalanan pendidikan yang menginspirasi dan membentuk karakter siswa yang unggul.',
+                'image' => null, // Will be uploaded via admin
+                'image_alt' => 'SMP Negeri 01 Namrole - Hero Image',
+                'image_position' => 'right',
                 'button_text' => 'Lihat Profil Sekolah',
                 'button_link' => '/profil',
                 'background_color' => 'bg-gradient-to-r from-primary-500 to-primary-600',

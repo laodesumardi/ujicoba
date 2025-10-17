@@ -57,6 +57,44 @@
                             @enderror
                         </div>
 
+                        <!-- Image Upload -->
+                        <div class="md:col-span-2">
+                            <label for="image" class="block text-sm font-medium text-gray-700 mb-2">Image</label>
+                            <input type="file" id="image" name="image" accept="image/*"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('image') border-red-500 @enderror">
+                            @error('image')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                            <p class="mt-1 text-sm text-gray-500">Max size: 2MB. Supported formats: JPEG, PNG, JPG, GIF, SVG</p>
+                        </div>
+
+                        <!-- Image Alt Text -->
+                        <div>
+                            <label for="image_alt" class="block text-sm font-medium text-gray-700 mb-2">Image Alt Text</label>
+                            <input type="text" id="image_alt" name="image_alt" value="{{ old('image_alt') }}" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('image_alt') border-red-500 @enderror"
+                                   placeholder="Alternative text for image">
+                            @error('image_alt')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Image Position -->
+                        <div>
+                            <label for="image_position" class="block text-sm font-medium text-gray-700 mb-2">Image Position</label>
+                            <select id="image_position" name="image_position" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('image_position') border-red-500 @enderror">
+                                <option value="center" {{ old('image_position', 'center') == 'center' ? 'selected' : '' }}>Center</option>
+                                <option value="left" {{ old('image_position') == 'left' ? 'selected' : '' }}>Left</option>
+                                <option value="right" {{ old('image_position') == 'right' ? 'selected' : '' }}>Right</option>
+                                <option value="top" {{ old('image_position') == 'top' ? 'selected' : '' }}>Top</option>
+                                <option value="bottom" {{ old('image_position') == 'bottom' ? 'selected' : '' }}>Bottom</option>
+                            </select>
+                            @error('image_position')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Button Text -->
                         <div>
                             <label for="button_text" class="block text-sm font-medium text-gray-700 mb-2">Button Text</label>

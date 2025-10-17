@@ -26,6 +26,7 @@
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Section</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -39,6 +40,13 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-gray-900">{{ $section->title ?? 'No title' }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($section->image)
+                                        <img src="{{ asset($section->image) }}" alt="{{ $section->image_alt }}" class="h-12 w-12 object-cover rounded-lg">
+                                    @else
+                                        <span class="text-gray-400 text-sm">No image</span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $section->is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
@@ -60,7 +68,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-4 text-center text-gray-500">No sections found.</td>
+                                <td colspan="6" class="px-6 py-4 text-center text-gray-500">No sections found.</td>
                             </tr>
                             @endforelse
                         </tbody>
