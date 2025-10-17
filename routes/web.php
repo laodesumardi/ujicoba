@@ -180,6 +180,67 @@ Route::get('/test-upload', function() {
     return response($html);
 });
 
+// Fix database connection
+Route::get('/fix-database', function() {
+    try {
+        $html = '<h1>Database Fix</h1>';
+        
+        // Check environment variables
+        $html .= '<h3>Environment Variables:</h3>';
+        $html .= '<p>APP_ENV: ' . env('APP_ENV', 'not set') . '</p>';
+        $html .= '<p>DB_CONNECTION: ' . env('DB_CONNECTION', 'not set') . '</p>';
+        $html .= '<p>DB_HOST: ' . env('DB_HOST', 'not set') . '</p>';
+        $html .= '<p>DB_DATABASE: ' . env('DB_DATABASE', 'not set') . '</p>';
+        $html .= '<p>DB_USERNAME: ' . env('DB_USERNAME', 'not set') . '</p>';
+        $html .= '<p>DB_PASSWORD: ' . (env('DB_PASSWORD') ? 'Set' : 'Not set') . '</p>';
+        
+        // Test database connection
+        $html .= '<h3>Database Connection:</h3>';
+        try {
+            $connection = \Illuminate\Support\Facades\DB::connection();
+            $connection->getPdo();
+            $html .= '<p>✅ Database connection successful</p>';
+        } catch (Exception $e) {
+            $html .= '<p>❌ Database connection failed: ' . $e->getMessage() . '</p>';
+        }
+        
+        // Check tables
+        $html .= '<h3>Tables Check:</h3>';
+        try {
+            $sessions = \Illuminate\Support\Facades\DB::table('sessions')->count();
+            $html .= '<p>✅ Sessions table has ' . $sessions . ' records</p>';
+        } catch (Exception $e) {
+            $html .= '<p>❌ Sessions table error: ' . $e->getMessage() . '</p>';
+        }
+        
+        try {
+            $sections = \Illuminate\Support\Facades\DB::table('home_sections')->count();
+            $html .= '<p>✅ Home sections table has ' . $sections . ' records</p>';
+        } catch (Exception $e) {
+            $html .= '<p>❌ Home sections table error: ' . $e->getMessage() . '</p>';
+        }
+        
+        // Clear cache
+        $html .= '<h3>Cache Management:</h3>';
+        try {
+            \Illuminate\Support\Facades\Artisan::call('cache:clear');
+            \Illuminate\Support\Facades\Artisan::call('config:clear');
+            \Illuminate\Support\Facades\Artisan::call('route:clear');
+            \Illuminate\Support\Facades\Artisan::call('view:clear');
+            $html .= '<p>✅ Cache cleared</p>';
+        } catch (Exception $e) {
+            $html .= '<p>❌ Cache clear failed: ' . $e->getMessage() . '</p>';
+        }
+        
+        $html .= '<p><a href="/">Go to Homepage</a></p>';
+        $html .= '<p><a href="/admin/home-sections">Go to Admin Panel</a></p>';
+        
+        return response($html);
+    } catch (Exception $e) {
+        return response('<h1>Database Fix Error</h1><p>Error: ' . $e->getMessage() . '</p>');
+    }
+});
+
 Route::get('/dashboard', function () {
     return redirect()->route('home');
 })->middleware(['auth', 'verified'])->name('dashboard');
