@@ -300,11 +300,15 @@ Route::middleware('auth')->group(function () {
 // Admin Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('school-profile', SchoolProfileController::class);
+    
+    // Specific routes first (before resource routes)
     Route::get('school-profile/hero/edit', [SchoolProfileController::class, 'editHero'])->name('school-profile.edit-hero');
     Route::put('school-profile/hero/update', [SchoolProfileController::class, 'updateHero'])->name('school-profile.update-hero');
     Route::get('school-profile/struktur/edit', [SchoolProfileController::class, 'editStruktur'])->name('school-profile.edit-struktur');
     Route::put('school-profile/struktur/update', [SchoolProfileController::class, 'updateStruktur'])->name('school-profile.update-struktur');
+    
+    // Resource routes
+    Route::resource('school-profile', SchoolProfileController::class);
     Route::resource('teachers', TeacherController::class);
     Route::resource('achievements', AchievementController::class);
     Route::resource('home-sections', HomeSectionController::class);
