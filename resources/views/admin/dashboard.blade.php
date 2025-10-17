@@ -107,6 +107,18 @@
                     </div>
                 </a>
 
+                <a href="{{ route('admin.ppdb.index') }}" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div class="bg-purple-100 rounded-full p-3 mr-4">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="font-medium text-gray-900">Kelola PPDB</h4>
+                        <p class="text-sm text-gray-500">Penerimaan Peserta Didik Baru</p>
+                    </div>
+                </a>
+
                 <a href="{{ route('home') }}" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                     <div class="bg-purple-100 rounded-full p-3 mr-4">
                         <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

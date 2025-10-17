@@ -324,6 +324,14 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('teachers', TeacherController::class);
     Route::resource('achievements', AchievementController::class);
     Route::resource('home-sections', HomeSectionController::class);
+    
+    // PPDB Admin Routes
+    Route::resource('ppdb', AdminPPDBController::class);
+    Route::get('ppdb-registrations', [AdminPPDBController::class, 'registrations'])->name('ppdb.registrations');
+    Route::get('ppdb-registrations/{registration}', [AdminPPDBController::class, 'showRegistration'])->name('ppdb.show-registration');
+    Route::put('ppdb-registrations/{registration}/status', [AdminPPDBController::class, 'updateRegistrationStatus'])->name('ppdb.update-registration-status');
+    Route::get('ppdb-registrations/{registration}/download/{type}', [AdminPPDBController::class, 'downloadDocument'])->name('ppdb.download-document');
+    Route::get('ppdb-export', [AdminPPDBController::class, 'exportRegistrations'])->name('ppdb.export');
 });
 
 
