@@ -11,6 +11,9 @@
             <a href="{{ route('admin.school-profile.edit-hero') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
                 Edit Hero Section
             </a>
+            <a href="{{ route('admin.school-profile.edit-struktur') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                Edit Struktur Organisasi
+            </a>
             <a href="{{ route('admin.school-profile.create') }}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium">
                 Tambah Section
             </a>

@@ -167,47 +167,17 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
                     </div>
-                    <h2 class="text-3xl font-bold text-gray-900">Struktur Organisasi</h2>
+                    <h2 class="text-3xl font-bold text-gray-900">{{ $profilData['struktur_organisasi']['judul'] }}</h2>
                 </div>
 
-                <!-- Kepala Sekolah -->
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Kepala Sekolah</h3>
-                    <div class="bg-gradient-to-r from-primary-500 to-primary-600 rounded-lg p-6 text-white">
-                        <div class="flex items-center">
-                            <div class="bg-white bg-opacity-20 rounded-full p-4 mr-4">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="text-xl font-bold">{{ $profilData['struktur_organisasi']['kepala_sekolah']['nama'] }}</h4>
-                                <p class="text-primary-100">{{ $profilData['struktur_organisasi']['kepala_sekolah']['jabatan'] }}</p>
-                                <p class="text-sm text-primary-200">{{ $profilData['struktur_organisasi']['kepala_sekolah']['pendidikan'] }}</p>
-                            </div>
-                        </div>
+                <!-- Struktur Organisasi Image -->
+                <div class="text-center">
+                    <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                        <img src="{{ asset($profilData['struktur_organisasi']['gambar']) }}" 
+                             alt="{{ $profilData['struktur_organisasi']['judul'] }}" 
+                             class="max-w-full h-auto mx-auto rounded-lg shadow-lg">
                     </div>
-                </div>
-
-                <!-- Wakil Kepala -->
-                <div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">Wakil Kepala Sekolah</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        @foreach($profilData['struktur_organisasi']['wakil_kepala'] as $key => $wakil)
-                        <div class="bg-gray-50 rounded-lg p-6">
-                            <div class="text-center">
-                                <div class="bg-primary-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                                    <svg class="w-8 h-8 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-                                    </svg>
-                                </div>
-                                <h4 class="font-semibold text-gray-900">{{ $wakil['nama'] }}</h4>
-                                <p class="text-sm text-gray-600">{{ $wakil['jabatan'] }}</p>
-                                <p class="text-xs text-gray-500 mt-2">{{ $wakil['pendidikan'] }}</p>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
+                    <p class="text-gray-600 text-lg">{{ $profilData['struktur_organisasi']['deskripsi'] }}</p>
                 </div>
             </div>
         </div>

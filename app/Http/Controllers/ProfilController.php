@@ -27,28 +27,9 @@ class ProfilController extends Controller
                 ]
             ],
             'struktur_organisasi' => [
-                'kepala_sekolah' => [
-                    'nama' => 'Drs. Ahmad Suryadi, M.Pd',
-                    'jabatan' => 'Kepala Sekolah',
-                    'pendidikan' => 'S2 Pendidikan Matematika'
-                ],
-                'wakil_kepala' => [
-                    'kurikulum' => [
-                        'nama' => 'Siti Nurhaliza, S.Pd',
-                        'jabatan' => 'Wakil Kepala Bidang Kurikulum',
-                        'pendidikan' => 'S1 Pendidikan Bahasa Indonesia'
-                    ],
-                    'kesiswaan' => [
-                        'nama' => 'Budi Santoso, S.Pd',
-                        'jabatan' => 'Wakil Kepala Bidang Kesiswaan',
-                        'pendidikan' => 'S1 Pendidikan Olahraga'
-                    ],
-                    'sarana' => [
-                        'nama' => 'Eka Putri, S.Pd',
-                        'jabatan' => 'Wakil Kepala Bidang Sarana Prasarana',
-                        'pendidikan' => 'S1 Pendidikan Teknologi Informasi'
-                    ]
-                ]
+                'gambar' => 'Struktur Organisasi.png',
+                'judul' => 'Struktur Organisasi SMP Negeri 01 Namrole',
+                'deskripsi' => 'Struktur organisasi sekolah yang menunjukkan hierarki kepemimpinan dan pembagian tugas di SMP Negeri 01 Namrole.'
             ],
             'tenaga_pendidik' => [
                 'guru_mata_pelajaran' => [

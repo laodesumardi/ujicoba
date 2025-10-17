@@ -251,4 +251,107 @@ class SchoolProfileController extends Controller
         return redirect()->route('admin.school-profile.index')
             ->with('success', 'Hero section updated successfully.');
     }
+
+    /**
+     * Edit struktur organisasi section
+     */
+    public function editStruktur()
+    {
+        $strukturSection = SchoolProfile::where('section_key', 'struktur')->first();
+        
+        if (!$strukturSection) {
+            // Create struktur section if doesn't exist
+            $strukturSection = SchoolProfile::create([
+                'section_key' => 'struktur',
+                'title' => 'Struktur Organisasi SMP Negeri 01 Namrole',
+                'content' => 'Struktur organisasi sekolah yang menunjukkan hierarki kepemimpinan dan pembagian tugas di SMP Negeri 01 Namrole.',
+                'image' => 'Struktur Organisasi.png',
+                'is_active' => true,
+                'sort_order' => 3
+            ]);
+        }
+        
+        return view('admin.school-profile.edit-struktur', compact('strukturSection'));
+    }
+
+    /**
+     * Update struktur organisasi section
+     */
+    public function updateStruktur(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'nullable|string',
+            'description' => 'nullable|string',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'image_alt' => 'nullable|string|max:255',
+            'is_active' => 'boolean'
+        ], [
+            'image.file' => 'The image must be a valid file.',
+            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif, svg, webp.',
+            'image.max' => 'The image may not be greater than 5MB.',
+        ]);
+
+        $strukturSection = SchoolProfile::where('section_key', 'struktur')->first();
+        
+        if (!$strukturSection) {
+            return redirect()->back()->withErrors(['error' => 'Struktur organisasi section not found.']);
+        }
+
+        $data = $request->all();
+
+        // Handle image upload for struktur section
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            
+            // Validate file
+            if (!$image->isValid()) {
+                return redirect()->back()->withErrors(['image' => 'Invalid file upload.']);
+            }
+            
+            // Delete old image if exists
+            if ($strukturSection->image) {
+                $oldImagePath = public_path($strukturSection->image);
+                $oldStoragePath = storage_path('app/public/school-profiles/' . basename($strukturSection->image));
+                
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+                if (file_exists($oldStoragePath)) {
+                    unlink($oldStoragePath);
+                }
+            }
+            
+            // Generate safe filename
+            $originalName = $image->getClientOriginalName();
+            $extension = $image->getClientOriginalExtension();
+            $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', pathinfo($originalName, PATHINFO_FILENAME));
+            $imageName = time() . '_' . $safeName . '.' . $extension;
+            
+            try {
+                // Store in uploads directory
+                $uploadsPath = public_path('uploads/school-profiles');
+                if (!is_dir($uploadsPath)) {
+                    mkdir($uploadsPath, 0755, true);
+                }
+                $image->move($uploadsPath, $imageName);
+                
+                // Store in storage directory
+                $storagePath = storage_path('app/public/school-profiles');
+                if (!is_dir($storagePath)) {
+                    mkdir($storagePath, 0755, true);
+                }
+                copy($uploadsPath . '/' . $imageName, $storagePath . '/' . $imageName);
+                
+                $data['image'] = 'storage/school-profiles/' . $imageName;
+            } catch (Exception $e) {
+                return redirect()->back()->withErrors(['image' => 'Failed to upload image: ' . $e->getMessage()]);
+            }
+        }
+
+        $strukturSection->update($data);
+
+        return redirect()->route('admin.school-profile.index')
+            ->with('success', 'Struktur organisasi updated successfully.');
+    }
 }
