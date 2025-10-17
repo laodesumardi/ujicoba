@@ -13,8 +13,8 @@ class SchoolProfileController extends Controller
      */
     public function index()
     {
-        $schoolProfile = SchoolProfile::first();
-        return view('admin.school-profile.index', compact('schoolProfile'));
+        $sections = SchoolProfile::orderBy('sort_order')->get();
+        return view('admin.school-profile.index', compact('sections'));
     }
 
     /**
@@ -31,23 +31,60 @@ class SchoolProfileController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'school_name' => 'required|string|max:255',
-            'history' => 'required|string',
-            'established_year' => 'required|string',
-            'location' => 'required|string|max:255',
-            'vision' => 'required|string',
-            'mission' => 'required|string',
-            'headmaster_name' => 'required|string|max:255',
-            'headmaster_position' => 'required|string|max:255',
-            'headmaster_education' => 'required|string|max:255',
-            'accreditation_status' => 'required|string|max:255',
-            'accreditation_number' => 'required|string|max:255',
-            'accreditation_year' => 'required|string',
-            'accreditation_score' => 'required|integer',
-            'accreditation_valid_until' => 'required|string',
+            'section_key' => 'required|string|max:255|unique:school_profiles,section_key',
+            'title' => 'required|string|max:255',
+            'content' => 'nullable|string',
+            'subtitle' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'image_alt' => 'nullable|string|max:255',
+            'is_active' => 'boolean',
+            'sort_order' => 'integer|min:0'
+        ], [
+            'image.file' => 'The image must be a valid file.',
+            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif, svg, webp.',
+            'image.max' => 'The image may not be greater than 5MB.',
         ]);
 
-        SchoolProfile::create($request->all());
+        $data = $request->all();
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            
+            // Validate file
+            if (!$image->isValid()) {
+                return redirect()->back()->withErrors(['image' => 'Invalid file upload.']);
+            }
+            
+            // Generate safe filename
+            $originalName = $image->getClientOriginalName();
+            $extension = $image->getClientOriginalExtension();
+            $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', pathinfo($originalName, PATHINFO_FILENAME));
+            $imageName = time() . '_' . $safeName . '.' . $extension;
+            
+            try {
+                // Store in uploads directory
+                $uploadsPath = public_path('uploads/school-profiles');
+                if (!is_dir($uploadsPath)) {
+                    mkdir($uploadsPath, 0755, true);
+                }
+                $image->move($uploadsPath, $imageName);
+                
+                // Store in storage directory
+                $storagePath = storage_path('app/public/school-profiles');
+                if (!is_dir($storagePath)) {
+                    mkdir($storagePath, 0755, true);
+                }
+                copy($uploadsPath . '/' . $imageName, $storagePath . '/' . $imageName);
+                
+                $data['image'] = 'storage/school-profiles/' . $imageName;
+            } catch (Exception $e) {
+                return redirect()->back()->withErrors(['image' => 'Failed to upload image: ' . $e->getMessage()]);
+            }
+        }
+
+        SchoolProfile::create($data);
 
         return redirect()->route('admin.school-profile.index')
             ->with('success', 'Profil sekolah berhasil dibuat!');
