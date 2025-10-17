@@ -10,8 +10,41 @@ class SetupController extends Controller
     public function generate()
     {
         try {
+            // Create storage directories
+            $directories = [
+                'storage/app/public',
+                'storage/app/public/home-sections',
+                'public/uploads',
+                'public/uploads/home-sections'
+            ];
+
+            foreach ($directories as $dir) {
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0755, true);
+                }
+            }
+
+            // Create storage link
             Artisan::call('storage:link');
-            return response('<h1>Storage Link Created Successfully!</h1><p>Storage link has been created for image access.</p><p><a href="/">Go to Homepage</a></p><p><a href="/admin/home-sections">Go to Admin Panel</a></p>');
+            
+            // Copy images to storage
+            $sourceDir = 'public/uploads/home-sections';
+            $targetDir = 'storage/app/public/home-sections';
+            
+            if (is_dir($sourceDir)) {
+                $files = scandir($sourceDir);
+                foreach ($files as $file) {
+                    if ($file != '.' && $file != '..' && is_file($sourceDir . '/' . $file)) {
+                        copy($sourceDir . '/' . $file, $targetDir . '/' . $file);
+                    }
+                }
+            }
+
+            // Create .htaccess for storage
+            $htaccessContent = "Options -Indexes\n<Files ~ \"\\.(jpg|jpeg|png|gif|svg|webp)$\">\n    Order allow,deny\n    Allow from all\n</Files>\n";
+            file_put_contents('public/storage/.htaccess', $htaccessContent);
+
+            return response('<h1>Storage Link Created Successfully!</h1><p>✅ Storage link created</p><p>✅ Images copied to storage</p><p>✅ .htaccess created</p><p><a href="/test-images">Test Images</a></p><p><a href="/">Go to Homepage</a></p><p><a href="/admin/home-sections">Go to Admin Panel</a></p>');
         } catch (\Exception $e) {
             return response('<h1>Error Creating Storage Link</h1><p>Error: ' . $e->getMessage() . '</p><p>Please try again or contact administrator.</p>');
         }
@@ -20,8 +53,39 @@ class SetupController extends Controller
     public function setup()
     {
         try {
+            // Create storage directories
+            $directories = [
+                'storage/app/public',
+                'storage/app/public/home-sections',
+                'public/uploads',
+                'public/uploads/home-sections'
+            ];
+
+            foreach ($directories as $dir) {
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0755, true);
+                }
+            }
+
             // Create storage link
             Artisan::call('storage:link');
+            
+            // Copy images to storage
+            $sourceDir = 'public/uploads/home-sections';
+            $targetDir = 'storage/app/public/home-sections';
+            
+            if (is_dir($sourceDir)) {
+                $files = scandir($sourceDir);
+                foreach ($files as $file) {
+                    if ($file != '.' && $file != '..' && is_file($sourceDir . '/' . $file)) {
+                        copy($sourceDir . '/' . $file, $targetDir . '/' . $file);
+                    }
+                }
+            }
+
+            // Create .htaccess for storage
+            $htaccessContent = "Options -Indexes\n<Files ~ \"\\.(jpg|jpeg|png|gif|svg|webp)$\">\n    Order allow,deny\n    Allow from all\n</Files>\n";
+            file_put_contents('public/storage/.htaccess', $htaccessContent);
             
             // Clear caches
             Artisan::call('cache:clear');
@@ -32,7 +96,7 @@ class SetupController extends Controller
             // Rebuild config cache
             Artisan::call('config:cache');
             
-            return response('<h1>Setup Completed Successfully!</h1><p>✅ Storage link created</p><p>✅ Caches cleared</p><p>✅ Config cache rebuilt</p><p><a href="/">Go to Homepage</a></p><p><a href="/admin/home-sections">Go to Admin Panel</a></p><p><a href="/generate">Test Storage Link Only</a></p>');
+            return response('<h1>Setup Completed Successfully!</h1><p>✅ Storage link created</p><p>✅ Images copied to storage</p><p>✅ .htaccess created</p><p>✅ Caches cleared</p><p>✅ Config cache rebuilt</p><p><a href="/test-images">Test Images</a></p><p><a href="/">Go to Homepage</a></p><p><a href="/admin/home-sections">Go to Admin Panel</a></p>');
         } catch (\Exception $e) {
             return response('<h1>Error During Setup</h1><p>Error: ' . $e->getMessage() . '</p><p>Please try again or contact administrator.</p>');
         }
