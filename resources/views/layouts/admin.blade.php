@@ -71,6 +71,37 @@
                     Prestasi
                 </a>
 
+                <!-- PPDB Menu -->
+                <div class="space-y-1">
+                    <div class="flex items-center px-4 py-2 text-primary-200 text-sm font-medium">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                        PPDB
+                    </div>
+                    
+                    <a href="{{ route('admin.ppdb.index') }}" class="flex items-center px-6 py-2 rounded-lg hover:bg-primary-500 transition-colors {{ request()->routeIs('admin.ppdb.index') || request()->routeIs('admin.ppdb.create') || request()->routeIs('admin.ppdb.edit') || request()->routeIs('admin.ppdb.show') ? 'bg-primary-500' : '' }}">
+                        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Kelola Informasi PPDB
+                    </a>
+                    
+                    <a href="{{ route('admin.ppdb.registrations') }}" class="flex items-center px-6 py-2 rounded-lg hover:bg-primary-500 transition-colors {{ request()->routeIs('admin.ppdb.registrations') || request()->routeIs('admin.ppdb.show-registration') ? 'bg-primary-500' : '' }}">
+                        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                        Data Pendaftaran
+                    </a>
+                    
+                    <a href="{{ route('admin.ppdb.export') }}" class="flex items-center px-6 py-2 rounded-lg hover:bg-primary-500 transition-colors {{ request()->routeIs('admin.ppdb.export') ? 'bg-primary-500' : '' }}">
+                        <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Export CSV
+                    </a>
+                </div>
+
                 <div class="border-t border-primary-500 pt-4 mt-4">
                     <a href="{{ route('home') }}" class="flex items-center px-4 py-2 rounded-lg hover:bg-primary-500 transition-colors">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
