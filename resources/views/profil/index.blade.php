@@ -5,18 +5,24 @@
 @section('content')
 <div class="bg-white">
     <!-- Hero Section -->
-    <div class="text-white py-16 relative" 
+    <div class="text-white relative flex items-center justify-center" 
          @if(isset($profilData['hero_background']) && $profilData['hero_background'])
-         style="background-image: url('{{ asset($profilData['hero_background']) }}'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 400px;"
+         style="background-image: url('{{ asset($profilData['hero_background']) }}'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 500px;"
          @else
-         style="background: linear-gradient(135deg, #14213d 0%, #1e3a8a 100%); min-height: 400px;"
+         style="background: linear-gradient(135deg, #14213d 0%, #1e3a8a 100%); min-height: 500px;"
          @endif>
         <!-- Overlay untuk kontras teks -->
         <div class="absolute inset-0 bg-black bg-opacity-40"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center">
-                <h1 class="text-4xl font-bold mb-4 text-white">{{ $profilData['hero_title'] ?? 'Profil Sekolah' }}</h1>
-                <p class="text-xl text-white opacity-90">{{ $profilData['hero_subtitle'] ?? 'SMP Negeri 01 Namrole - Sekolah Unggul Berkarakter' }}</p>
+        
+        <!-- Konten di tengah -->
+        <div class="relative z-10 text-center px-4 sm:px-6 lg:px-8">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-5xl md:text-6xl font-bold mb-6 text-white leading-tight">
+                    {{ $profilData['hero_title'] ?? 'Profil Sekolah' }}
+                </h1>
+                <p class="text-xl md:text-2xl text-white opacity-90 leading-relaxed">
+                    {{ $profilData['hero_subtitle'] ?? 'SMP Negeri 01 Namrole - Sekolah Unggul Berkarakter' }}
+                </p>
             </div>
         </div>
     </div>
