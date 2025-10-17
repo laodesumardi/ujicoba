@@ -103,7 +103,16 @@ class SchoolProfileController extends Controller
      */
     public function edit(SchoolProfile $schoolProfile)
     {
-        return view('admin.school-profile.edit', compact('schoolProfile'));
+        // Determine if this is a section-based profile or complete profile
+        $isSectionBased = !empty($schoolProfile->section_key);
+        
+        if ($isSectionBased) {
+            // For section-based profiles, use the section edit form
+            return view('admin.school-profile.edit-section', compact('schoolProfile'));
+        } else {
+            // For complete profiles, use the full edit form
+            return view('admin.school-profile.edit', compact('schoolProfile'));
+        }
     }
 
     /**
@@ -111,27 +120,102 @@ class SchoolProfileController extends Controller
      */
     public function update(Request $request, SchoolProfile $schoolProfile)
     {
-        $request->validate([
-            'school_name' => 'required|string|max:255',
-            'history' => 'required|string',
-            'established_year' => 'required|string',
-            'location' => 'required|string|max:255',
-            'vision' => 'required|string',
-            'mission' => 'required|string',
-            'headmaster_name' => 'required|string|max:255',
-            'headmaster_position' => 'required|string|max:255',
-            'headmaster_education' => 'required|string|max:255',
-            'accreditation_status' => 'required|string|max:255',
-            'accreditation_number' => 'required|string|max:255',
-            'accreditation_year' => 'required|string',
-            'accreditation_score' => 'required|integer',
-            'accreditation_valid_until' => 'required|string',
-        ]);
+        // Determine if this is a section-based profile or complete profile
+        $isSectionBased = !empty($schoolProfile->section_key);
+        
+        if ($isSectionBased) {
+            // Handle section-based profile update
+            $request->validate([
+                'title' => 'required|string|max:255',
+                'content' => 'required|string',
+                'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+                'image_alt' => 'nullable|string|max:255',
+                'is_active' => 'boolean'
+            ], [
+                'image.file' => 'The image must be a valid file.',
+                'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif, svg, webp.',
+                'image.max' => 'The image may not be greater than 5MB.',
+            ]);
 
-        $schoolProfile->update($request->all());
+            $data = $request->all();
 
-        return redirect()->route('admin.school-profile.index')
-            ->with('success', 'Profil sekolah berhasil diperbarui!');
+            // Handle image upload for section-based profiles
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                
+                // Validate file
+                if (!$image->isValid()) {
+                    return redirect()->back()->withErrors(['image' => 'Invalid file upload.']);
+                }
+                
+                // Delete old image if exists
+                if ($schoolProfile->image) {
+                    $oldImagePath = public_path($schoolProfile->image);
+                    $oldStoragePath = storage_path('app/public/school-profiles/' . basename($schoolProfile->image));
+                    
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                    if (file_exists($oldStoragePath)) {
+                        unlink($oldStoragePath);
+                    }
+                }
+                
+                // Generate safe filename
+                $originalName = $image->getClientOriginalName();
+                $extension = $image->getClientOriginalExtension();
+                $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', pathinfo($originalName, PATHINFO_FILENAME));
+                $imageName = time() . '_' . $safeName . '.' . $extension;
+                
+                try {
+                    // Store in uploads directory
+                    $uploadsPath = public_path('uploads/school-profiles');
+                    if (!is_dir($uploadsPath)) {
+                        mkdir($uploadsPath, 0755, true);
+                    }
+                    $image->move($uploadsPath, $imageName);
+                    
+                    // Store in storage directory
+                    $storagePath = storage_path('app/public/school-profiles');
+                    if (!is_dir($storagePath)) {
+                        mkdir($storagePath, 0755, true);
+                    }
+                    copy($uploadsPath . '/' . $imageName, $storagePath . '/' . $imageName);
+                    
+                    $data['image'] = 'storage/school-profiles/' . $imageName;
+                } catch (Exception $e) {
+                    return redirect()->back()->withErrors(['image' => 'Failed to upload image: ' . $e->getMessage()]);
+                }
+            }
+
+            $schoolProfile->update($data);
+
+            return redirect()->route('admin.school-profile.index')
+                ->with('success', 'Section berhasil diperbarui!');
+        } else {
+            // Handle complete profile update
+            $request->validate([
+                'school_name' => 'required|string|max:255',
+                'history' => 'required|string',
+                'established_year' => 'required|string',
+                'location' => 'required|string|max:255',
+                'vision' => 'required|string',
+                'mission' => 'required|string',
+                'headmaster_name' => 'required|string|max:255',
+                'headmaster_position' => 'required|string|max:255',
+                'headmaster_education' => 'required|string|max:255',
+                'accreditation_status' => 'required|string|max:255',
+                'accreditation_number' => 'required|string|max:255',
+                'accreditation_year' => 'required|string',
+                'accreditation_score' => 'required|integer',
+                'accreditation_valid_until' => 'required|string',
+            ]);
+
+            $schoolProfile->update($request->all());
+
+            return redirect()->route('admin.school-profile.index')
+                ->with('success', 'Profil sekolah berhasil diperbarui!');
+        }
     }
 
     /**
