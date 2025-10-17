@@ -142,6 +142,44 @@ Route::get('/generate-controller', [SetupController::class, 'generate']);
 Route::get('/setup-controller', [SetupController::class, 'setup']);
 Route::get('/test-images-controller', [SetupController::class, 'testImages']);
 
+// Test upload functionality
+Route::get('/test-upload', function() {
+    $html = '<h1>Upload Test</h1>';
+    
+    // Check if directories exist and are writable
+    $directories = [
+        'public/uploads/home-sections',
+        'storage/app/public/home-sections',
+        'public/storage/home-sections'
+    ];
+    
+    foreach ($directories as $dir) {
+        if (is_dir($dir)) {
+            if (is_writable($dir)) {
+                $html .= '<p>✅ ' . $dir . ' - exists and writable</p>';
+            } else {
+                $html .= '<p>❌ ' . $dir . ' - exists but not writable</p>';
+            }
+        } else {
+            $html .= '<p>❌ ' . $dir . ' - does not exist</p>';
+        }
+    }
+    
+    // Test file creation
+    $testFile = 'storage/app/public/home-sections/test.txt';
+    if (file_put_contents($testFile, 'test content')) {
+        $html .= '<p>✅ Can create files in storage</p>';
+        unlink($testFile);
+    } else {
+        $html .= '<p>❌ Cannot create files in storage</p>';
+    }
+    
+    $html .= '<p><a href="/admin/home-sections">Go to Admin Panel</a></p>';
+    $html .= '<p><a href="/">Go to Homepage</a></p>';
+    
+    return response($html);
+});
+
 Route::get('/dashboard', function () {
     return redirect()->route('home');
 })->middleware(['auth', 'verified'])->name('dashboard');

@@ -56,8 +56,12 @@ class HomeSectionController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_' . $image->getClientOriginalName();
+            
+            // Store in both uploads and storage directories
             $image->move(public_path('uploads/home-sections'), $imageName);
-            $data['image'] = 'uploads/home-sections/' . $imageName;
+            $image->move(storage_path('app/public/home-sections'), $imageName);
+            
+            $data['image'] = 'storage/home-sections/' . $imageName;
         }
 
         HomeSection::create($data);
@@ -112,14 +116,26 @@ class HomeSectionController extends Controller
         // Handle image upload
         if ($request->hasFile('image')) {
             // Delete old image if exists
-            if ($homeSection->image && file_exists(public_path($homeSection->image))) {
-                unlink(public_path($homeSection->image));
+            if ($homeSection->image) {
+                $oldImagePath = public_path($homeSection->image);
+                $oldStoragePath = storage_path('app/public/home-sections/' . basename($homeSection->image));
+                
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+                if (file_exists($oldStoragePath)) {
+                    unlink($oldStoragePath);
+                }
             }
 
             $image = $request->file('image');
             $imageName = time() . '_' . $image->getClientOriginalName();
+            
+            // Store in both uploads and storage directories
             $image->move(public_path('uploads/home-sections'), $imageName);
-            $data['image'] = 'uploads/home-sections/' . $imageName;
+            $image->move(storage_path('app/public/home-sections'), $imageName);
+            
+            $data['image'] = 'storage/home-sections/' . $imageName;
         }
 
         $homeSection->update($data);
