@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Teacher;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -25,7 +25,7 @@ class DashboardController extends Controller
         $courses = $teacher->courses()->with(['lessons', 'enrollments'])->get();
         
         // Get basic statistics
-        $totalTeachers = Teacher::where('is_active', true)->count();
+        $totalTeachers = User::where('role', 'teacher')->where('is_active', true)->count();
         $totalStudents = $courses->sum(function($course) {
             return $course->enrollments->where('status', 'approved')->count();
         });

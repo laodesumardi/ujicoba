@@ -42,7 +42,7 @@ class Subject extends Model
     // Relationships
     public function teachers()
     {
-        return $this->hasMany(Teacher::class, 'subject', 'name');
+        return $this->hasMany(User::class, 'subject', 'name')->where('role', 'teacher');
     }
 
     // Accessors
