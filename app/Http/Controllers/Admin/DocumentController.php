@@ -91,6 +91,7 @@ class DocumentController extends Controller
         return view('admin.documents.edit', compact('document', 'categories', 'types'));
     }
 
+
     /**
      * Update the specified resource in storage.
      */
@@ -181,6 +182,9 @@ class DocumentController extends Controller
      */
     public function updateSection(Request $request)
     {
+        // Debug: Log request method
+        \Log::info('updateSection called with method: ' . $request->method());
+        
         $request->validate([
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string|max:255',

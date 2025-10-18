@@ -152,31 +152,82 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
                 <h2 class="text-3xl font-bold text-primary-900 mb-4">Selamat Datang, {{ Auth::user()->name }}!</h2>
-                <p class="text-lg text-gray-600">Akses dashboard admin untuk mengelola website sekolah</p>
-                                </div>
+                @if(auth()->user()->role === 'admin')
+                    <p class="text-lg text-gray-600">Akses dashboard admin untuk mengelola website sekolah</p>
+                @elseif(auth()->user()->role === 'teacher')
+                    <p class="text-lg text-gray-600">Akses dashboard guru untuk mengelola kelas dan pembelajaran</p>
+                @elseif(auth()->user()->role === 'student')
+                    <p class="text-lg text-gray-600">Akses dashboard siswa untuk melihat pembelajaran dan tugas</p>
+                @else
+                    <p class="text-lg text-gray-600">Akses dashboard untuk mengelola akun Anda</p>
+                @endif
+            </div>
 
             <div class="max-w-md mx-auto">
                 <div class="bg-white rounded-2xl shadow-xl p-8">
                     <div class="text-center mb-6">
                         <div class="flex justify-center mb-4">
                             <div class="bg-primary-100 rounded-full p-4">
-                                <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                                </svg>
+                                @if(auth()->user()->role === 'admin')
+                                    <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                    </svg>
+                                @elseif(auth()->user()->role === 'teacher')
+                                    <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                                    </svg>
+                                @elseif(auth()->user()->role === 'student')
+                                    <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                                    </svg>
+                                @else
+                                    <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                @endif
                             </div>
                         </div>
-                        <h3 class="text-2xl font-bold text-primary-900 mb-2">Admin Dashboard</h3>
-                        <p class="text-gray-600">Kelola profil sekolah, guru, dan prestasi</p>
-                                </div>
+                        @if(auth()->user()->role === 'admin')
+                            <h3 class="text-2xl font-bold text-primary-900 mb-2">Admin Dashboard</h3>
+                            <p class="text-gray-600">Kelola profil sekolah, guru, dan prestasi</p>
+                        @elseif(auth()->user()->role === 'teacher')
+                            <h3 class="text-2xl font-bold text-primary-900 mb-2">Dashboard Guru</h3>
+                            <p class="text-gray-600">Kelola kelas, materi, dan penilaian siswa</p>
+                        @elseif(auth()->user()->role === 'student')
+                            <h3 class="text-2xl font-bold text-primary-900 mb-2">Dashboard Siswa</h3>
+                            <p class="text-gray-600">Lihat pembelajaran, tugas, dan nilai</p>
+                        @else
+                            <h3 class="text-2xl font-bold text-primary-900 mb-2">Dashboard</h3>
+                            <p class="text-gray-600">Kelola akun dan informasi Anda</p>
+                        @endif
+                    </div>
 
                     <div class="space-y-4">
-                        <a href="{{ route('admin.dashboard') }}" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
-                            </svg>
-                            Buka Dashboard
-                        </a>
+                        @if(auth()->user()->role === 'admin')
+                            <a href="{{ route('admin.dashboard') }}" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
+                                </svg>
+                                Buka Dashboard
+                            </a>
+                        @elseif(auth()->user()->role === 'teacher')
+                            <a href="{{ route('teacher.dashboard') }}" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                                </svg>
+                                Buka Dashboard
+                            </a>
+                        @elseif(auth()->user()->role === 'student')
+                            <a href="{{ route('student.dashboard') }}" class="w-full bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path>
+                                </svg>
+                                Buka Dashboard
+                            </a>
+                        @endif
                         
                         <form method="POST" action="{{ route('logout') }}" class="w-full">
                             @csrf
@@ -191,7 +242,7 @@
                 </div>
             </div>
         </div>
-                                </div>
+    </div>
     @endauth
 
     <!-- News Section -->

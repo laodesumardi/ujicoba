@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SchoolProfileController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\AchievementController;
+use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\HomeSectionController;
 use App\Http\Controllers\Admin\PPDBController as AdminPPDBController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
@@ -26,6 +27,175 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
 Route::get('/kontak', [ContactController::class, 'index'])->name('contact');
 
+// Test route for debugging
+Route::post('/test-password', function (Illuminate\Http\Request $request) {
+    $request->validate([
+        'password' => 'required|string|min:8|confirmed',
+    ]);
+    
+    return response()->json([
+        'success' => true,
+        'message' => 'Password validation passed',
+        'data' => [
+            'password' => $request->password,
+            'password_confirmation' => $request->password_confirmation,
+            'match' => $request->password === $request->password_confirmation
+        ]
+    ]);
+})->name('test.password');
+
+// Universal Login Routes (for all roles)
+Route::get('/login', function () {
+    return view('auth.universal-login');
+})->name('login');
+
+Route::post('/login', function (Illuminate\Http\Request $request) {
+    $credentials = $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
+
+    // Try to authenticate with web guard
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
+        $request->session()->regenerate();
+        
+        // Debug info (remove in production)
+        \Log::info('Login successful', [
+            'user_role' => $user->role ?? 'NULL',
+            'user_name' => $user->name ?? 'NULL',
+            'user_email' => $user->email ?? 'NULL',
+            'user_id' => $user->id ?? 'NULL'
+        ]);
+        
+        // Force redirect based on user role
+        if ($user->role === 'teacher') {
+            \Log::info('Redirecting teacher to dashboard');
+            return response()->view('auth.redirect', [
+                'url' => '/teacher/dashboard',
+                'message' => 'Login berhasil! Selamat datang di Dashboard Guru.'
+            ]);
+        } elseif ($user->role === 'admin') {
+            \Log::info('Redirecting admin to dashboard');
+            return response()->view('auth.redirect', [
+                'url' => '/admin/dashboard',
+                'message' => 'Login berhasil! Selamat datang di Admin Dashboard.'
+            ]);
+        } elseif ($user->role === 'student') {
+            \Log::info('Redirecting student to dashboard');
+            return response()->view('auth.redirect', [
+                'url' => '/student/dashboard',
+                'message' => 'Login berhasil! Selamat datang di Student Dashboard.'
+            ]);
+        } else {
+            \Log::info('Redirecting to fallback dashboard');
+            return response()->view('auth.redirect', [
+                'url' => '/dashboard',
+                'message' => 'Login berhasil!'
+            ]);
+        }
+    }
+
+    return back()->withErrors([
+        'email' => 'The provided credentials do not match our records.',
+    ])->onlyInput('email');
+})->name('login.submit');
+
+Route::post('/logout', function (Illuminate\Http\Request $request) {
+    // Logout from web guard
+    Auth::logout();
+    
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/login');
+})->name('logout');
+
+// E-Learning Routes
+Route::middleware(['auth'])->group(function () {
+    // Student Dashboard
+    Route::prefix('student')->name('student.')->middleware(['auth', 'role:student', 'student.registered'])->group(function () {
+        Route::get('/dashboard', [App\Http\Controllers\Student\DashboardController::class, 'index'])->name('dashboard');
+        
+        // Student Courses
+        Route::get('/courses', [App\Http\Controllers\Student\CourseController::class, 'index'])->name('courses.index');
+        Route::get('/courses/enrolled', [App\Http\Controllers\Student\CourseController::class, 'enrolled'])->name('courses.enrolled');
+        Route::get('/courses/{course}', [App\Http\Controllers\Student\CourseController::class, 'show'])->name('courses.show');
+        Route::post('/courses/{course}/enroll', [App\Http\Controllers\Student\CourseController::class, 'enroll'])->name('courses.enroll');
+        
+        // Student Lessons
+        Route::get('/courses/{course}/lessons/{lesson}', [App\Http\Controllers\Student\LessonController::class, 'show'])->name('courses.lessons.show');
+        Route::post('/courses/{course}/lessons/{lesson}/complete', [App\Http\Controllers\Student\LessonController::class, 'complete'])->name('courses.lessons.complete');
+        
+        // Student Attachments
+        Route::get('/courses/{course}/lessons/{lesson}/attachments/{filename}', [App\Http\Controllers\Student\AttachmentController::class, 'downloadLessonAttachment'])->name('courses.lessons.attachments.download');
+        Route::get('/assignments/{assignment}/attachments/{filename}', [App\Http\Controllers\Student\AttachmentController::class, 'downloadAssignmentAttachment'])->name('assignments.attachments.download');
+        
+        // Student Assignments
+        Route::get('/assignments', [App\Http\Controllers\Student\AssignmentController::class, 'index'])->name('assignments.index');
+        Route::get('/assignments/submitted', [App\Http\Controllers\Student\AssignmentController::class, 'submitted'])->name('assignments.submitted');
+        Route::get('/assignments/graded', [App\Http\Controllers\Student\AssignmentController::class, 'graded'])->name('assignments.graded');
+        Route::get('/assignments/{assignment}', [App\Http\Controllers\Student\AssignmentController::class, 'show'])->name('assignments.show');
+        Route::post('/assignments/{assignment}/submit', [App\Http\Controllers\Student\AssignmentController::class, 'submit'])->name('assignments.submit');
+        Route::get('/assignments/{assignment}/download/{filename}', [App\Http\Controllers\Student\AssignmentController::class, 'downloadAttachment'])->name('assignments.download-attachment');
+        
+        // Student Forums
+        Route::get('/forums', [App\Http\Controllers\Student\ForumController::class, 'index'])->name('forums.index');
+        Route::get('/forums/{forum}', [App\Http\Controllers\Student\ForumController::class, 'show'])->name('forums.show');
+        Route::post('/forums/{forum}/replies', [App\Http\Controllers\Student\ForumController::class, 'storeReply'])->name('forums.replies.store');
+        
+        // Student Grades
+        Route::get('/grades', [App\Http\Controllers\Student\GradeController::class, 'index'])->name('grades.index');
+        
+        // Student Profile
+        Route::get('/profile', [App\Http\Controllers\Student\ProfileController::class, 'show'])->name('profile');
+        Route::get('/profile/edit', [App\Http\Controllers\Student\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [App\Http\Controllers\Student\ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile/photo', [App\Http\Controllers\Student\ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
+    });
+    
+    // Teacher Dashboard
+    Route::prefix('teacher')->name('teacher.')->middleware(['auth', 'role:teacher'])->group(function () {
+        Route::get('/dashboard', [App\Http\Controllers\Teacher\DashboardController::class, 'index'])->name('dashboard');
+        
+        // Profile Routes
+        Route::get('/profile', [App\Http\Controllers\Teacher\ProfileController::class, 'show'])->name('profile');
+        Route::get('/profile/edit', [App\Http\Controllers\Teacher\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [App\Http\Controllers\Teacher\ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile/photo', [App\Http\Controllers\Teacher\ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
+        
+        // LMS Routes
+        Route::resource('courses', App\Http\Controllers\Teacher\CourseController::class);
+        Route::post('courses/{course}/toggle-status', [App\Http\Controllers\Teacher\CourseController::class, 'toggleStatus'])->name('courses.toggle-status');
+        Route::post('courses/{course}/archive', [App\Http\Controllers\Teacher\CourseController::class, 'archive'])->name('courses.archive');
+        
+        // Course Lessons
+        Route::resource('courses.lessons', App\Http\Controllers\Teacher\LessonController::class);
+        Route::post('courses/{course}/lessons/{lesson}/toggle-published', [App\Http\Controllers\Teacher\LessonController::class, 'togglePublished'])->name('courses.lessons.toggle-published');
+        Route::post('courses/{course}/lessons/reorder', [App\Http\Controllers\Teacher\LessonController::class, 'reorder'])->name('courses.lessons.reorder');
+        
+        // Course Assignments
+        Route::resource('courses.assignments', App\Http\Controllers\Teacher\AssignmentController::class);
+        Route::post('courses/{course}/assignments/{assignment}/toggle-published', [App\Http\Controllers\Teacher\AssignmentController::class, 'togglePublished'])->name('courses.assignments.toggle-published');
+        Route::post('courses/{course}/assignments/{assignment}/submissions/{submission}/grade', [App\Http\Controllers\Teacher\AssignmentController::class, 'gradeSubmission'])->name('courses.assignments.submissions.grade');
+        Route::get('courses/{course}/assignments/{assignment}/download-submissions', [App\Http\Controllers\Teacher\AssignmentController::class, 'downloadAllSubmissions'])->name('courses.assignments.download-submissions');
+        
+        // Assignments Overview
+        Route::get('assignments', [App\Http\Controllers\Teacher\AssignmentController::class, 'overview'])->name('assignments.overview');
+        
+        // Course Forums
+        Route::resource('courses.forums', App\Http\Controllers\Teacher\ForumController::class);
+        Route::post('courses/{course}/forums/{forum}/toggle-pin', [App\Http\Controllers\Teacher\ForumController::class, 'togglePin'])->name('courses.forums.toggle-pin');
+        Route::post('courses/{course}/forums/{forum}/toggle-lock', [App\Http\Controllers\Teacher\ForumController::class, 'toggleLock'])->name('courses.forums.toggle-lock');
+        Route::post('courses/{course}/forums/{forum}/replies', [App\Http\Controllers\Teacher\ForumController::class, 'storeReply'])->name('courses.forums.replies.store');
+        Route::delete('courses/{course}/forums/{forum}/replies/{reply}', [App\Http\Controllers\Teacher\ForumController::class, 'deleteReply'])->name('courses.forums.replies.delete');
+    });
+    
+    // Admin Dashboard
+    Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
+        Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    });
+});
+
 // Document Routes
 Route::prefix('download')->name('documents.')->group(function () {
     Route::get('/', [DocumentController::class, 'index'])->name('index');
@@ -34,6 +204,14 @@ Route::prefix('download')->name('documents.')->group(function () {
     Route::get('/unggulan', [DocumentController::class, 'featured'])->name('featured');
     Route::get('/download/{id}', [DocumentController::class, 'download'])->name('download');
 });
+
+// Student Registration Routes
+Route::get('/register', function () {
+    return view('auth.student-registration-info');
+})->name('register');
+
+Route::get('/register/form', [App\Http\Controllers\Auth\StudentRegisterController::class, 'showRegistrationForm'])->name('register.form');
+Route::post('/register', [App\Http\Controllers\Auth\StudentRegisterController::class, 'register'])->name('register');
 
 // PPDB Routes
 Route::prefix('ppdb')->name('ppdb.')->group(function () {
@@ -354,7 +532,7 @@ Route::middleware('auth')->group(function () {
 
 // Admin Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard'); // Removed duplicate
     
     // Specific routes first (before resource routes)
     Route::get('school-profile/hero/edit', [SchoolProfileController::class, 'editHero'])->name('school-profile.edit-hero');
@@ -365,7 +543,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Resource routes
     Route::resource('school-profile', SchoolProfileController::class);
     Route::resource('teachers', TeacherController::class);
-    Route::resource('achievements', AchievementController::class);
+    Route::post('teachers/{teacher}/transfer-courses', [TeacherController::class, 'transferCourses'])->name('teachers.transfer-courses');
+        Route::resource('achievements', AchievementController::class);
+        Route::post('achievements/{achievement}/toggle-featured', [AchievementController::class, 'toggleFeatured'])->name('achievements.toggle-featured');
+        
+        // Subject routes
+        Route::resource('subjects', SubjectController::class);
+        Route::post('subjects/{subject}/toggle-active', [SubjectController::class, 'toggleActive'])->name('subjects.toggle-active');
     Route::resource('home-sections', HomeSectionController::class);
     
         // PPDB Admin Routes

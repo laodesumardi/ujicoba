@@ -13,21 +13,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create admin user
-        User::factory()->create([
-            'name' => 'Admin SMP Namrole',
-            'email' => 'admin@smpnamrole.com',
-            'password' => bcrypt('admin123'),
-        ]);
-
-        // Seed home sections
+        // Seed role-based data first
         $this->call([
+            RoleBasedDataSeeder::class,
             HomeSectionSeeder::class,
             SchoolProfileSeeder::class,
             NewsSeeder::class,
             AcademicCalendarSeeder::class,
             GallerySeeder::class,
             DocumentSeeder::class,
+            AchievementSeeder::class,
+            SubjectSeeder::class,
+            AssignmentSeeder::class,
+            LessonSeeder::class,
         ]);
     }
 }
