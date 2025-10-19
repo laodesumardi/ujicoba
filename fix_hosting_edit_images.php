@@ -67,12 +67,12 @@ if (function_exists('symlink')) {
     } else {
         echo "   ❌ Failed to create storage link using symlink()\n";
         echo "   🔧 Creating manual storage directory...\n";
-        $this->createManualStorage();
+        createManualStorage();
     }
 } else {
     echo "   ⚠️  symlink() function not available\n";
     echo "   🔧 Creating manual storage directory...\n";
-    $this->createManualStorage();
+    createManualStorage();
 }
 
 // 5. Fix home sections images for hosting
@@ -453,7 +453,7 @@ function createManualStorage() {
     
     // Copy all files from storage/app/public to public/storage
     if (is_dir($sourceDir)) {
-        $this->copyDirectory($sourceDir, $targetDir);
+        copyDirectory($sourceDir, $targetDir);
         echo "   ✅ Copied storage files to public storage\n";
     }
 }
