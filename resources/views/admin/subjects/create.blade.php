@@ -131,3 +131,6 @@ document.getElementById('color').addEventListener('input', function() {
 </script>
 @endsection
 
+
+
+

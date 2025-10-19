@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('title', 'Berita & Pengumuman - SMP Negeri 01 Namrole')
 
 @section('content')
@@ -7,9 +11,16 @@
     <!-- Hero Section with Full Width Image -->
     @if($newsSection && $newsSection->image)
     <div class="relative h-96 overflow-hidden">
-        <img src="{{ asset('storage/' . $newsSection->image) }}" 
+        <img src="{{ Storage::url($newsSection->image) }}" 
              alt="{{ $newsSection->image_alt }}" 
-             class="w-full h-full object-cover">
+             class="w-full h-full object-cover"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div class="w-full h-full bg-gradient-to-r from-primary-600 to-primary-800 flex items-center justify-center hidden">
+            <div class="text-center text-white px-4">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">Berita & Pengumuman</h1>
+                <p class="text-xl md:text-2xl text-gray-200">Informasi terbaru dari SMP Negeri 01 Namrole</p>
+            </div>
+        </div>
         <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div class="text-center text-white px-4">
                 <h1 class="text-4xl md:text-5xl font-bold mb-4">

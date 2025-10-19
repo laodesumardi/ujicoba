@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PPDB;
 use App\Models\PPDBRegistration;
+use App\Models\Notification;
 
 class PPDBController extends Controller
 {
@@ -98,6 +99,13 @@ class PPDBController extends Controller
      */
     public function success()
     {
+        // Create notification for admin when someone visits success page
+        Notification::createSystem(
+            'PPDB Success Page Accessed',
+            'Seseorang telah mengakses halaman sukses PPDB',
+            'green'
+        );
+        
         return view('ppdb.success');
     }
 
@@ -115,6 +123,17 @@ class PPDBController extends Controller
         $registration = PPDBRegistration::where('registration_number', $registrationNumber)->first();
         
         return view('ppdb.check-status', compact('registration'));
+    }
+
+    /**
+     * Refresh CSRF token for mobile
+     */
+    public function refreshToken()
+    {
+        return response()->json([
+            'token' => csrf_token(),
+            'success' => true
+        ]);
     }
 
     /**

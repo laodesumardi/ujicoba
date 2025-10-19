@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SchoolProfile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SchoolProfileController extends Controller
 {
@@ -291,16 +292,8 @@ class SchoolProfileController extends Controller
             }
             
             // Delete old image if exists
-            if ($heroSection->image) {
-                $oldImagePath = public_path($heroSection->image);
-                $oldStoragePath = storage_path('app/public/school-profiles/' . basename($heroSection->image));
-                
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
-                }
-                if (file_exists($oldStoragePath)) {
-                    unlink($oldStoragePath);
-                }
+            if ($heroSection->image && Storage::disk('public')->exists($heroSection->image)) {
+                Storage::disk('public')->delete($heroSection->image);
             }
             
             // Generate safe filename
@@ -310,21 +303,22 @@ class SchoolProfileController extends Controller
             $imageName = time() . '_' . $safeName . '.' . $extension;
             
             try {
-                // Store in uploads directory
-                $uploadsPath = public_path('uploads/school-profiles');
-                if (!is_dir($uploadsPath)) {
-                    mkdir($uploadsPath, 0755, true);
-                }
-                $image->move($uploadsPath, $imageName);
+                // Store in storage using Laravel Storage facade
+                $path = $image->storeAs('school-profiles', $imageName, 'public');
+                $data['image'] = $path;
                 
-                // Store in storage directory
-                $storagePath = storage_path('app/public/school-profiles');
-                if (!is_dir($storagePath)) {
-                    mkdir($storagePath, 0755, true);
+                // Copy file to public storage for immediate access
+                $sourcePath = storage_path('app/public/' . $path);
+                $destPath = public_path('storage/' . $path);
+                $destDir = dirname($destPath);
+                if (!is_dir($destDir)) {
+                    mkdir($destDir, 0755, true);
                 }
-                copy($uploadsPath . '/' . $imageName, $storagePath . '/' . $imageName);
-                
-                $data['image'] = 'storage/school-profiles/' . $imageName;
+                if (copy($sourcePath, $destPath)) {
+                    \Log::info('Hero image uploaded and copied to public storage: ' . $path);
+                } else {
+                    \Log::error('Failed to copy hero image to public storage: ' . $path);
+                }
             } catch (Exception $e) {
                 return redirect()->back()->withErrors(['image' => 'Failed to upload image: ' . $e->getMessage()]);
             }

@@ -18,8 +18,8 @@
     <div class="max-w-md w-full space-y-8">
         <!-- Header -->
         <div class="text-center">
-            <div class="mx-auto h-16 w-16 bg-primary-600 rounded-full flex items-center justify-center">
-                <i class="fas fa-graduation-cap text-white text-2xl"></i>
+            <div class="flex justify-center mb-6">
+                <img src="{{ asset('logo.png') }}" alt="Logo SMP Negeri 01 Namrole" class="h-16 w-auto">
             </div>
             <h2 class="mt-6 text-3xl font-bold text-gray-900">
                 Masuk ke Sistem
@@ -121,4 +121,7 @@
     </div>
 </body>
 </html>
+
+
+
 

@@ -1,2 +1,13 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap
+Sitemap: https://smp01namrole.sch.id/sitemap.xml
+
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /teacher/
+Disallow: /student/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /node_modules/

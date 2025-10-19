@@ -1,0 +1,59 @@
+
+/* Mobile 419 Error Fix CSS */
+@media (max-width: 768px) {
+    /* Mobile form improvements */
+    .mobile-form {
+        padding: 1rem;
+        margin: 0.5rem;
+    }
+    
+    /* Mobile button improvements */
+    .mobile-button {
+        min-height: 44px; /* iOS minimum touch target */
+        font-size: 16px; /* Prevent zoom on iOS */
+        padding: 12px 24px;
+    }
+    
+    /* Mobile input improvements */
+    .mobile-input {
+        font-size: 16px; /* Prevent zoom on iOS */
+        padding: 12px;
+        border-radius: 8px;
+    }
+    
+    /* Mobile CSRF refresh button */
+    .mobile-csrf-refresh {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-size: 16px;
+        min-height: 44px;
+        width: 100%;
+        margin: 8px 0;
+    }
+    
+    /* Mobile notification */
+    .mobile-notification {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        z-index: 9999;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        text-align: center;
+    }
+    
+    .mobile-notification.success {
+        background: #10b981;
+        color: white;
+    }
+    
+    .mobile-notification.error {
+        background: #ef4444;
+        color: white;
+    }
+}

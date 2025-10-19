@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\SchoolProfile;
+use App\Models\Accreditation;
+use App\Models\Achievement;
 
 class ProfilController extends Controller
 {
@@ -14,6 +16,10 @@ class ProfilController extends Controller
                                 ->orderBy('sort_order')
                                 ->get()
                                 ->keyBy('section_key');
+        
+        // Ambil data akreditasi dan prestasi dari database
+        $accreditation = Accreditation::active()->first();
+        $achievements = Achievement::active()->orderBy('year', 'desc')->get();
         
         // Data profil sekolah dari database
         $profilData = [
@@ -62,25 +68,31 @@ class ProfilController extends Controller
             ],
             'akreditasi' => [
                 'content' => $sections->get('akreditasi')->content ?? 'SMP Negeri 01 Namrole telah terakreditasi A dengan skor 95. Akreditasi ini menunjukkan kualitas pendidikan yang tinggi dan komitmen sekolah dalam memberikan pelayanan terbaik kepada siswa dan masyarakat.',
-                'status' => 'Terakreditasi A',
-                'nomor_akreditasi' => 'BAN-SM-2023-001',
-                'tahun_akreditasi' => '2023',
-                'skor' => '95',
-                'masa_berlaku' => '2023-2028'
+                'status' => $accreditation->status ?? 'Terakreditasi A',
+                'nomor_akreditasi' => $accreditation->certificate_number ?? 'BAN-SM-2023-001',
+                'tahun_akreditasi' => $accreditation->year ?? '2023',
+                'skor' => $accreditation->score ?? '95',
+                'masa_berlaku' => $accreditation->valid_until ?? '2023-2028'
             ],
             'prestasi' => [
-                'akademik' => [
-                    ['prestasi' => 'Juara 1 Olimpiade Matematika Tingkat Kabupaten', 'tahun' => '2023'],
-                    ['prestasi' => 'Juara 2 Lomba Cerdas Cermat Tingkat Provinsi', 'tahun' => '2023'],
-                    ['prestasi' => 'Juara 1 Olimpiade IPA Tingkat Kabupaten', 'tahun' => '2022'],
-                    ['prestasi' => 'Juara 3 Lomba Debat Bahasa Inggris Tingkat Provinsi', 'tahun' => '2022']
-                ],
-                'non_akademik' => [
-                    ['prestasi' => 'Juara 1 Lomba Pidato Tingkat Kabupaten', 'tahun' => '2023'],
-                    ['prestasi' => 'Juara 2 Lomba Tari Tradisional Tingkat Provinsi', 'tahun' => '2023'],
-                    ['prestasi' => 'Juara 1 Lomba Paduan Suara Tingkat Kabupaten', 'tahun' => '2022'],
-                    ['prestasi' => 'Juara 3 Lomba Futsal Tingkat Kabupaten', 'tahun' => '2022']
-                ]
+                'akademik' => $achievements->where('type', 'academic')->map(function($achievement) {
+                    return [
+                        'prestasi' => $achievement->title,
+                        'tahun' => $achievement->year,
+                        'level' => $achievement->level_label,
+                        'position' => $achievement->position,
+                        'participant' => $achievement->participant_name
+                    ];
+                })->toArray(),
+                'non_akademik' => $achievements->where('type', 'non_academic')->map(function($achievement) {
+                    return [
+                        'prestasi' => $achievement->title,
+                        'tahun' => $achievement->year,
+                        'level' => $achievement->level_label,
+                        'position' => $achievement->position,
+                        'participant' => $achievement->participant_name
+                    ];
+                })->toArray()
             ]
         ];
 

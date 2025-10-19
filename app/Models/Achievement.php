@@ -7,44 +7,31 @@ use Illuminate\Database\Eloquent\Model;
 class Achievement extends Model
 {
     protected $fillable = [
+        'type',
         'title',
         'description',
-        'category',
         'level',
         'year',
-        'student_name',
-        'student_class',
-        'teacher_name',
         'position',
-        'event_name',
-        'organizer',
-        'certificate_image',
-        'photo',
-        'is_featured',
-        'is_public',
-        'sort_order'
+        'participant_name',
+        'notes',
+        'is_active'
     ];
 
     protected $casts = [
-        'is_featured' => 'boolean',
-        'is_public' => 'boolean',
-        'sort_order' => 'integer'
+        'is_active' => 'boolean',
+        'year' => 'integer'
     ];
 
     // Scopes
-    public function scopeFeatured($query)
+    public function scopeActive($query)
     {
-        return $query->where('is_featured', true);
+        return $query->where('is_active', true);
     }
 
-    public function scopePublic($query)
+    public function scopeByType($query, $type)
     {
-        return $query->where('is_public', true);
-    }
-
-    public function scopeByCategory($query, $category)
-    {
-        return $query->where('category', $category);
+        return $query->where('type', $type);
     }
 
     public function scopeByLevel($query, $level)
@@ -58,43 +45,22 @@ class Achievement extends Model
     }
 
     // Accessors
-    public function getCertificateImageUrlAttribute()
+    public function getTypeLabelAttribute()
     {
-        if ($this->certificate_image) {
-            return asset('storage/achievements/certificates/' . $this->certificate_image);
-        }
-        return null;
-    }
-
-    public function getPhotoUrlAttribute()
-    {
-        if ($this->photo) {
-            return asset('storage/achievements/photos/' . $this->photo);
-        }
-        return null;
-    }
-
-    public function getCategoryLabelAttribute()
-    {
-        $categories = [
+        $types = [
             'academic' => 'Akademik',
-            'sports' => 'Olahraga',
-            'arts' => 'Seni & Budaya',
-            'science' => 'Sains & Teknologi',
-            'leadership' => 'Kepemimpinan',
-            'community' => 'Pengabdian Masyarakat'
+            'non_academic' => 'Non-Akademik'
         ];
-        return $categories[$this->category] ?? $this->category;
+        return $types[$this->type] ?? $this->type;
     }
 
     public function getLevelLabelAttribute()
     {
         $levels = [
-            'school' => 'Sekolah',
-            'district' => 'Kecamatan',
-            'provincial' => 'Provinsi',
-            'national' => 'Nasional',
-            'international' => 'Internasional'
+            'kabupaten' => 'Kabupaten',
+            'provinsi' => 'Provinsi',
+            'nasional' => 'Nasional',
+            'internasional' => 'Internasional'
         ];
         return $levels[$this->level] ?? $this->level;
     }

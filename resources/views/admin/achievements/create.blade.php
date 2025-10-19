@@ -3,220 +3,136 @@
 @section('title', 'Tambah Prestasi')
 
 @section('content')
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3 mb-0 text-gray-800">Tambah Prestasi</h1>
-                <a href="{{ route('admin.achievements.index') }}" class="btn btn-secondary">
-                    <i class="fas fa-arrow-left mr-2"></i>Kembali
+<div class="bg-white">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-6 py-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold">Tambah Prestasi</h1>
+                    <p class="text-primary-100 mt-2">Tambahkan prestasi baru ke dalam sistem</p>
+                </div>
+                <a href="{{ route('admin.achievements.index') }}" class="bg-white text-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Kembali
                 </a>
             </div>
+        </div>
+    </div>
 
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Form Tambah Prestasi</h6>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('admin.achievements.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        
-                        <div class="row">
-                            <!-- Basic Information -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="title" class="font-weight-bold">Judul Prestasi <span class="text-danger">*</span></label>
-                                    <input type="text" name="title" id="title" class="form-control @error('title') is-invalid @enderror" 
-                                           value="{{ old('title') }}" required>
-                                    @error('title')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="description" class="font-weight-bold">Deskripsi</label>
-                                    <textarea name="description" id="description" rows="3" class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
-                                    @error('description')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="category" class="font-weight-bold">Kategori <span class="text-danger">*</span></label>
-                                    <select name="category" id="category" class="form-control @error('category') is-invalid @enderror" required>
-                                        <option value="">Pilih Kategori</option>
-                                        <option value="academic" {{ old('category') == 'academic' ? 'selected' : '' }}>Akademik</option>
-                                        <option value="sports" {{ old('category') == 'sports' ? 'selected' : '' }}>Olahraga</option>
-                                        <option value="arts" {{ old('category') == 'arts' ? 'selected' : '' }}>Seni & Budaya</option>
-                                        <option value="science" {{ old('category') == 'science' ? 'selected' : '' }}>Sains & Teknologi</option>
-                                        <option value="leadership" {{ old('category') == 'leadership' ? 'selected' : '' }}>Kepemimpinan</option>
-                                        <option value="community" {{ old('category') == 'community' ? 'selected' : '' }}>Pengabdian Masyarakat</option>
-                                    </select>
-                                    @error('category')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="level" class="font-weight-bold">Level <span class="text-danger">*</span></label>
-                                    <select name="level" id="level" class="form-control @error('level') is-invalid @enderror" required>
-                                        <option value="">Pilih Level</option>
-                                        <option value="school" {{ old('level') == 'school' ? 'selected' : '' }}>Sekolah</option>
-                                        <option value="district" {{ old('level') == 'district' ? 'selected' : '' }}>Kecamatan</option>
-                                        <option value="provincial" {{ old('level') == 'provincial' ? 'selected' : '' }}>Provinsi</option>
-                                        <option value="national" {{ old('level') == 'national' ? 'selected' : '' }}>Nasional</option>
-                                        <option value="international" {{ old('level') == 'international' ? 'selected' : '' }}>Internasional</option>
-                                    </select>
-                                    @error('level')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="year" class="font-weight-bold">Tahun <span class="text-danger">*</span></label>
-                                    <input type="text" name="year" id="year" class="form-control @error('year') is-invalid @enderror" 
-                                           value="{{ old('year') }}" maxlength="4" required>
-                                    @error('year')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- Student Information -->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="student_name" class="font-weight-bold">Nama Siswa</label>
-                                    <input type="text" name="student_name" id="student_name" class="form-control @error('student_name') is-invalid @enderror" 
-                                           value="{{ old('student_name') }}">
-                                    @error('student_name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="student_class" class="font-weight-bold">Kelas</label>
-                                    <input type="text" name="student_class" id="student_class" class="form-control @error('student_class') is-invalid @enderror" 
-                                           value="{{ old('student_class') }}">
-                                    @error('student_class')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="teacher_name" class="font-weight-bold">Nama Guru Pembimbing</label>
-                                    <input type="text" name="teacher_name" id="teacher_name" class="form-control @error('teacher_name') is-invalid @enderror" 
-                                           value="{{ old('teacher_name') }}">
-                                    @error('teacher_name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="position" class="font-weight-bold">Posisi/Peringkat</label>
-                                    <input type="text" name="position" id="position" class="form-control @error('position') is-invalid @enderror" 
-                                           value="{{ old('position') }}" placeholder="Contoh: Juara 1, Juara 2, Peserta">
-                                    @error('position')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="event_name" class="font-weight-bold">Nama Event/Lomba</label>
-                                    <input type="text" name="event_name" id="event_name" class="form-control @error('event_name') is-invalid @enderror" 
-                                           value="{{ old('event_name') }}">
-                                    @error('event_name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="organizer" class="font-weight-bold">Penyelenggara</label>
-                                    <input type="text" name="organizer" id="organizer" class="form-control @error('organizer') is-invalid @enderror" 
-                                           value="{{ old('organizer') }}">
-                                    @error('organizer')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
+    <!-- Content -->
+    <div class="max-w-4xl mx-auto px-6 py-8">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Form Tambah Prestasi</h3>
+            </div>
+            <div class="p-6">
+                <form action="{{ route('admin.achievements.store') }}" method="POST" class="space-y-6">
+                    @csrf
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="type" class="block text-sm font-medium text-gray-700 mb-2">
+                                Tipe Prestasi <span class="text-red-500">*</span>
+                            </label>
+                            <select name="type" id="type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('type') border-red-500 @enderror" required>
+                                <option value="">Pilih Tipe</option>
+                                <option value="academic" {{ old('type') == 'academic' ? 'selected' : '' }}>Akademik</option>
+                                <option value="non_academic" {{ old('type') == 'non_academic' ? 'selected' : '' }}>Non-Akademik</option>
+                            </select>
+                            @error('type')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
-
-                        <!-- File Uploads -->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="certificate_image" class="font-weight-bold">Foto Sertifikat</label>
-                                    <input type="file" name="certificate_image" id="certificate_image" accept="image/*" 
-                                           class="form-control @error('certificate_image') is-invalid @enderror">
-                                    <small class="form-text text-muted">Format: JPG, PNG, GIF. Maksimal 2MB</small>
-                                    @error('certificate_image')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="photo" class="font-weight-bold">Foto Dokumentasi</label>
-                                    <input type="file" name="photo" id="photo" accept="image/*" 
-                                           class="form-control @error('photo') is-invalid @enderror">
-                                    <small class="form-text text-muted">Format: JPG, PNG, GIF. Maksimal 2MB</small>
-                                    @error('photo')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
+                        <div>
+                            <label for="level" class="block text-sm font-medium text-gray-700 mb-2">
+                                Level <span class="text-red-500">*</span>
+                            </label>
+                            <select name="level" id="level" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('level') border-red-500 @enderror" required>
+                                <option value="">Pilih Level</option>
+                                <option value="kabupaten" {{ old('level') == 'kabupaten' ? 'selected' : '' }}>Kabupaten</option>
+                                <option value="provinsi" {{ old('level') == 'provinsi' ? 'selected' : '' }}>Provinsi</option>
+                                <option value="nasional" {{ old('level') == 'nasional' ? 'selected' : '' }}>Nasional</option>
+                                <option value="internasional" {{ old('level') == 'internasional' ? 'selected' : '' }}>Internasional</option>
+                            </select>
+                            @error('level')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
+                    </div>
 
-                        <!-- Settings -->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="sort_order" class="font-weight-bold">Urutan Tampil</label>
-                                    <input type="number" name="sort_order" id="sort_order" class="form-control @error('sort_order') is-invalid @enderror" 
-                                           value="{{ old('sort_order', 0) }}" min="0">
-                                    <small class="form-text text-muted">Angka lebih kecil akan ditampilkan lebih dulu</small>
-                                    @error('sort_order')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+                            Judul Prestasi <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" name="title" id="title" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('title') border-red-500 @enderror" value="{{ old('title') }}" required>
+                        @error('title')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input type="checkbox" name="is_featured" id="is_featured" class="form-check-input" 
-                                               {{ old('is_featured') ? 'checked' : '' }}>
-                                        <label for="is_featured" class="form-check-label font-weight-bold">
-                                            Tampilkan di Halaman Utama
-                                        </label>
-                                    </div>
-                                </div>
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                        <textarea name="description" id="description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('description') border-red-500 @enderror">{{ old('description') }}</textarea>
+                        @error('description')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
 
-                                <div class="form-group">
-                                    <div class="form-check">
-                                        <input type="checkbox" name="is_public" id="is_public" class="form-check-input" 
-                                               {{ old('is_public', true) ? 'checked' : '' }}>
-                                        <label for="is_public" class="form-check-label font-weight-bold">
-                                            Tampilkan untuk Umum
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="year" class="block text-sm font-medium text-gray-700 mb-2">
+                                Tahun <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" name="year" id="year" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('year') border-red-500 @enderror" value="{{ old('year') }}" min="2000" max="2030" required>
+                            @error('year')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
-
-                        <div class="form-group text-right">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save mr-2"></i>Simpan Prestasi
-                            </button>
-                            <a href="{{ route('admin.achievements.index') }}" class="btn btn-secondary ml-2">
-                                <i class="fas fa-times mr-2"></i>Batal
-                            </a>
+                        <div>
+                            <label for="position" class="block text-sm font-medium text-gray-700 mb-2">Posisi/Juara</label>
+                            <input type="text" name="position" id="position" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('position') border-red-500 @enderror" value="{{ old('position') }}" placeholder="Contoh: Juara 1, Juara 2, dll">
+                            @error('position')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
-                    </form>
-                </div>
+                        <div>
+                            <label for="participant_name" class="block text-sm font-medium text-gray-700 mb-2">Nama Peserta/Kelompok</label>
+                            <input type="text" name="participant_name" id="participant_name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('participant_name') border-red-500 @enderror" value="{{ old('participant_name') }}">
+                            @error('participant_name')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="notes" class="block text-sm font-medium text-gray-700 mb-2">Catatan</label>
+                        <textarea name="notes" id="notes" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 @error('notes') border-red-500 @enderror">{{ old('notes') }}</textarea>
+                        @error('notes')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" name="is_active" id="is_active" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded" value="1" {{ old('is_active', true) ? 'checked' : '' }}>
+                        <label for="is_active" class="ml-2 block text-sm text-gray-900">Aktif</label>
+                    </div>
+
+                    <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+                        <a href="{{ route('admin.achievements.index') }}" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+                            Batal
+                        </a>
+                        <button type="submit" class="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors flex items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            Simpan
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 @endsection
-

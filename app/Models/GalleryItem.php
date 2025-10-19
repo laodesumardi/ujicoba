@@ -58,7 +58,7 @@ class GalleryItem extends Model
     public function getThumbnailUrlAttribute()
     {
         if ($this->thumbnail_path) {
-            return asset('storage/' . $this->thumbnail_path);
+            return asset('storage/' . str_replace('public/', '', $this->thumbnail_path));
         }
         return $this->file_url;
     }

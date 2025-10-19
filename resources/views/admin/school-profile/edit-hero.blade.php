@@ -1,5 +1,9 @@
 @extends('layouts.admin')
 
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('title', 'Edit Hero Section')
 @section('page-title', 'Edit Hero Section')
 
@@ -75,10 +79,13 @@
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Current Image</label>
                             <div class="flex items-center space-x-4">
-                                <img src="{{ asset($heroSection->image) }}" alt="{{ $heroSection->image_alt }}" class="h-32 w-48 object-cover rounded-lg">
+                                <img src="{{ Storage::url($heroSection->image) }}" alt="{{ $heroSection->image_alt }}" 
+                                     class="h-32 w-48 object-cover rounded-lg"
+                                     onerror="this.src='{{ asset('images/default-hero.png') }}'">
                                 <div>
                                     <p class="text-sm text-gray-600">{{ basename($heroSection->image) }}</p>
                                     <p class="text-xs text-gray-500">Upload new image to replace</p>
+                                    <p class="text-xs text-blue-600">URL: {{ Storage::url($heroSection->image) }}</p>
                                 </div>
                             </div>
                         </div>

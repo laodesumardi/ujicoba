@@ -82,7 +82,7 @@ class Gallery extends Model
     public function getCoverImageUrlAttribute()
     {
         if ($this->cover_image) {
-            return asset('storage/' . $this->cover_image);
+            return asset('storage/' . str_replace('public/', '', $this->cover_image));
         }
         return asset('images/default-gallery.jpg');
     }
@@ -111,6 +111,11 @@ class Gallery extends Model
         ];
 
         return $categories[$this->category] ?? ucfirst($this->category);
+    }
+
+    public function getCategoryLabel()
+    {
+        return $this->getCategoryLabelAttribute();
     }
 
     public function getStatusLabelAttribute()

@@ -92,6 +92,7 @@ class News extends Model
     public function getFeaturedImageUrlAttribute()
     {
         if ($this->featured_image) {
+            // Coba gunakan URL langsung ke public/storage
             return asset('storage/' . $this->featured_image);
         }
         return asset('images/default-news.jpg');

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }} - Login Guru</title>
+    <title>{{ config('app.name', 'SMP Negeri 01 Namrole') }} - Login Guru</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -21,8 +21,8 @@
     <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
             <div>
-                <div class="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-primary-100">
-                    <i class="fas fa-chalkboard-teacher text-primary-600 text-xl"></i>
+                <div class="flex justify-center mb-6">
+                    <img src="{{ asset('logo.png') }}" alt="Logo SMP Negeri 01 Namrole" class="h-16 w-auto">
                 </div>
                 <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
                     Login Guru
@@ -81,4 +81,7 @@
     </div>
 </body>
 </html>
+
+
+
 

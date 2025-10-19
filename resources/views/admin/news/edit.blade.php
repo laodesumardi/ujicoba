@@ -124,7 +124,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Gambar Saat Ini</label>
                                 <div class="flex items-center space-x-4">
-                                    <img src="{{ $news->featured_image_url }}" alt="{{ $news->title }}" class="h-24 w-24 object-cover rounded-lg">
+                                    <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" class="h-24 w-24 object-cover rounded-lg">
                                     <div>
                                         <p class="text-sm text-gray-600">Gambar utama saat ini</p>
                                         <p class="text-xs text-gray-500">Upload gambar baru untuk mengganti</p>

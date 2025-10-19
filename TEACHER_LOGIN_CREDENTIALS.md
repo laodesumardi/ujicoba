@@ -89,3 +89,6 @@ php artisan db:seed --class=TeacherSeeder
 2. Check database connection
 3. Verify migration has run: `php artisan migrate:status`
 
+
+
+

@@ -64,15 +64,9 @@ class TeacherController extends Controller
             $photo = $request->file('photo');
             $filename = time() . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
             
-            // Ensure directory exists
-            $teachersDir = storage_path('app/public/teachers');
-            if (!is_dir($teachersDir)) {
-                mkdir($teachersDir, 0755, true);
-            }
-            
-            // Store file
-            $photo->storeAs('public/teachers', $filename);
-            $data['photo'] = $filename;
+            // Store file using Laravel Storage facade
+            $path = $photo->storeAs('teachers', $filename, 'public');
+            $data['photo'] = $path;
         } else {
             $data['photo'] = null;
         }
@@ -139,22 +133,16 @@ class TeacherController extends Controller
 
         if ($request->hasFile('photo')) {
             // Delete old photo
-            if ($teacher->photo) {
-                Storage::delete('public/teachers/' . $teacher->photo);
+            if ($teacher->photo && Storage::disk('public')->exists($teacher->photo)) {
+                Storage::disk('public')->delete($teacher->photo);
             }
 
             $photo = $request->file('photo');
             $filename = time() . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
             
-            // Ensure directory exists
-            $teachersDir = storage_path('app/public/teachers');
-            if (!is_dir($teachersDir)) {
-                mkdir($teachersDir, 0755, true);
-            }
-            
-            // Store file
-            $photo->storeAs('public/teachers', $filename);
-            $data['photo'] = $filename;
+            // Store file using Laravel Storage facade
+            $path = $photo->storeAs('teachers', $filename, 'public');
+            $data['photo'] = $path;
         } else {
             // Keep existing photo if no new photo uploaded
             unset($data['photo']);

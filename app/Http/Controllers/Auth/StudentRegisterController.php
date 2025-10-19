@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -91,6 +92,9 @@ class StudentRegisterController extends Controller
             'parent_email' => $request->parent_email,
             'is_active' => true,
         ]);
+
+        // Create notification for admin
+        Notification::createPPDBRegistration($user->name, $user->id);
 
         // Auto login after registration
         Auth::login($user);

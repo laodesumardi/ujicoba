@@ -1,5 +1,9 @@
 @extends('layouts.admin')
 
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('title', 'Edit Section Kalender Akademik')
 @section('page-title', 'Edit Section Kalender Akademik')
 
@@ -76,9 +80,11 @@
                                 </label>
                                 @if($section->image)
                                 <div class="mb-3">
-                                    <img src="{{ asset('storage/' . $section->image) }}" alt="{{ $section->image_alt }}" 
-                                         class="w-32 h-20 object-cover rounded-lg border border-gray-300">
+                                    <img src="{{ Storage::url($section->image) }}" alt="{{ $section->image_alt }}" 
+                                         class="w-32 h-20 object-cover rounded-lg border border-gray-300"
+                                         onerror="this.src='{{ asset('images/default-section.png') }}'">
                                     <p class="text-sm text-gray-500 mt-1">Gambar saat ini</p>
+                                    <p class="text-xs text-blue-600">URL: {{ Storage::url($section->image) }}</p>
                                 </div>
                                 @endif
                                 <input type="file" name="image" id="image" 

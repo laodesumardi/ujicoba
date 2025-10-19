@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Achievement;
+use App\Models\Accreditation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,8 +15,9 @@ class AchievementController extends Controller
      */
     public function index()
     {
-        $achievements = Achievement::orderBy('sort_order')->orderBy('created_at', 'desc')->paginate(10);
-        return view('admin.achievements.index', compact('achievements'));
+        $achievements = Achievement::orderBy('year', 'desc')->orderBy('created_at', 'desc')->paginate(10);
+        $accreditation = Accreditation::active()->first();
+        return view('admin.achievements.index', compact('achievements', 'accreditation'));
     }
 
     /**
@@ -32,41 +34,19 @@ class AchievementController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'type' => 'required|string|in:academic,non_academic',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category' => 'required|string|in:academic,sports,arts,science,leadership,community',
-            'level' => 'required|string|in:school,district,provincial,national,international',
-            'year' => 'required|string|max:4',
-            'student_name' => 'nullable|string|max:255',
-            'student_class' => 'nullable|string|max:50',
-            'teacher_name' => 'nullable|string|max:255',
+            'level' => 'required|string|in:kabupaten,provinsi,nasional,internasional',
+            'year' => 'required|integer|min:2000|max:2030',
             'position' => 'nullable|string|max:100',
-            'event_name' => 'nullable|string|max:255',
-            'organizer' => 'nullable|string|max:255',
-            'certificate_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_featured' => 'boolean',
-            'is_public' => 'boolean',
-            'sort_order' => 'nullable|integer|min:0'
+            'participant_name' => 'nullable|string|max:255',
+            'notes' => 'nullable|string',
+            'is_active' => 'boolean'
         ]);
 
         $data = $request->all();
-
-        // Handle certificate image upload
-        if ($request->hasFile('certificate_image')) {
-            $certificate = $request->file('certificate_image');
-            $certificateName = time() . '_' . uniqid() . '.' . $certificate->getClientOriginalExtension();
-            $certificate->storeAs('public/achievements/certificates', $certificateName);
-            $data['certificate_image'] = $certificateName;
-        }
-
-        // Handle photo upload
-        if ($request->hasFile('photo')) {
-            $photo = $request->file('photo');
-            $photoName = time() . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
-            $photo->storeAs('public/achievements/photos', $photoName);
-            $data['photo'] = $photoName;
-        }
+        $data['is_active'] = $request->has('is_active');
 
         Achievement::create($data);
 
@@ -96,51 +76,19 @@ class AchievementController extends Controller
     public function update(Request $request, Achievement $achievement)
     {
         $request->validate([
+            'type' => 'required|string|in:academic,non_academic',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category' => 'required|string|in:academic,sports,arts,science,leadership,community',
-            'level' => 'required|string|in:school,district,provincial,national,international',
-            'year' => 'required|string|max:4',
-            'student_name' => 'nullable|string|max:255',
-            'student_class' => 'nullable|string|max:50',
-            'teacher_name' => 'nullable|string|max:255',
+            'level' => 'required|string|in:kabupaten,provinsi,nasional,internasional',
+            'year' => 'required|integer|min:2000|max:2030',
             'position' => 'nullable|string|max:100',
-            'event_name' => 'nullable|string|max:255',
-            'organizer' => 'nullable|string|max:255',
-            'certificate_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'is_featured' => 'boolean',
-            'is_public' => 'boolean',
-            'sort_order' => 'nullable|integer|min:0'
+            'participant_name' => 'nullable|string|max:255',
+            'notes' => 'nullable|string',
+            'is_active' => 'boolean'
         ]);
 
         $data = $request->all();
-
-        // Handle certificate image upload
-        if ($request->hasFile('certificate_image')) {
-            // Delete old certificate
-            if ($achievement->certificate_image) {
-                Storage::delete('public/achievements/certificates/' . $achievement->certificate_image);
-            }
-            
-            $certificate = $request->file('certificate_image');
-            $certificateName = time() . '_' . uniqid() . '.' . $certificate->getClientOriginalExtension();
-            $certificate->storeAs('public/achievements/certificates', $certificateName);
-            $data['certificate_image'] = $certificateName;
-        }
-
-        // Handle photo upload
-        if ($request->hasFile('photo')) {
-            // Delete old photo
-            if ($achievement->photo) {
-                Storage::delete('public/achievements/photos/' . $achievement->photo);
-            }
-            
-            $photo = $request->file('photo');
-            $photoName = time() . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
-            $photo->storeAs('public/achievements/photos', $photoName);
-            $data['photo'] = $photoName;
-        }
+        $data['is_active'] = $request->has('is_active');
 
         $achievement->update($data);
 
@@ -153,29 +101,9 @@ class AchievementController extends Controller
      */
     public function destroy(Achievement $achievement)
     {
-        // Delete associated files
-        if ($achievement->certificate_image) {
-            Storage::delete('public/achievements/certificates/' . $achievement->certificate_image);
-        }
-        if ($achievement->photo) {
-            Storage::delete('public/achievements/photos/' . $achievement->photo);
-        }
-
         $achievement->delete();
 
         return redirect()->route('admin.achievements.index')
             ->with('success', 'Prestasi berhasil dihapus.');
-    }
-
-    /**
-     * Toggle featured status
-     */
-    public function toggleFeatured(Achievement $achievement)
-    {
-        $achievement->update(['is_featured' => !$achievement->is_featured]);
-        
-        $status = $achievement->is_featured ? 'ditampilkan' : 'disembunyikan';
-        return redirect()->back()
-            ->with('success', "Prestasi berhasil {$status} dari halaman utama.");
     }
 }

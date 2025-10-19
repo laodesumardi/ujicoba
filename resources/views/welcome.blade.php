@@ -13,7 +13,7 @@
             $hasImage = false;
 
             if ($sections['hero']->image) {
-                $imageUrl = asset($sections['hero']->image);
+                $imageUrl = asset('storage/' . str_replace('public/', '', $sections['hero']->image));
                 $heroBgStyle = "background-image: url('{$imageUrl}'); background-size: cover; background-position: center; background-repeat: no-repeat;";
                 $hasImage = true;
             } else {
@@ -43,7 +43,7 @@
                             {{ $sections['hero']->button_text }}
                         </a>
                         @if($sections['hero']->description)
-                        <a href="#" class="border-2 border-white text-white px-10 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-primary-600 transition-all duration-300 transform hover:scale-105">
+                        <a href="{{ route('ppdb.index') }}" class="border-2 border-white text-white px-10 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-primary-600 transition-all duration-300 transform hover:scale-105">
                             Informasi Pendaftaran
                         </a>
                         @endif
@@ -69,7 +69,7 @@
                     <a href="{{ route('profil') }}" class="bg-white text-primary-600 px-10 py-4 rounded-lg font-semibold text-lg hover:bg-primary-50 transition-all duration-300 transform hover:scale-105 shadow-lg">
                         Lihat Profil Sekolah
                     </a>
-                    <a href="#" class="border-2 border-white text-white px-10 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-primary-600 transition-all duration-300 transform hover:scale-105">
+                    <a href="{{ route('ppdb.index') }}" class="border-2 border-white text-white px-10 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-primary-600 transition-all duration-300 transform hover:scale-105">
                         Informasi Pendaftaran
                     </a>
                 </div>
@@ -140,6 +140,56 @@
                     @if(isset($sections['fasilitas_lengkap']) && $sections['fasilitas_lengkap']->is_active && $sections['fasilitas_lengkap']->description)
                     <p class="text-sm text-gray-500 mt-4">{{ $sections['fasilitas_lengkap']->description }}</p>
                     @endif
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Headmaster Greeting Section -->
+    @if(isset($headmasterGreeting) && $headmasterGreeting)
+    <div class="bg-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-200">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-0">
+                    <!-- Photo Section -->
+                    <div class="p-8 lg:p-12 flex items-center justify-center bg-gray-50">
+                        <div class="text-center">
+                            @if($headmasterGreeting->photo_url)
+                                <img src="{{ $headmasterGreeting->photo_url }}" alt="{{ $headmasterGreeting->headmaster_name }}" 
+                                     class="w-48 h-60 rounded-lg mx-auto mb-6 shadow-lg object-cover">
+                            @else
+                                <div class="w-48 h-60 rounded-lg mx-auto mb-6 bg-gray-200 flex items-center justify-center">
+                                    <i class="fas fa-user-tie text-5xl text-gray-400"></i>
+                                </div>
+                            @endif
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $headmasterGreeting->headmaster_name }}</h3>
+                            <p class="text-gray-600 text-base">Kepala Sekolah</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Greeting Content -->
+                    <div class="p-8 lg:p-12 flex items-center">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900 mb-4">Sambutan Kepala Sekolah</h2>
+                            <div class="text-gray-700 leading-relaxed text-base max-h-80 overflow-y-auto">
+                                @php
+                                    $message = $headmasterGreeting->greeting_message;
+                                    $maxLength = 500; // Batasi panjang teks
+                                    if (strlen($message) > $maxLength) {
+                                        $message = substr($message, 0, $maxLength) . '...';
+                                    }
+                                @endphp
+                                {!! nl2br(e($message)) !!}
+                            </div>
+                            <div class="mt-6 flex items-center text-primary-600">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                                <span class="font-semibold text-sm">SMP Negeri 01 Namrole</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -359,6 +409,206 @@
         </div>
     </div>
     @endif
+
+    <!-- Gallery Section -->
+    @if($featuredGalleries->count() > 0 || $latestGalleries->count() > 0)
+    <div class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Galeri Sekolah</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Dokumentasi kegiatan dan momen berharga di SMP Negeri 01 Namrole
+                </p>
+            </div>
+
+            <!-- Featured Galleries -->
+            @if($featuredGalleries->count() > 0)
+            <div class="mb-12">
+                <h3 class="text-xl font-semibold text-gray-900 mb-6">Galeri Unggulan</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($featuredGalleries as $gallery)
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                        <div class="relative">
+                            <img src="{{ $gallery->cover_image_url }}" alt="{{ $gallery->title }}" class="w-full h-48 object-cover">
+                            <div class="absolute top-4 right-4">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-600 text-white">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                    </svg>
+                                    Unggulan
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold text-gray-900 mb-2 line-clamp-2">
+                                <a href="{{ route('gallery.show', $gallery->slug) }}" class="hover:text-primary-600 transition-colors">
+                                    {{ $gallery->title }}
+                                </a>
+                            </h4>
+                            <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ $gallery->description }}</p>
+                            <div class="flex items-center justify-between text-sm text-gray-500">
+                                <span class="inline-flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    {{ $gallery->getItemCount() }} item
+                                </span>
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                    {{ $gallery->getCategoryLabel() }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
+            <!-- Latest Galleries -->
+            @if($latestGalleries->count() > 0)
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-gray-900 mb-6">Galeri Terbaru</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($latestGalleries->take(3) as $gallery)
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                        <div class="relative">
+                            <img src="{{ $gallery->cover_image_url }}" alt="{{ $gallery->title }}" class="w-full h-48 object-cover">
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-semibold text-gray-900 mb-2 line-clamp-2">
+                                <a href="{{ route('gallery.show', $gallery->slug) }}" class="hover:text-primary-600 transition-colors">
+                                    {{ $gallery->title }}
+                                </a>
+                            </h4>
+                            <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ $gallery->description }}</p>
+                            <div class="flex items-center justify-between text-sm text-gray-500">
+                                <span class="inline-flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    {{ $gallery->getItemCount() }} item
+                                </span>
+                                <span class="text-xs text-gray-500">{{ $gallery->created_at->format('d M Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
+            <!-- View All Galleries Button -->
+            <div class="text-center">
+                <a href="{{ route('gallery.index') }}" class="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    Lihat Semua Galeri
+                </a>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Contact Form Section -->
+    <div class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Kirim Pesan</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Ada pertanyaan atau ingin berkomunikasi dengan kami? Kirimkan pesan Anda melalui form di bawah ini.
+                </p>
+            </div>
+
+            <div class="max-w-2xl mx-auto">
+                @if(session('success'))
+                    <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                <form action="{{ route('contact.store') }}" method="POST" class="space-y-6">
+                    @csrf
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                                Nama Lengkap <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="name" name="name" value="{{ old('name') }}" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('name') border-red-500 @enderror"
+                                   placeholder="Masukkan nama lengkap Anda">
+                            @error('name')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                                Email <span class="text-red-500">*</span>
+                            </label>
+                            <input type="email" id="email" name="email" value="{{ old('email') }}" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('email') border-red-500 @enderror"
+                                   placeholder="Masukkan email Anda">
+                            @error('email')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                            No. Telepon
+                        </label>
+                        <input type="tel" id="phone" name="phone" value="{{ old('phone') }}"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('phone') border-red-500 @enderror"
+                               placeholder="Masukkan nomor telepon Anda">
+                        @error('phone')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">
+                            Subjek <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="subject" name="subject" value="{{ old('subject') }}" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('subject') border-red-500 @enderror"
+                               placeholder="Masukkan subjek pesan Anda">
+                        @error('subject')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-700 mb-2">
+                            Pesan <span class="text-red-500">*</span>
+                        </label>
+                        <textarea id="message" name="message" rows="5" required
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('message') border-red-500 @enderror"
+                                  placeholder="Tuliskan pesan Anda di sini...">{{ old('message') }}</textarea>
+                        @error('message')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" 
+                                class="inline-flex items-center px-8 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                            Kirim Pesan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <style>

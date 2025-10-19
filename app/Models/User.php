@@ -150,6 +150,29 @@ class User extends Authenticatable
         return $this->role === 'teacher';
     }
 
+    public function getPhotoUrlAttribute()
+    {
+        if ($this->photo) {
+            // Check if it's a storage path with 'storage/' prefix
+            if (strpos($this->photo, 'storage/') === 0) {
+                return asset($this->photo);
+            }
+            // Check if it's a storage path without 'storage/' prefix
+            if (strpos($this->photo, 'teachers/') === 0) {
+                return asset('storage/' . $this->photo);
+            }
+            // Check if it's just a filename (old format)
+            if (!strpos($this->photo, '/') && !strpos($this->photo, 'storage/')) {
+                return asset('storage/teachers/' . $this->photo);
+            }
+            // If it's already a full URL or path
+            return $this->photo;
+        }
+        
+        // Return default teacher image
+        return asset('images/default-teacher.png');
+    }
+
     public function getIsAdminAttribute()
     {
         return $this->role === 'admin';

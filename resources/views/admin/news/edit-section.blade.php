@@ -1,5 +1,9 @@
 @extends('layouts.admin')
 
+@php
+use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('title', 'Edit Section Berita')
 @section('page-title', 'Edit Section Berita')
 
@@ -70,10 +74,13 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Gambar Saat Ini</label>
                                 <div class="flex items-center space-x-4">
-                                    <img src="{{ asset('storage/' . $newsSection->image) }}" alt="{{ $newsSection->image_alt }}" class="h-24 w-24 object-cover rounded-lg">
+                                    <img src="{{ Storage::url($newsSection->image) }}" alt="{{ $newsSection->image_alt }}" 
+                                         class="h-24 w-24 object-cover rounded-lg"
+                                         onerror="this.src='{{ asset('images/default-section.png') }}'">
                                     <div>
                                         <p class="text-sm text-gray-600">Gambar section saat ini</p>
                                         <p class="text-xs text-gray-500">Upload gambar baru untuk mengganti</p>
+                                        <p class="text-xs text-blue-600">URL: {{ Storage::url($newsSection->image) }}</p>
                                     </div>
                                 </div>
                             </div>

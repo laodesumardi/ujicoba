@@ -25,7 +25,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
-Route::get('/kontak', [ContactController::class, 'index'])->name('contact');
+Route::get('/kontak', [ContactController::class, 'index'])->name('contact.index');
+Route::post('/kontak', [ContactController::class, 'store'])->name('contact.store');
+Route::get('/perpustakaan', [App\Http\Controllers\LibraryController::class, 'index'])->name('library');
+Route::get('/tenaga-pendidik', [App\Http\Controllers\StaffController::class, 'index'])->name('staff');
+Route::get('/fasilitas', [App\Http\Controllers\FacilityController::class, 'index'])->name('facilities');
 
 // Test route for debugging
 Route::post('/test-password', function (Illuminate\Http\Request $request) {
@@ -210,8 +214,12 @@ Route::get('/register', function () {
     return view('auth.student-registration-info');
 })->name('register');
 
+Route::get('/register/info', function () {
+    return view('auth.student-registration-info');
+})->name('student.register');
+
 Route::get('/register/form', [App\Http\Controllers\Auth\StudentRegisterController::class, 'showRegistrationForm'])->name('register.form');
-Route::post('/register', [App\Http\Controllers\Auth\StudentRegisterController::class, 'register'])->name('register');
+Route::post('/register', [App\Http\Controllers\Auth\StudentRegisterController::class, 'register'])->name('register.submit');
 
 // PPDB Routes
 Route::prefix('ppdb')->name('ppdb.')->group(function () {
@@ -221,6 +229,7 @@ Route::prefix('ppdb')->name('ppdb.')->group(function () {
     Route::get('/success', [PPDBController::class, 'success'])->name('success');
     Route::get('/check-status', [PPDBController::class, 'checkStatus'])->name('check-status');
     Route::post('/check-status', [PPDBController::class, 'checkStatus'])->name('check-status.post');
+    Route::get('/refresh-token', [PPDBController::class, 'refreshToken'])->name('refresh-token');
 });
 
 // News Routes
@@ -247,11 +256,16 @@ Route::prefix('galeri')->name('gallery.')->group(function () {
     Route::get('/{slug}', [GalleryController::class, 'show'])->name('show');
 });
 
+// Legal Pages Routes
+Route::get('/kebijakan-privasi', [App\Http\Controllers\PageController::class, 'privacyPolicy'])->name('privacy-policy');
+Route::get('/syarat-ketentuan', [App\Http\Controllers\PageController::class, 'termsConditions'])->name('terms-conditions');
+Route::get('/peta-situs', [App\Http\Controllers\PageController::class, 'sitemap'])->name('sitemap');
+
 // Debug route
 Route::get('/debug', function() {
     echo '<h1>Debug Route Working!</h1>';
     echo '<p>Current time: ' . now() . '</p>';
-    echo '<p>Laravel version: ' . app()->version() . '</p>';
+    echo '<p>Framework version: ' . app()->version() . '</p>';
     echo '<p>Environment: ' . app()->environment() . '</p>';
     echo '<p><a href="/">Go to Homepage</a></p>';
 });
@@ -332,16 +346,104 @@ Route::get('/test-storage', function() {
 // Simple setup routes
 Route::get('/generate', function() {
     try {
-        \Illuminate\Support\Facades\Artisan::call('storage:link');
-        return response('<h1>Storage Link Created!</h1><p>✅ Storage link created</p><p><a href="/">Home</a></p>');
+        // Use absolute paths
+        $storagePath = base_path('storage/app/public');
+        $publicPath = public_path('storage');
+        
+        // Debug information
+        $debug = [];
+        $debug[] = 'Storage path: ' . $storagePath;
+        $debug[] = 'Public path: ' . $publicPath;
+        $debug[] = 'Storage exists: ' . (file_exists($storagePath) ? 'Yes' : 'No');
+        $debug[] = 'Storage is dir: ' . (is_dir($storagePath) ? 'Yes' : 'No');
+        $debug[] = 'Public storage exists: ' . (file_exists($publicPath) ? 'Yes' : 'No');
+        
+        // Create public storage directory
+        if (!file_exists($publicPath)) {
+            mkdir($publicPath, 0755, true);
+        }
+        
+        if (is_dir($storagePath)) {
+            $files = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($storagePath, RecursiveDirectoryIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::SELF_FIRST
+            );
+            
+            $copied = 0;
+            foreach ($files as $file) {
+                $targetPath = $publicPath . '/' . substr($file->getPathname(), strlen($storagePath . '/'));
+                
+                if ($file->isDir()) {
+                    if (!file_exists($targetPath)) {
+                        mkdir($targetPath, 0755, true);
+                    }
+                } else {
+                    if (!file_exists($targetPath)) {
+                        copy($file->getPathname(), $targetPath);
+                        $copied++;
+                    }
+                }
+            }
+            
+            return response('<h1>Storage Files Copied!</h1><p>✅ Storage files copied successfully! (' . $copied . ' files)</p><p><a href="/">Home</a></p>');
+        }
+        
+        return response('<h1>Error!</h1><p>❌ Storage directory not found</p><p>Debug: ' . implode('<br>', $debug) . '</p>');
+        
     } catch (Exception $e) {
-        return response('<h1>Error!</h1><p>Error: ' . $e->getMessage() . '</p>');
+        return response('<h1>Error!</h1><p>❌ Error: ' . $e->getMessage() . '</p>');
     }
 });
 
 Route::get('/setup', function() {
     try {
-        \Illuminate\Support\Facades\Artisan::call('storage:link');
+        // Try to create symlink first (only on non-Windows systems)
+        if (function_exists('symlink') && PHP_OS_FAMILY !== 'Windows') {
+            if (file_exists('public/storage')) {
+                if (is_link('public/storage')) {
+                    unlink('public/storage');
+                } else {
+                    exec('rm -rf public/storage');
+                }
+            }
+            $result = symlink('../storage/app/public', 'public/storage');
+            if ($result) {
+                \Illuminate\Support\Facades\Artisan::call('cache:clear');
+                return response('<h1>Setup Complete!</h1><p>✅ Storage symlink created</p><p>✅ Cache cleared</p><p><a href="/">Home</a></p>');
+            }
+        }
+        
+        // Fallback: Copy files instead of symlink
+        if (!file_exists('public/storage')) {
+            mkdir('public/storage', 0755, true);
+        }
+        
+        if (is_dir('storage/app/public')) {
+            $files = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator('storage/app/public', RecursiveDirectoryIterator::SKIP_DOTS),
+                RecursiveIteratorIterator::SELF_FIRST
+            );
+            
+            $copied = 0;
+            foreach ($files as $file) {
+                $targetPath = 'public/storage/' . substr($file->getPathname(), strlen('storage/app/public/'));
+                
+                if ($file->isDir()) {
+                    if (!file_exists($targetPath)) {
+                        mkdir($targetPath, 0755, true);
+                    }
+                } else {
+                    if (!file_exists($targetPath)) {
+                        copy($file->getPathname(), $targetPath);
+                        $copied++;
+                    }
+                }
+            }
+            
+            \Illuminate\Support\Facades\Artisan::call('cache:clear');
+            return response('<h1>Setup Complete!</h1><p>✅ Storage files copied (' . $copied . ' files)</p><p>✅ Cache cleared</p><p><a href="/">Home</a></p>');
+        }
+        
         \Illuminate\Support\Facades\Artisan::call('cache:clear');
         \Illuminate\Support\Facades\Artisan::call('config:clear');
         return response('<h1>Setup Complete!</h1><p>✅ Storage link created</p><p>✅ Caches cleared</p><p><a href="/">Home</a></p>');
@@ -351,24 +453,15 @@ Route::get('/setup', function() {
 });
 
 Route::get('/test-images', function() {
-    $html = '<h1>Image Test</h1>';
-    
-    if (is_dir('public/storage/home-sections')) {
-        $files = scandir('public/storage/home-sections');
-        $html .= '<h3>Images Found:</h3><ul>';
-        foreach ($files as $file) {
-            if ($file != '.' && $file != '..') {
-                $html .= '<li><a href="/storage/home-sections/' . $file . '" target="_blank">' . $file . '</a></li>';
-            }
-        }
-        $html .= '</ul>';
-    } else {
-        $html .= '<p>❌ Storage directory not found</p>';
-    }
-    
-    $html .= '<p><a href="/">Home</a></p>';
-    return response($html);
+    return view('test-images');
 });
+
+// Image upload routes
+Route::get('/image-upload', [App\Http\Controllers\ImageController::class, 'showUploadForm'])->name('image.upload.form');
+Route::post('/upload-public', [App\Http\Controllers\ImageController::class, 'uploadToPublic'])->name('image.upload.public');
+Route::post('/upload-storage', [App\Http\Controllers\ImageController::class, 'uploadToStorage'])->name('image.upload.storage');
+Route::delete('/delete-public', [App\Http\Controllers\ImageController::class, 'deleteFromPublic'])->name('image.delete.public');
+Route::delete('/delete-storage', [App\Http\Controllers\ImageController::class, 'deleteFromStorage'])->name('image.delete.storage');
 
 // Setup routes using controller (backup)
 Route::get('/generate-controller', [SetupController::class, 'generate']);
@@ -546,6 +639,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('teachers/{teacher}/transfer-courses', [TeacherController::class, 'transferCourses'])->name('teachers.transfer-courses');
         Route::resource('achievements', AchievementController::class);
         Route::post('achievements/{achievement}/toggle-featured', [AchievementController::class, 'toggleFeatured'])->name('achievements.toggle-featured');
+        Route::resource('accreditations', App\Http\Controllers\Admin\AccreditationController::class);
+        Route::resource('facilities', App\Http\Controllers\Admin\FacilityController::class);
         
         // Subject routes
         Route::resource('subjects', SubjectController::class);
@@ -582,8 +677,60 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::post('documents/{document}/toggle-featured', [AdminDocumentController::class, 'toggleFeatured'])->name('documents.toggle-featured');
         Route::get('documents-section/edit', [AdminDocumentController::class, 'editSection'])->name('documents.edit-section');
         Route::put('documents-section/update', [AdminDocumentController::class, 'updateSection'])->name('documents.update-section');
+        
+        // Library Admin Routes
+        Route::resource('libraries', App\Http\Controllers\Admin\LibraryController::class);
+        
+        // Vision Mission Admin Routes
+        Route::resource('vision-missions', App\Http\Controllers\Admin\VisionMissionController::class);
+        
+        // Message Admin Routes
+        Route::resource('messages', App\Http\Controllers\Admin\MessageController::class)->only(['index', 'show', 'update', 'destroy']);
+        Route::post('messages/{message}/mark-as-read', [App\Http\Controllers\Admin\MessageController::class, 'markAsRead'])->name('messages.mark-as-read');
+        
+        // Headmaster Greeting Admin Routes
+        Route::resource('headmaster-greetings', App\Http\Controllers\Admin\HeadmasterGreetingController::class);
+        
+        // Notification Admin Routes
+        Route::get('notifications', [App\Http\Controllers\Admin\NotificationController::class, 'index'])->name('notifications.index');
+        Route::get('notifications/unread-count', [App\Http\Controllers\Admin\NotificationController::class, 'unreadCount'])->name('notifications.unread-count');
+        Route::post('notifications/{notification}/mark-as-read', [App\Http\Controllers\Admin\NotificationController::class, 'markAsRead'])->name('notifications.mark-as-read');
+        Route::post('notifications/mark-all-as-read', [App\Http\Controllers\Admin\NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-as-read');
+        Route::delete('notifications/{notification}', [App\Http\Controllers\Admin\NotificationController::class, 'destroy'])->name('notifications.destroy');
+        
+        // Contact Admin Routes
+        Route::get('contact', [App\Http\Controllers\Admin\ContactController::class, 'index'])->name('contact.index');
+        Route::put('contact', [App\Http\Controllers\Admin\ContactController::class, 'update'])->name('contact.update');
+        
+        // Social Media Admin Routes
+        Route::resource('social-media', App\Http\Controllers\Admin\SocialMediaController::class);
+        Route::post('social-media/{socialMedia}/toggle-active', [App\Http\Controllers\Admin\SocialMediaController::class, 'toggleActive'])->name('social-media.toggle-active');
+        
+        // User Management Admin Routes
+        Route::resource('user-management', App\Http\Controllers\Admin\UserManagementController::class)->parameters(['user-management' => 'user']);
+        Route::post('user-management/{user}/toggle-active', [App\Http\Controllers\Admin\UserManagementController::class, 'toggleActive'])->name('user-management.toggle-active');
+        Route::delete('notifications', [App\Http\Controllers\Admin\NotificationController::class, 'clearAll'])->name('notifications.clear-all');
 });
 
 
 
 require __DIR__.'/auth.php';
+
+
+// Mobile PPDB Fix Routes
+Route::get("/ppdb/refresh-token", function() {
+    return response()->json([
+        "token" => csrf_token(),
+        "success" => true,
+        "timestamp" => time()
+    ]);
+})->name('ppdb.refresh-token');
+
+Route::get("/ppdb/auto-refresh", function() {
+    return response()->json([
+        "token" => csrf_token(),
+        "success" => true,
+        "auto_refresh" => true,
+        "timestamp" => time()
+    ]);
+})->name('ppdb.auto-refresh');

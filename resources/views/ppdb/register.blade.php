@@ -3,6 +3,93 @@
 @section('title', 'Daftar PPDB - Penerimaan Peserta Didik Baru')
 
 @section('content')
+<style>
+/* Mobile-specific CSS for PPDB form */
+@media (max-width: 768px) {
+    .ppdb-form {
+        padding: 15px;
+        margin: 10px;
+    }
+    
+    .ppdb-form input,
+    .ppdb-form textarea,
+    .ppdb-form select {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+        padding: 12px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .ppdb-form input:focus,
+    .ppdb-form textarea:focus,
+    .ppdb-form select:focus {
+        border-color: #3b82f6;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .csrf-refresh-btn {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        margin: 10px 0;
+        width: 100%;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+    }
+    
+    .csrf-refresh-btn:hover {
+        background: #2563eb;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+    
+    .auto-save-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        left: 20px;
+        z-index: 9999;
+        padding: 12px 16px;
+        border-radius: 8px;
+        color: white;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        animation: slideIn 0.3s ease;
+    }
+    
+    .auto-save-notification.success {
+        background: linear-gradient(135deg, #10b981, #059669);
+    }
+    
+    .auto-save-notification.error {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+    
+    .auto-save-notification.info {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+    }
+    
+    @keyframes slideIn {
+        from {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+}
+</style>
 <div class="bg-white">
     <!-- Hero Section -->
     <div class="bg-gradient-to-r from-primary-500 to-primary-600 text-white py-12">
@@ -26,8 +113,25 @@
         @endif
 
         <div class="bg-white rounded-lg shadow-lg p-8">
-            <form method="POST" action="{{ route('ppdb.store') }}" enctype="multipart/form-data">
+            <!-- CSRF Token Refresh Button -->
+            <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-blue-600 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                        <span class="text-sm text-blue-700">Formulir akan otomatis disimpan. Jika terjadi error 419, klik tombol refresh di bawah.</span>
+                    </div>
+                    <button type="button" onclick="refreshCSRFToken()" class="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors font-medium">
+                        🔄 Refresh Token
+                    </button>
+                </div>
+            </div>
+            
+            <form method="POST" action="{{ route('ppdb.store') }}" enctype="multipart/form-data" id="ppdbForm">
                 @csrf
+                <!-- Hidden CSRF token for mobile refresh -->
+                <input type="hidden" name="_token" id="csrf-token" value="{{ csrf_token() }}">
                 
                 <!-- Data Siswa -->
                 <div class="mb-8">
@@ -260,4 +364,217 @@
         </div>
     </div>
 </div>
+
+<script>
+// Auto-save form data every 30 seconds
+let autoSaveInterval;
+let csrfRefreshInterval;
+let formData = {};
+
+// Start auto-save when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Load saved data if exists
+    loadSavedData();
+
+    // Start auto-save
+    autoSaveInterval = setInterval(autoSave, 30000); // 30 seconds
+    
+    // Start CSRF token auto-refresh every 5 minutes
+    csrfRefreshInterval = setInterval(refreshCSRFToken, 300000); // 5 minutes
+
+    // Save on input change
+    document.querySelectorAll('input, textarea, select').forEach(function(element) {
+        element.addEventListener('input', function() {
+            saveFormData();
+        });
+    });
+
+    // Save before form submit
+    document.getElementById('ppdbForm').addEventListener('submit', function() {
+        clearInterval(autoSaveInterval);
+        clearInterval(csrfRefreshInterval);
+        saveFormData();
+        
+        // Refresh CSRF token before submit
+        refreshCSRFToken();
+    });
+});
+
+// Auto-save function
+function autoSave() {
+    saveFormData();
+    showNotification('Formulir disimpan otomatis', 'success');
+}
+
+// Save form data to localStorage
+function saveFormData() {
+    const form = document.getElementById('ppdbForm');
+    const formData = new FormData(form);
+    
+    // Convert FormData to object
+    const data = {};
+    for (let [key, value] of formData.entries()) {
+        if (key !== '_token' && key !== 'photo' && key !== 'birth_certificate' && key !== 'family_card' && key !== 'report_card') {
+            data[key] = value;
+        }
+    }
+    
+    // Save to localStorage
+    localStorage.setItem('ppdb_draft', JSON.stringify(data));
+}
+
+// Load saved data
+function loadSavedData() {
+    const savedData = localStorage.getItem('ppdb_draft');
+    if (savedData) {
+        try {
+            const data = JSON.parse(savedData);
+            
+            // Fill form fields
+            Object.keys(data).forEach(function(key) {
+                const element = document.querySelector(`[name="${key}"]`);
+                if (element && element.type !== 'file') {
+                    element.value = data[key];
+                }
+            });
+            
+            showNotification('Data sebelumnya dimuat', 'info');
+        } catch (e) {
+            console.log('No saved data or invalid data');
+        }
+    }
+}
+
+// Refresh CSRF token
+
+// Enhanced mobile CSRF refresh
+function refreshCSRFToken() {
+    // Show loading indicator
+    const button = event.target;
+    const originalText = button.innerHTML;
+    button.innerHTML = '🔄 Refreshing...';
+    button.disabled = true;
+    
+    fetch('/ppdb/refresh-token', {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+        },
+        cache: 'no-cache'
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success && data.token) {
+            // Update CSRF token in all form inputs
+            document.querySelectorAll('input[name="_token"]').forEach(input => {
+                input.value = data.token;
+            });
+            document.getElementById('csrf-token').value = data.token;
+            
+            // Update meta tag
+            const metaTag = document.querySelector('meta[name="csrf-token"]');
+            if (metaTag) {
+                metaTag.setAttribute('content', data.token);
+            }
+            
+            showNotification('Token CSRF diperbarui untuk mobile', 'success');
+        } else {
+            throw new Error('Invalid response format');
+        }
+    })
+    .catch(error => {
+        console.error('Error refreshing CSRF token:', error);
+        showNotification('Gagal memperbarui token: ' + error.message, 'error');
+    })
+    .finally(() => {
+        // Restore button
+        button.innerHTML = originalText;
+        button.disabled = false;
+    });
+}
+    fetch('/ppdb/refresh-token', {
+        method: 'GET',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success && data.token) {
+            // Update CSRF token in all form inputs
+            document.querySelectorAll('input[name="_token"]').forEach(input => {
+                input.value = data.token;
+            });
+            document.getElementById('csrf-token').value = data.token;
+            showNotification('Token CSRF diperbarui', 'success');
+        } else {
+            throw new Error('Invalid response format');
+        }
+    })
+    .catch(error => {
+        console.error('Error refreshing CSRF token:', error);
+        showNotification('Gagal memperbarui token: ' + error.message, 'error');
+    });
+}
+
+// Show notification
+function showNotification(message, type) {
+    // Remove existing notification
+    const existing = document.querySelector('.auto-save-notification');
+    if (existing) {
+        existing.remove();
+    }
+    
+    // Create notification
+    const notification = document.createElement('div');
+    notification.className = `auto-save-notification fixed top-4 right-4 sm:right-4 left-4 sm:left-auto z-50 px-4 py-3 rounded-lg text-white text-sm font-medium max-w-sm ${
+        type === 'success' ? 'bg-green-500' : 
+        type === 'error' ? 'bg-red-500' : 
+        'bg-blue-500'
+    }`;
+    notification.textContent = message;
+    
+    // Add mobile-specific styles
+    notification.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+    notification.style.transform = 'translateY(0)';
+    notification.style.transition = 'all 0.3s ease';
+    
+    document.body.appendChild(notification);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.transform = 'translateY(-100%)';
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }
+    }, 3000);
+}
+
+// Clear saved data on successful submission
+window.addEventListener('beforeunload', function() {
+    // Don't clear on page refresh, only on actual navigation
+    if (performance.navigation.type === 1) {
+        localStorage.removeItem('ppdb_draft');
+    }
+});
+</script>
 @endsection

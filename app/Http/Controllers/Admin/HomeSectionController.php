@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\HomeSection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class HomeSectionController extends Controller
 {
@@ -68,22 +69,10 @@ class HomeSectionController extends Controller
             $imageName = time() . '_' . $safeName . '.' . $extension;
             
             try {
-                // Store in uploads directory
-                $uploadsPath = public_path('uploads/home-sections');
-                if (!is_dir($uploadsPath)) {
-                    mkdir($uploadsPath, 0755, true);
-                }
-                $image->move($uploadsPath, $imageName);
-                
-                // Store in storage directory
-                $storagePath = storage_path('app/public/home-sections');
-                if (!is_dir($storagePath)) {
-                    mkdir($storagePath, 0755, true);
-                }
-                copy($uploadsPath . '/' . $imageName, $storagePath . '/' . $imageName);
-                
-                $data['image'] = 'storage/home-sections/' . $imageName;
-            } catch (Exception $e) {
+                // Store in storage using Laravel Storage facade
+                $path = $image->storeAs('home-sections', $imageName, 'public');
+                $data['image'] = $path;
+            } catch (\Exception $e) {
                 return redirect()->back()->withErrors(['image' => 'Failed to upload image: ' . $e->getMessage()]);
             }
         } else {
@@ -150,16 +139,8 @@ class HomeSectionController extends Controller
             }
             
             // Delete old image if exists
-            if ($homeSection->image) {
-                $oldImagePath = public_path($homeSection->image);
-                $oldStoragePath = storage_path('app/public/home-sections/' . basename($homeSection->image));
-                
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
-                }
-                if (file_exists($oldStoragePath)) {
-                    unlink($oldStoragePath);
-                }
+            if ($homeSection->image && Storage::disk('public')->exists($homeSection->image)) {
+                Storage::disk('public')->delete($homeSection->image);
             }
             
             // Generate safe filename
@@ -169,22 +150,26 @@ class HomeSectionController extends Controller
             $imageName = time() . '_' . $safeName . '.' . $extension;
             
             try {
-                // Store in uploads directory
-                $uploadsPath = public_path('uploads/home-sections');
-                if (!is_dir($uploadsPath)) {
-                    mkdir($uploadsPath, 0755, true);
-                }
-                $image->move($uploadsPath, $imageName);
+                // Store in storage using Laravel Storage facade
+                $path = $image->storeAs('home-sections', $imageName, 'public');
+                $data['image'] = $path;
                 
-                // Store in storage directory
-                $storagePath = storage_path('app/public/home-sections');
-                if (!is_dir($storagePath)) {
-                    mkdir($storagePath, 0755, true);
-                }
-                copy($uploadsPath . '/' . $imageName, $storagePath . '/' . $imageName);
+                // Copy file to public storage for immediate access
+                $sourcePath = storage_path('app/public/' . $path);
+                $destPath = public_path('storage/' . $path);
+                $destDir = dirname($destPath);
                 
-                $data['image'] = 'storage/home-sections/' . $imageName;
-            } catch (Exception $e) {
+                // Ensure destination directory exists
+                if (!is_dir($destDir)) {
+                    mkdir($destDir, 0755, true);
+                }
+                
+                if (copy($sourcePath, $destPath)) {
+                    \Log::info('Image uploaded and copied to public storage: ' . $path);
+                } else {
+                    \Log::error('Failed to copy image to public storage: ' . $path);
+                }
+            } catch (\Exception $e) {
                 return redirect()->back()->withErrors(['image' => 'Failed to upload image: ' . $e->getMessage()]);
             }
         } else {
