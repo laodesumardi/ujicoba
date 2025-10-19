@@ -63,10 +63,16 @@ if (is_link($storageLink)) {
 
 // Check if symlink function is available
 if (function_exists('symlink')) {
-    if (symlink($storageTarget, $storageLink)) {
-        echo "   ✅ Storage link created using symlink()\n";
-    } else {
-        echo "   ❌ Failed to create storage link using symlink()\n";
+    try {
+        if (symlink($storageTarget, $storageLink)) {
+            echo "   ✅ Storage link created using symlink()\n";
+        } else {
+            echo "   ❌ Failed to create storage link using symlink()\n";
+            echo "   🔧 Creating manual storage directory...\n";
+            createManualStorage();
+        }
+    } catch (Exception $e) {
+        echo "   ❌ Error creating symlink: " . $e->getMessage() . "\n";
         echo "   🔧 Creating manual storage directory...\n";
         createManualStorage();
     }
@@ -146,7 +152,8 @@ try {
             echo "   🔧 Added slug\n";
         }
         
-        if (empty($gallery->is_active)) {
+        // Check if is_active column exists
+        if (property_exists($gallery, 'is_active') && empty($gallery->is_active)) {
             $updateData['is_active'] = 1;
             $needsUpdate = true;
             echo "   🔧 Set as active\n";
@@ -247,7 +254,8 @@ try {
         }
         
         // Fix other fields
-        if (empty($item->is_active)) {
+        // Check if is_active column exists
+        if (property_exists($item, 'is_active') && empty($item->is_active)) {
             $updateData['is_active'] = 1;
             $needsUpdate = true;
             echo "   🔧 Set as active\n";
@@ -408,7 +416,11 @@ try {
         echo "   ✅ Gallery ID 14 found: {$testGallery->title}\n";
         echo "   📝 Description: " . substr($testGallery->description ?? '', 0, 50) . "...\n";
         echo "   🔗 Slug: {$testGallery->slug}\n";
-        echo "   ✅ Active: " . ($testGallery->is_active ? 'Yes' : 'No') . "\n";
+        if (property_exists($testGallery, 'is_active')) {
+            echo "   ✅ Active: " . ($testGallery->is_active ? 'Yes' : 'No') . "\n";
+        } else {
+            echo "   ✅ Active: Column not found\n";
+        }
         
         if ($testGallery->image) {
             echo "   🖼️  Image: {$testGallery->image}\n";

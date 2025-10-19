@@ -39,7 +39,11 @@ try {
         echo "   🔍 Gallery ID {$gallery->id}: {$gallery->title}\n";
         echo "      📝 Description: " . (empty($gallery->description) ? 'Empty' : substr($gallery->description, 0, 50) . '...') . "\n";
         echo "      🔗 Slug: {$gallery->slug}\n";
-        echo "      ✅ Active: " . ($gallery->is_active ? 'Yes' : 'No') . "\n";
+        if (property_exists($gallery, 'is_active')) {
+            echo "      ✅ Active: " . ($gallery->is_active ? 'Yes' : 'No') . "\n";
+        } else {
+            echo "      ✅ Active: Column not found\n";
+        }
         
         if ($gallery->image) {
             echo "      🖼️  Image: {$gallery->image}\n";
@@ -108,7 +112,11 @@ try {
         echo "   🔍 Item ID {$item->id}: {$item->title}\n";
         echo "      📝 Description: " . (empty($item->description) ? 'Empty' : substr($item->description, 0, 50) . '...') . "\n";
         echo "      🏷️  Gallery ID: {$item->gallery_id}\n";
-        echo "      ✅ Active: " . ($item->is_active ? 'Yes' : 'No') . "\n";
+        if (property_exists($item, 'is_active')) {
+            echo "      ✅ Active: " . ($item->is_active ? 'Yes' : 'No') . "\n";
+        } else {
+            echo "      ✅ Active: Column not found\n";
+        }
         
         if ($item->image) {
             echo "      🖼️  Image: {$item->image}\n";
@@ -172,7 +180,11 @@ try {
         echo "   ✅ Gallery ID {$galleryId} found: {$gallery->title}\n";
         echo "   📝 Description: " . (empty($gallery->description) ? 'Empty' : substr($gallery->description, 0, 100) . '...') . "\n";
         echo "   🔗 Slug: {$gallery->slug}\n";
-        echo "   ✅ Active: " . ($gallery->is_active ? 'Yes' : 'No') . "\n";
+        if (property_exists($gallery, 'is_active')) {
+            echo "   ✅ Active: " . ($gallery->is_active ? 'Yes' : 'No') . "\n";
+        } else {
+            echo "   ✅ Active: Column not found\n";
+        }
         
         if ($gallery->image) {
             echo "   🖼️  Image: {$gallery->image}\n";
@@ -317,6 +329,14 @@ try {
         'login' => 'Login',
         'admin.dashboard' => 'Admin Dashboard'
     ];
+    
+    // Test specific gallery edit route
+    try {
+        $galleryEditUrl = route('admin.gallery.edit', ['gallery' => 14]);
+        echo "   ✅ Gallery Edit Route: {$galleryEditUrl}\n";
+    } catch (Exception $e) {
+        echo "   ❌ Gallery Edit Route: Not found\n";
+    }
     
     foreach ($routes as $route => $description) {
         try {
