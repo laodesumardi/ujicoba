@@ -24,9 +24,10 @@
                 <h2 class="text-xl font-bold text-gray-900 mb-4">Foto Profil</h2>
                 <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
                     <div class="flex-shrink-0">
-                        @if($user->photo && Storage::disk('public')->exists($user->photo))
-                            <img src="{{ Storage::url($user->photo) }}" alt="Foto Profil" class="w-24 h-24 rounded-full object-cover border-2 border-primary-200 shadow-sm" id="current-photo-preview">
-                        @else
+                        @if($user->photo)
+                            <img src="{{ $user->photo_url }}" alt="Foto Profil" class="w-24 h-24 rounded-full object-cover border-2 border-primary-200 shadow-sm" id="current-photo-preview" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        @endif
+                        @if(!$user->photo)
                             <div class="w-24 h-24 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 text-4xl font-bold border-2 border-primary-200 shadow-sm" id="current-photo-preview-fallback">
                                 {{ substr($user->name, 0, 1) }}
                             </div>
@@ -45,7 +46,7 @@
                         @error('photo')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
-                        @if($user->photo && Storage::disk('public')->exists($user->photo))
+                        @if($user->photo)
                             <button type="button" onclick="document.getElementById('delete-photo-form').submit()" class="mt-3 text-red-600 hover:text-red-800 text-sm font-medium">
                                 Hapus Foto Profil
                             </button>

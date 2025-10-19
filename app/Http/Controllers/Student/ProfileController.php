@@ -88,6 +88,21 @@ class ProfileController extends Controller
             // Store new photo
             $path = $request->file('photo')->store('students/photos', 'public');
             $user->photo = $path;
+            
+            // Copy uploaded files to public/storage for immediate access
+            $sourcePath = storage_path('app/public/' . $path);
+            $destPath = public_path('storage/' . $path);
+            $destDir = dirname($destPath);
+            
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+            
+            if (copy($sourcePath, $destPath)) {
+                \Log::info('Student photo copied to public storage: ' . $path);
+            } else {
+                \Log::error('Failed to copy student photo to public storage: ' . $path);
+            }
         }
 
         // Update password if provided

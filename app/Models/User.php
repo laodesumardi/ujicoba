@@ -152,25 +152,48 @@ class User extends Authenticatable
 
     public function getPhotoUrlAttribute()
     {
-        if ($this->photo) {
-            // Check if it's a storage path with 'storage/' prefix
-            if (strpos($this->photo, 'storage/') === 0) {
-                return asset($this->photo);
+        if (!$this->photo) {
+            // Return default image based on role
+            if ($this->role === 'student') {
+                return asset('images/default-student.png');
+            } elseif ($this->role === 'teacher') {
+                return asset('images/default-teacher.png');
+            } else {
+                return asset('images/default-user.png');
             }
-            // Check if it's a storage path without 'storage/' prefix
-            if (strpos($this->photo, 'teachers/') === 0) {
-                return asset('storage/' . $this->photo);
-            }
-            // Check if it's just a filename (old format)
-            if (!strpos($this->photo, '/') && !strpos($this->photo, 'storage/')) {
-                return asset('storage/teachers/' . $this->photo);
-            }
-            // If it's already a full URL or path
+        }
+        
+        if (filter_var($this->photo, FILTER_VALIDATE_URL)) {
             return $this->photo;
         }
         
-        // Return default teacher image
-        return asset('images/default-teacher.png');
+        if (str_starts_with($this->photo, 'http://') || str_starts_with($this->photo, 'https://')) {
+            return $this->photo;
+        }
+        
+        // Check if it's a storage path with 'storage/' prefix
+        if (str_starts_with($this->photo, 'storage/')) {
+            return asset($this->photo);
+        }
+        
+        // Check if it's a storage path without 'storage/' prefix
+        if (str_starts_with($this->photo, 'teachers/') || str_starts_with($this->photo, 'students/')) {
+            return asset('storage/' . $this->photo);
+        }
+        
+        // Check if it's just a filename (old format)
+        if (!str_contains($this->photo, '/')) {
+            if ($this->role === 'student') {
+                return asset('storage/students/photos/' . $this->photo);
+            } elseif ($this->role === 'teacher') {
+                return asset('storage/teachers/' . $this->photo);
+            } else {
+                return asset('storage/' . $this->photo);
+            }
+        }
+        
+        // If it's already a full URL or path
+        return $this->photo;
     }
 
     public function getIsAdminAttribute()
