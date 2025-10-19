@@ -124,7 +124,9 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Gambar Saat Ini</label>
                                 <div class="flex items-center space-x-4">
-                                    <img src="{{ asset('storage/' . $news->featured_image) }}" alt="{{ $news->title }}" class="h-24 w-24 object-cover rounded-lg">
+                                    <img src="{{ $news->featured_image_url }}" alt="{{ $news->title }}" 
+                                         class="h-24 w-24 object-cover rounded-lg border border-gray-300"
+                                         onerror="this.src='{{ asset('images/default-news.png') }}'">
                                     <div>
                                         <p class="text-sm text-gray-600">Gambar utama saat ini</p>
                                         <p class="text-xs text-gray-500">Upload gambar baru untuk mengganti</p>
@@ -138,8 +140,20 @@
                                 <label for="featured_image" class="block text-sm font-medium text-gray-700 mb-2">
                                     {{ $news->featured_image ? 'Ganti Gambar Utama' : 'Gambar Utama' }}
                                 </label>
+                                
+                                <!-- New Image Preview -->
+                                <div id="imagePreview" class="mb-4 hidden">
+                                    <div class="relative inline-block">
+                                        <img id="previewImg" src="" alt="Preview" class="max-w-xs max-h-48 rounded-lg border border-gray-300">
+                                        <button type="button" id="removeImage" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600">
+                                            ×
+                                        </button>
+                                    </div>
+                                </div>
+                                
                                 <input type="file" name="featured_image" id="featured_image" accept="image/*"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('featured_image') border-red-500 @enderror">
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('featured_image') border-red-500 @enderror"
+                                       onchange="previewImage(this)">
                                 @error('featured_image')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
@@ -229,4 +243,84 @@
         </div>
     </div>
 </div>
+
+<script>
+function previewImage(input) {
+    const preview = document.getElementById('imagePreview');
+    const previewImg = document.getElementById('previewImg');
+    const removeBtn = document.getElementById('removeImage');
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            preview.classList.remove('hidden');
+        }
+        
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        preview.classList.add('hidden');
+    }
+}
+
+// Remove image functionality
+document.getElementById('removeImage').addEventListener('click', function() {
+    const input = document.getElementById('featured_image');
+    const preview = document.getElementById('imagePreview');
+    
+    input.value = '';
+    preview.classList.add('hidden');
+});
+
+// Auto-resize textarea
+document.getElementById('content').addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = this.scrollHeight + 'px';
+});
+
+// Form validation
+document.querySelector('form').addEventListener('submit', function(e) {
+    const title = document.getElementById('title').value.trim();
+    const content = document.getElementById('content').value.trim();
+    const category = document.getElementById('category').value;
+    const type = document.getElementById('type').value;
+    const status = document.getElementById('status').value;
+    
+    if (!title) {
+        e.preventDefault();
+        alert('Judul berita harus diisi!');
+        document.getElementById('title').focus();
+        return;
+    }
+    
+    if (!content) {
+        e.preventDefault();
+        alert('Konten berita harus diisi!');
+        document.getElementById('content').focus();
+        return;
+    }
+    
+    if (!category) {
+        e.preventDefault();
+        alert('Kategori harus dipilih!');
+        document.getElementById('category').focus();
+        return;
+    }
+    
+    if (!type) {
+        e.preventDefault();
+        alert('Jenis berita harus dipilih!');
+        document.getElementById('type').focus();
+        return;
+    }
+    
+    if (!status) {
+        e.preventDefault();
+        alert('Status berita harus dipilih!');
+        document.getElementById('status').focus();
+        return;
+    }
+});
+</script>
 @endsection
