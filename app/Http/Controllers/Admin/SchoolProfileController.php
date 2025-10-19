@@ -191,6 +191,23 @@ class SchoolProfileController extends Controller
 
             $schoolProfile->update($data);
 
+            // Copy uploaded files to public/storage for immediate access
+            if ($request->hasFile('image')) {
+                $sourcePath = storage_path('app/public/school-profiles/' . basename($data['image']));
+                $destPath = public_path('storage/school-profiles/' . basename($data['image']));
+                $destDir = dirname($destPath);
+                
+                if (!is_dir($destDir)) {
+                    mkdir($destDir, 0755, true);
+                }
+                
+                if (copy($sourcePath, $destPath)) {
+                    \Log::info('School profile image copied to public storage: ' . basename($data['image']));
+                } else {
+                    \Log::error('Failed to copy school profile image to public storage: ' . basename($data['image']));
+                }
+            }
+
             return redirect()->route('admin.school-profile.index')
                 ->with('success', 'Section berhasil diperbarui!');
         } else {
@@ -428,6 +445,23 @@ class SchoolProfileController extends Controller
         }
 
         $strukturSection->update($data);
+
+        // Copy uploaded files to public/storage for immediate access
+        if ($request->hasFile('image')) {
+            $sourcePath = storage_path('app/public/school-profiles/' . basename($data['image']));
+            $destPath = public_path('storage/school-profiles/' . basename($data['image']));
+            $destDir = dirname($destPath);
+            
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+            
+            if (copy($sourcePath, $destPath)) {
+                \Log::info('Struktur image copied to public storage: ' . basename($data['image']));
+            } else {
+                \Log::error('Failed to copy struktur image to public storage: ' . basename($data['image']));
+            }
+        }
 
         return redirect()->route('admin.school-profile.index')
             ->with('success', 'Struktur organisasi updated successfully.');

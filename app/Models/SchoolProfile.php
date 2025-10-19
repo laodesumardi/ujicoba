@@ -52,4 +52,40 @@ class SchoolProfile extends Model
     {
         return $query->where('section_key', $sectionKey);
     }
+
+    // Accessors
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return asset('images/default-school-profile.png');
+        }
+        
+        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+            return $this->image;
+        }
+        
+        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+            return $this->image;
+        }
+        
+        if (str_starts_with($this->image, 'storage/school-profiles/')) {
+            return asset($this->image);
+        }
+        
+        if (str_starts_with($this->image, 'school-profiles/')) {
+            return asset('storage/' . $this->image);
+        }
+        
+        if (str_starts_with($this->image, 'uploads/school-profiles/')) {
+            return asset($this->image);
+        }
+        
+        if (!str_starts_with($this->image, 'storage/') && 
+            !str_starts_with($this->image, 'school-profiles/') &&
+            !str_starts_with($this->image, 'uploads/')) {
+            return asset('storage/school-profiles/' . $this->image);
+        }
+        
+        return asset('images/default-school-profile.png');
+    }
 }
