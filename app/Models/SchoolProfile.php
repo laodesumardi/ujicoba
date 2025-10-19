@@ -68,24 +68,27 @@ class SchoolProfile extends Model
             return $this->image;
         }
         
-        if (str_starts_with($this->image, 'storage/school-profiles/')) {
+        // If it starts with storage/, use it directly with asset()
+        if (str_starts_with($this->image, 'storage/')) {
             return asset($this->image);
         }
         
+        // If it starts with school-profiles/, add storage/ prefix
         if (str_starts_with($this->image, 'school-profiles/')) {
             return asset('storage/' . $this->image);
         }
         
+        // If it starts with uploads/school-profiles/, change to storage/school-profiles/
         if (str_starts_with($this->image, 'uploads/school-profiles/')) {
-            return asset($this->image);
+            return asset(str_replace('uploads/school-profiles/', 'storage/school-profiles/', $this->image));
         }
         
-        if (!str_starts_with($this->image, 'storage/') && 
-            !str_starts_with($this->image, 'school-profiles/') &&
-            !str_starts_with($this->image, 'uploads/')) {
+        // If it's just a filename, add the full path
+        if (!str_contains($this->image, '/')) {
             return asset('storage/school-profiles/' . $this->image);
         }
         
+        // Default fallback
         return asset('images/default-school-profile.png');
     }
 }

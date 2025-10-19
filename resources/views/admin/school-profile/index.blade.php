@@ -148,7 +148,7 @@ use Illuminate\Support\Facades\Storage;
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($section->image)
-                                        <img src="{{ Storage::url($section->image) }}" alt="{{ $section->image_alt ?: $section->title }}" class="h-12 w-12 object-cover rounded-lg" onerror="this.src='{{ asset('images/default-section.png') }}'">
+                                        <img src="{{ $section->image_url }}" alt="{{ $section->image_alt ?: $section->title }}" class="h-12 w-12 object-cover rounded-lg" onerror="this.src='{{ asset('images/default-section.png') }}'">
                                     @else
                                         <span class="text-gray-400 text-sm">No image</span>
                                     @endif
@@ -208,7 +208,7 @@ use Illuminate\Support\Facades\Storage;
                         
                         @if($section->image)
                         <div class="mb-3">
-                            <img src="{{ Storage::url($section->image) }}" alt="{{ $section->image_alt ?: $section->title }}" class="h-16 w-16 object-cover rounded-lg" onerror="this.src='{{ asset('images/default-section.png') }}'">
+                            <img src="{{ $section->image_url }}" alt="{{ $section->image_alt ?: $section->title }}" class="h-16 w-16 object-cover rounded-lg" onerror="this.src='{{ asset('images/default-section.png') }}'">
                         </div>
                         @endif
                         
