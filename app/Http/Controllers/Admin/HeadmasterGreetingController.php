@@ -51,6 +51,23 @@ class HeadmasterGreetingController extends Controller
 
         HeadmasterGreeting::create($data);
 
+        // Copy uploaded files to public/storage for immediate access
+        if ($request->hasFile('photo')) {
+            $sourcePath = storage_path('app/public/' . $data['photo']);
+            $destPath = public_path('storage/' . $data['photo']);
+            $destDir = dirname($destPath);
+            
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+            
+            if (copy($sourcePath, $destPath)) {
+                \Log::info('Headmaster photo copied to public storage: ' . $data['photo']);
+            } else {
+                \Log::error('Failed to copy headmaster photo to public storage: ' . $data['photo']);
+            }
+        }
+
         return redirect()->route('admin.headmaster-greetings.index')
             ->with('success', 'Sambutan kepala sekolah berhasil ditambahkan.');
     }
@@ -100,6 +117,23 @@ class HeadmasterGreetingController extends Controller
         $data['is_active'] = $request->has('is_active');
 
         $headmasterGreeting->update($data);
+
+        // Copy uploaded files to public/storage for immediate access
+        if ($request->hasFile('photo')) {
+            $sourcePath = storage_path('app/public/' . $data['photo']);
+            $destPath = public_path('storage/' . $data['photo']);
+            $destDir = dirname($destPath);
+            
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+            
+            if (copy($sourcePath, $destPath)) {
+                \Log::info('Headmaster photo copied to public storage: ' . $data['photo']);
+            } else {
+                \Log::error('Failed to copy headmaster photo to public storage: ' . $data['photo']);
+            }
+        }
 
         return redirect()->route('admin.headmaster-greetings.index')
             ->with('success', 'Sambutan kepala sekolah berhasil diperbarui.');

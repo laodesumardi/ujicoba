@@ -20,16 +20,31 @@ class HeadmasterGreeting extends Model
     public function getPhotoUrlAttribute()
     {
         if (!$this->photo) {
-            return null;
+            return asset('images/default-headmaster.png');
         }
         
-        // Check if it's already a full URL
         if (filter_var($this->photo, FILTER_VALIDATE_URL)) {
             return $this->photo;
         }
         
-        // Return the storage URL
-        return asset('storage/' . $this->photo);
+        if (str_starts_with($this->photo, 'http://') || str_starts_with($this->photo, 'https://')) {
+            return $this->photo;
+        }
+        
+        if (str_starts_with($this->photo, 'headmaster-greetings/')) {
+            return asset('storage/' . $this->photo);
+        }
+        
+        if (str_starts_with($this->photo, 'storage/')) {
+            return asset($this->photo);
+        }
+        
+        if (!str_starts_with($this->photo, 'headmaster-greetings/') && 
+            !str_starts_with($this->photo, 'storage/')) {
+            return asset('storage/' . $this->photo);
+        }
+        
+        return asset('images/default-headmaster.png');
     }
 
     public function scopeActive($query)
