@@ -11,7 +11,7 @@
             <p class="text-sm text-gray-500">Edit {{ ucfirst(str_replace('-', ' ', $schoolProfile->section_key)) }} section</p>
         </div>
         
-        <form action="{{ route('admin.school-profile.update', $schoolProfile) }}" method="POST" class="p-6 space-y-6">
+        <form enctype="multipart/form-data" action="{{ route('admin.school-profile.update', $schoolProfile) }}" method="POST" class="p-6 space-y-6">
             @csrf
             @method('PUT')
             
