@@ -118,6 +118,23 @@ class NewsController extends Controller
 
         News::create($data);
 
+        // Copy uploaded files to public/storage for immediate access
+        if ($request->hasFile('featured_image')) {
+            $sourcePath = storage_path('app/public/' . $data['featured_image']);
+            $destPath = public_path('storage/' . $data['featured_image']);
+            $destDir = dirname($destPath);
+            
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+            
+            if (copy($sourcePath, $destPath)) {
+                \Log::info('News featured image copied to public storage: ' . $data['featured_image']);
+            } else {
+                \Log::error('Failed to copy news featured image to public storage: ' . $data['featured_image']);
+            }
+        }
+
         return redirect()->route('admin.news.index')
                        ->with('success', 'Berita berhasil dibuat!');
     }
@@ -197,6 +214,23 @@ class NewsController extends Controller
         }
 
         $news->update($data);
+
+        // Copy uploaded files to public/storage for immediate access
+        if ($request->hasFile('featured_image')) {
+            $sourcePath = storage_path('app/public/' . $data['featured_image']);
+            $destPath = public_path('storage/' . $data['featured_image']);
+            $destDir = dirname($destPath);
+            
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+            
+            if (copy($sourcePath, $destPath)) {
+                \Log::info('News featured image copied to public storage: ' . $data['featured_image']);
+            } else {
+                \Log::error('Failed to copy news featured image to public storage: ' . $data['featured_image']);
+            }
+        }
 
         return redirect()->route('admin.news.index')
                        ->with('success', 'Berita berhasil diperbarui!');
