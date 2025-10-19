@@ -455,7 +455,7 @@
                                     {{ $gallery->getItemCount() }} item
                                 </span>
                                 <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                    {{ $gallery->getCategoryLabel() }}
+                                    {{ $gallery->category_label }}
                                 </span>
                             </div>
                         </div>
