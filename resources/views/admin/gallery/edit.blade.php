@@ -64,7 +64,8 @@
                     <p class="text-sm text-gray-600 mb-2">Gambar Cover Saat Ini:</p>
                     <img src="{{ $gallery->cover_image_url }}" 
                          alt="{{ $gallery->title }}" 
-                         class="w-32 h-32 object-cover rounded-lg border border-gray-300">
+                         class="w-32 h-32 object-cover rounded-lg border border-gray-300"
+                         onerror="this.src='{{ asset('images/default-gallery.png') }}'">
                 </div>
                 @endif
                 
