@@ -138,6 +138,23 @@ class FacilityController extends Controller
 
         $facility->update($data);
 
+        // Copy uploaded files to public/storage for immediate access
+        if ($request->hasFile('image')) {
+            $sourcePath = storage_path('app/public/' . $data['image']);
+            $destPath = public_path('storage/' . $data['image']);
+            $destDir = dirname($destPath);
+            
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+            
+            if (copy($sourcePath, $destPath)) {
+                \Log::info('Facility image copied to public storage: ' . $data['image']);
+            } else {
+                \Log::error('Failed to copy facility image to public storage: ' . $data['image']);
+            }
+        }
+
         return redirect()->route('admin.facilities.index')
             ->with('success', 'Fasilitas berhasil diperbarui.');
     }
