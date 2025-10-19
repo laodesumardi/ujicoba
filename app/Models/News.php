@@ -91,11 +91,32 @@ class News extends Model
     // Accessors
     public function getFeaturedImageUrlAttribute()
     {
-        if ($this->featured_image) {
-            // Coba gunakan URL langsung ke public/storage
+        if (!$this->featured_image) {
+            return asset('images/default-news.png');
+        }
+        
+        if (filter_var($this->featured_image, FILTER_VALIDATE_URL)) {
+            return $this->featured_image;
+        }
+        
+        if (str_starts_with($this->featured_image, 'http://') || str_starts_with($this->featured_image, 'https://')) {
+            return $this->featured_image;
+        }
+        
+        if (str_starts_with($this->featured_image, 'news/')) {
             return asset('storage/' . $this->featured_image);
         }
-        return asset('images/default-news.jpg');
+        
+        if (str_starts_with($this->featured_image, 'storage/')) {
+            return asset($this->featured_image);
+        }
+        
+        if (!str_starts_with($this->featured_image, 'news/') && 
+            !str_starts_with($this->featured_image, 'storage/')) {
+            return asset('storage/' . $this->featured_image);
+        }
+        
+        return asset('images/default-news.png');
     }
 
     public function getExcerptAttribute($value)
