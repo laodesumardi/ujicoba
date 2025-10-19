@@ -119,6 +119,23 @@ class GalleryController extends Controller
 
         Gallery::create($data);
 
+        // Copy uploaded files to public/storage for immediate access
+        if ($request->hasFile('cover_image')) {
+            $sourcePath = storage_path('app/public/' . $data['cover_image']);
+            $destPath = public_path('storage/' . $data['cover_image']);
+            $destDir = dirname($destPath);
+            
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+            
+            if (copy($sourcePath, $destPath)) {
+                \Log::info('Gallery cover image copied to public storage: ' . $data['cover_image']);
+            } else {
+                \Log::error('Failed to copy gallery cover image to public storage: ' . $data['cover_image']);
+            }
+        }
+
         return redirect()->route('admin.gallery.index')
                         ->with('success', 'Galeri berhasil dibuat!');
     }
@@ -192,6 +209,23 @@ class GalleryController extends Controller
         }
 
         $gallery->update($data);
+
+        // Copy uploaded files to public/storage for immediate access
+        if ($request->hasFile('cover_image')) {
+            $sourcePath = storage_path('app/public/' . $data['cover_image']);
+            $destPath = public_path('storage/' . $data['cover_image']);
+            $destDir = dirname($destPath);
+            
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+            
+            if (copy($sourcePath, $destPath)) {
+                \Log::info('Gallery cover image copied to public storage: ' . $data['cover_image']);
+            } else {
+                \Log::error('Failed to copy gallery cover image to public storage: ' . $data['cover_image']);
+            }
+        }
 
         return redirect()->route('admin.gallery.index')
                         ->with('success', 'Galeri berhasil diperbarui!');
