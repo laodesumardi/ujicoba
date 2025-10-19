@@ -50,21 +50,36 @@ foreach ($directories as $dir) {
 // 4. Create storage link if not exists
 echo "\n🔗 Creating storage link...\n";
 $storageLink = 'public/storage';
-if (!is_link($storageLink)) {
-    if (symlink('../storage/app/public', $storageLink)) {
-        echo "   ✅ Storage link created\n";
-    } else {
-        echo "   ❌ Failed to create storage link\n";
-        echo "   🔧 Creating manual storage directory...\n";
-        
-        // Create storage directory manually
-        if (!is_dir($storageLink)) {
-            mkdir($storageLink, 0755, true);
-            echo "   ✅ Storage directory created manually\n";
+
+// Check if symlink function is available
+if (function_exists('symlink')) {
+    if (!is_link($storageLink)) {
+        if (symlink('../storage/app/public', $storageLink)) {
+            echo "   ✅ Storage link created\n";
+        } else {
+            echo "   ❌ Failed to create storage link\n";
+            echo "   🔧 Creating manual storage directory...\n";
+            
+            // Create storage directory manually
+            if (!is_dir($storageLink)) {
+                mkdir($storageLink, 0755, true);
+                echo "   ✅ Storage directory created manually\n";
+            }
         }
+    } else {
+        echo "   ✅ Storage link already exists\n";
     }
 } else {
-    echo "   ✅ Storage link already exists\n";
+    echo "   ⚠️  symlink() function not available on this hosting\n";
+    echo "   🔧 Creating manual storage directory...\n";
+    
+    // Create storage directory manually
+    if (!is_dir($storageLink)) {
+        mkdir($storageLink, 0755, true);
+        echo "   ✅ Storage directory created manually\n";
+    } else {
+        echo "   ✅ Storage directory already exists\n";
+    }
 }
 
 // 5. Fix home sections data and images
