@@ -67,11 +67,11 @@ use Illuminate\Support\Facades\Storage;
                         <div class="md:col-span-2" id="current-image">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Current Image</label>
                             <div class="flex items-center space-x-4">
-                                <img src="{{ Storage::url($homeSection->image) }}" alt="{{ $homeSection->image_alt }}" class="h-20 w-20 object-cover rounded-lg" onerror="this.src='{{ asset('images/default-teacher.png') }}'">
+                                <img src="{{ $homeSection->image_url }}" alt="{{ $homeSection->image_alt }}" class="h-20 w-20 object-cover rounded-lg" onerror="this.src='{{ asset('images/default-teacher.png') }}'">
                                 <div>
                                     <p class="text-sm text-gray-600">{{ basename($homeSection->image) }}</p>
                                     <p class="text-xs text-gray-500">Upload new image to replace</p>
-                                    <p class="text-xs text-blue-600">URL: {{ Storage::url($homeSection->image) }}</p>
+                                    <p class="text-xs text-blue-600">URL: {{ $homeSection->image_url }}</p>
                                 </div>
                             </div>
                         </div>

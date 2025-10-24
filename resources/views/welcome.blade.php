@@ -13,7 +13,7 @@
             $hasImage = false;
 
             if ($sections['hero']->image) {
-                $imageUrl = asset('storage/' . str_replace('public/', '', $sections['hero']->image));
+                $imageUrl = $sections['hero']->image_url;
                 $heroBgStyle = "background-image: url('{$imageUrl}'); background-size: cover; background-position: center; background-repeat: no-repeat;";
                 $hasImage = true;
             } else {
