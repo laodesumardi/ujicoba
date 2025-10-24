@@ -47,7 +47,7 @@ class Library extends Model
                 'id' => $this->id,
                 'field' => 'organization_chart',
                 'v' => $version,
-            ]);
+            ], false);
         }
         
         // URL eksternal
@@ -57,12 +57,12 @@ class Library extends Model
             return $this->organization_chart;
         }
         
-        // Gunakan direct image serving route dengan cache-busting
+        // Gunakan direct image serving route dengan cache-busting (RELATIVE URL)
         return route('image.serve.model', [
             'model' => 'library',
             'id' => $this->id,
             'field' => 'organization_chart',
             'v' => $version,
-        ]);
+        ], false);
     }
 }

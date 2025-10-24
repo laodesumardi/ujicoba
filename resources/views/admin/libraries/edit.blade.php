@@ -120,10 +120,10 @@
                                 
                                 <div class="mt-4">
                                     <p class="text-sm font-medium text-gray-700 mb-2">Current image:</p>
-                                    <img src="{{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => ($library->updated_at ? $library->updated_at->timestamp : time())]) }}" alt="Current Organization Chart" 
+                                    <img src="{{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => ($library->updated_at ? $library->updated_at->timestamp : time())], false) }}" alt="Current Organization Chart" 
                                          loading="lazy"
                                          onerror="this.onerror=null; this.src='{{ asset('images/default-struktur.png') }}'; this.alt='Gambar tidak tersedia';">
-                                    <p class="text-xs text-gray-500 mt-1">URL: {{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => ($library->updated_at ? $library->updated_at->timestamp : time())]) }}</p>
+                                    <p class="text-xs text-gray-500 mt-1">URL: {{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => ($library->updated_at ? $library->updated_at->timestamp : time())], false) }}</p>
                                 </div>
                             </div>
 
