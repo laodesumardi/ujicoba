@@ -136,9 +136,8 @@
                 <div>
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Gambar Cover</h3>
                     @if($gallery->cover_image)
-                        <img src="{{ route('image.serve.model', ['model' => 'gallery', 'id' => $gallery->id, 'field' => 'cover_image']) }}" 
-                             alt="{{ $gallery->title }}" 
-                             class="w-full h-64 object-cover rounded-lg border border-gray-300">
+                        <img src="{{ route('image.serve.model', ['model' => 'gallery', 'id' => $gallery->id, 'field' => 'cover_image', 'v' => ($gallery->updated_at ? $gallery->updated_at->timestamp : time())]) }}"
+                             alt="{{ $gallery->title }}" class="w-full h-48 object-cover rounded-lg">
                     @else
                         <div class="w-full h-64 bg-gray-200 rounded-lg border border-gray-300 flex items-center justify-center">
                             <div class="text-center text-gray-500">
@@ -165,7 +164,7 @@
                 @foreach($items as $item)
                 <div class="relative group">
                     @if($item->isImage())
-                        <img src="{{ route('image.serve.model', ['model' => 'gallery-item', 'id' => $item->id, 'field' => 'image']) }}" 
+                        <img src="{{ route('image.serve.model', ['model' => 'gallery-item', 'id' => $item->id, 'field' => 'image', 'v' => ($item->updated_at ? $item->updated_at->timestamp : time())]) }}"
                              alt="{{ $item->title }}" onerror="this.src='{{ asset('images/default-gallery-item.png') }}'" 
                              class="w-full h-24 object-cover rounded-lg border border-gray-300">
                     @else
