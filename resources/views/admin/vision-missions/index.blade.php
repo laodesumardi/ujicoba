@@ -116,15 +116,30 @@
                                     {{ count($visionMission->missions ?? []) }} misi
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="flex items-center space-x-2">
+                                    <div class="flex items-center space-x-4">
                                         @if($visionMission->image_one_url)
-                                            <img src="{{ $visionMission->image_one_url }}" alt="Gambar 1" class="w-10 h-10 object-cover rounded border">
+                                            <div class="flex flex-col items-center">
+                                                <img src="{{ $visionMission->image_one_url }}" alt="{{ $visionMission->image_one_name ?? 'Gambar 1' }}" class="w-10 h-10 object-cover rounded border">
+                                                @if($visionMission->image_one_name)
+                                                    <span class="mt-1 text-[10px] text-gray-600">{{ $visionMission->image_one_name }}</span>
+                                                @endif
+                                            </div>
                                         @endif
                                         @if($visionMission->image_two_url)
-                                            <img src="{{ $visionMission->image_two_url }}" alt="Gambar 2" class="w-10 h-10 object-cover rounded border">
+                                            <div class="flex flex-col items-center">
+                                                <img src="{{ $visionMission->image_two_url }}" alt="{{ $visionMission->image_two_name ?? 'Gambar 2' }}" class="w-10 h-10 object-cover rounded border">
+                                                @if($visionMission->image_two_name)
+                                                    <span class="mt-1 text-[10px] text-gray-600">{{ $visionMission->image_two_name }}</span>
+                                                @endif
+                                            </div>
                                         @endif
                                         @if($visionMission->image_three_url)
-                                            <img src="{{ $visionMission->image_three_url }}" alt="Gambar 3" class="w-10 h-10 object-cover rounded border">
+                                            <div class="flex flex-col items-center">
+                                                <img src="{{ $visionMission->image_three_url }}" alt="{{ $visionMission->image_three_name ?? 'Gambar 3' }}" class="w-10 h-10 object-cover rounded border">
+                                                @if($visionMission->image_three_name)
+                                                    <span class="mt-1 text-[10px] text-gray-600">{{ $visionMission->image_three_name }}</span>
+                                                @endif
+                                            </div>
                                         @endif
                                         @if(!$visionMission->image_one_url && !$visionMission->image_two_url && !$visionMission->image_three_url)
                                             <span class="text-xs text-gray-400">-</span>
@@ -203,15 +218,30 @@
                         </div>
 
                         <div class="mt-3">
-                            <div class="flex space-x-2">
+                            <div class="flex space-x-4">
                                 @if($visionMission->image_one_url)
-                                    <img src="{{ $visionMission->image_one_url }}" alt="Gambar 1" class="w-14 h-14 object-cover rounded border">
+                                    <div class="flex flex-col items-center">
+                                        <img src="{{ $visionMission->image_one_url }}" alt="{{ $visionMission->image_one_name ?? 'Gambar 1' }}" class="w-14 h-14 object-cover rounded border">
+                                        @if($visionMission->image_one_name)
+                                            <span class="mt-1 text-[10px] text-gray-600">{{ $visionMission->image_one_name }}</span>
+                                        @endif
+                                    </div>
                                 @endif
                                 @if($visionMission->image_two_url)
-                                    <img src="{{ $visionMission->image_two_url }}" alt="Gambar 2" class="w-14 h-14 object-cover rounded border">
+                                    <div class="flex flex-col items-center">
+                                        <img src="{{ $visionMission->image_two_url }}" alt="{{ $visionMission->image_two_name ?? 'Gambar 2' }}" class="w-14 h-14 object-cover rounded border">
+                                        @if($visionMission->image_two_name)
+                                            <span class="mt-1 text-[10px] text-gray-600">{{ $visionMission->image_two_name }}</span>
+                                        @endif
+                                    </div>
                                 @endif
                                 @if($visionMission->image_three_url)
-                                    <img src="{{ $visionMission->image_three_url }}" alt="Gambar 3" class="w-14 h-14 object-cover rounded border">
+                                    <div class="flex flex-col items-center">
+                                        <img src="{{ $visionMission->image_three_url }}" alt="{{ $visionMission->image_three_name ?? 'Gambar 3' }}" class="w-14 h-14 object-cover rounded border">
+                                        @if($visionMission->image_three_name)
+                                            <span class="mt-1 text-[10px] text-gray-600">{{ $visionMission->image_three_name }}</span>
+                                        @endif
+                                    </div>
                                 @endif
                                 @if(!$visionMission->image_one_url && !$visionMission->image_two_url && !$visionMission->image_three_url)
                                     <span class="text-xs text-gray-400">Tidak ada gambar</span>

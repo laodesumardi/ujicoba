@@ -11,8 +11,11 @@ class VisionMission extends Model
         'missions',
         'is_active',
         'image_one',
+        'image_one_name',
         'image_two',
-        'image_three'
+        'image_two_name',
+        'image_three',
+        'image_three_name'
     ];
 
     protected $casts = [

@@ -64,21 +64,21 @@
                 </h3>
                 <div class="grid md:grid-cols-3 gap-6">
                     @if($visionMission->image_one_url)
-                        <div>
-                            <img src="{{ $visionMission->image_one_url }}" alt="Gambar 1" class="w-full h-40 object-cover rounded border">
-                            <p class="text-xs text-gray-500 mt-2">Gambar 1</p>
+                        <div class="flex flex-col items-center">
+                            <img src="{{ $visionMission->image_one_url }}" alt="{{ $visionMission->image_one_name ?? 'Gambar 1' }}" class="w-full h-40 object-cover rounded border">
+                            <p class="text-xs text-gray-500 mt-2">{{ $visionMission->image_one_name ?? 'Gambar 1' }}</p>
                         </div>
                     @endif
                     @if($visionMission->image_two_url)
-                        <div>
-                            <img src="{{ $visionMission->image_two_url }}" alt="Gambar 2" class="w-full h-40 object-cover rounded border">
-                            <p class="text-xs text-gray-500 mt-2">Gambar 2</p>
+                        <div class="flex flex-col items-center">
+                            <img src="{{ $visionMission->image_two_url }}" alt="{{ $visionMission->image_two_name ?? 'Gambar 2' }}" class="w-full h-40 object-cover rounded border">
+                            <p class="text-xs text-gray-500 mt-2">{{ $visionMission->image_two_name ?? 'Gambar 2' }}</p>
                         </div>
                     @endif
                     @if($visionMission->image_three_url)
-                        <div>
-                            <img src="{{ $visionMission->image_three_url }}" alt="Gambar 3" class="w-full h-40 object-cover rounded border">
-                            <p class="text-xs text-gray-500 mt-2">Gambar 3</p>
+                        <div class="flex flex-col items-center">
+                            <img src="{{ $visionMission->image_three_url }}" alt="{{ $visionMission->image_three_name ?? 'Gambar 3' }}" class="w-full h-40 object-cover rounded border">
+                            <p class="text-xs text-gray-500 mt-2">{{ $visionMission->image_three_name ?? 'Gambar 3' }}</p>
                         </div>
                     @endif
                 </div>

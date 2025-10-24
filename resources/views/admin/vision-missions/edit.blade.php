@@ -113,6 +113,11 @@
                             @error('image_one')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
+                            <label for="image_one_name" class="block text-xs font-medium text-gray-600 mt-3 mb-1">Nama Gambar 1 (opsional)</label>
+                            <input type="text" id="image_one_name" name="image_one_name" value="{{ old('image_one_name', $visionMission->image_one_name) }}" placeholder="Contoh: Upacara Bendera" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('image_one_name') border-red-500 @enderror">
+                            @error('image_one_name')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                             @php $preview1 = old('image_one', $visionMission->image_one_url); @endphp
                             @if($preview1)
                                 <img src="{{ $preview1 }}" alt="Preview Gambar 1" class="mt-2 w-full h-32 object-cover rounded border">
@@ -124,6 +129,11 @@
                             @error('image_two')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
+                            <label for="image_two_name" class="block text-xs font-medium text-gray-600 mt-3 mb-1">Nama Gambar 2 (opsional)</label>
+                            <input type="text" id="image_two_name" name="image_two_name" value="{{ old('image_two_name', $visionMission->image_two_name) }}" placeholder="Contoh: Kegiatan Pramuka" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('image_two_name') border-red-500 @enderror">
+                            @error('image_two_name')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                             @php $preview2 = old('image_two', $visionMission->image_two_url); @endphp
                             @if($preview2)
                                 <img src="{{ $preview2 }}" alt="Preview Gambar 2" class="mt-2 w-full h-32 object-cover rounded border">
@@ -133,6 +143,11 @@
                             <label for="image_three" class="block text-sm font-medium text-gray-700 mb-2">Gambar 3</label>
                             <input type="text" id="image_three" name="image_three" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('image_three') border-red-500 @enderror" value="{{ old('image_three', $visionMission->image_three) }}" placeholder="/images/visi-3.jpg">
                             @error('image_three')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                            <label for="image_three_name" class="block text-xs font-medium text-gray-600 mt-3 mb-1">Nama Gambar 3 (opsional)</label>
+                            <input type="text" id="image_three_name" name="image_three_name" value="{{ old('image_three_name', $visionMission->image_three_name) }}" placeholder="Contoh: Kegiatan Olahraga" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('image_three_name') border-red-500 @enderror">
+                            @error('image_three_name')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                             @php $preview3 = old('image_three', $visionMission->image_three_url); @endphp
