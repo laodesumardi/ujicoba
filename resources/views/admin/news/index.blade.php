@@ -175,17 +175,9 @@
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        @if($article->featured_image)
                                         <div class="flex-shrink-0 h-12 w-12">
-                                            <img class="h-12 w-12 rounded-lg object-cover" src="{{ $article->featured_image_url }}" alt="{{ $article->title }}">
+                                            <img class="h-12 w-12 rounded-lg object-cover" src="{{ $article->featured_image_url }}" alt="{{ $article->title }}" onerror="this.src='{{ asset('images/default-news.png') }}'">
                                         </div>
-                                        @else
-                                        <div class="flex-shrink-0 h-12 w-12 bg-gray-200 rounded-lg flex items-center justify-center">
-                                            <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
-                                            </svg>
-                                        </div>
-                                        @endif
                                         <div class="ml-4">
                                             <div class="text-sm font-medium text-gray-900">
                                                 {{ Str::limit($article->title, 50) }}
@@ -265,17 +257,9 @@
                         <div class="flex items-start justify-between mb-3">
                             <div class="flex-1">
                                 <div class="flex items-center mb-2">
-                                    @if($article->featured_image)
                                     <div class="flex-shrink-0 h-12 w-12 mr-3">
-                                        <img class="h-12 w-12 rounded-lg object-cover" src="{{ $article->featured_image_url }}" alt="{{ $article->title }}">
+                                        <img class="h-12 w-12 rounded-lg object-cover" src="{{ $article->featured_image_url }}" alt="{{ $article->title }}" onerror="this.src='{{ asset('images/default-news.png') }}'">
                                     </div>
-                                    @else
-                                    <div class="flex-shrink-0 h-12 w-12 bg-gray-200 rounded-lg flex items-center justify-center mr-3">
-                                        <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
-                                        </svg>
-                                    </div>
-                                    @endif
                                     <div class="flex-1">
                                         <div class="text-sm font-medium text-gray-900 mb-1">
                                             {{ Str::limit($article->title, 60) }}

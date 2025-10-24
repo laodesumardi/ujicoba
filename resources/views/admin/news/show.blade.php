@@ -93,7 +93,7 @@
                     <div class="bg-white border border-gray-200 rounded-lg p-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Gambar Utama</h3>
                         <div class="text-center">
-                            <img src="{{ $news->featured_image_url }}" alt="{{ $news->title }}" class="max-w-full h-auto mx-auto rounded-lg shadow-lg">
+                            <img src="{{ $news->featured_image_url }}" alt="{{ $news->title }}" class="max-w-full h-auto mx-auto rounded-lg shadow-lg" onerror="this.src='{{ asset('images/default-news.png') }}'">
                         </div>
                     </div>
                     @endif
