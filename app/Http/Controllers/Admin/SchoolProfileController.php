@@ -143,47 +143,44 @@ class SchoolProfileController extends Controller
             // Handle image upload for section-based profiles
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                
+
                 // Validate file
                 if (!$image->isValid()) {
                     return redirect()->back()->withErrors(['image' => 'Invalid file upload.']);
                 }
-                
-                // Delete old image if exists
+
+                // Delete old image if exists (normalize path)
                 if ($schoolProfile->image) {
-                    $oldImagePath = public_path($schoolProfile->image);
-                    $oldStoragePath = storage_path('app/public/school-profiles/' . basename($schoolProfile->image));
-                    
-                    if (file_exists($oldImagePath)) {
-                        unlink($oldImagePath);
+                    $old = $schoolProfile->image;
+                    $normalizedOld = str_starts_with($old, 'storage/') ? 'school-profiles/' . basename($old) : $old;
+                    if (\Storage::disk('public')->exists($normalizedOld)) {
+                        \Storage::disk('public')->delete($normalizedOld);
                     }
-                    if (file_exists($oldStoragePath)) {
-                        unlink($oldStoragePath);
+                    $publicMirror = public_path('storage/' . $normalizedOld);
+                    if (file_exists($publicMirror)) {
+                        @unlink($publicMirror);
                     }
                 }
-                
+
                 // Generate safe filename
                 $originalName = $image->getClientOriginalName();
                 $extension = $image->getClientOriginalExtension();
                 $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', pathinfo($originalName, PATHINFO_FILENAME));
                 $imageName = time() . '_' . $safeName . '.' . $extension;
-                
+
                 try {
-                    // Store in uploads directory
-                    $uploadsPath = public_path('uploads/school-profiles');
-                    if (!is_dir($uploadsPath)) {
-                        mkdir($uploadsPath, 0755, true);
+                    // Store via Laravel Storage (public disk)
+                    $path = $image->storeAs('school-profiles', $imageName, 'public');
+                    $data['image'] = $path; // e.g. 'school-profiles/filename.jpg'
+
+                    // Mirror copy to public/storage for hosts without symlink
+                    $sourcePath = storage_path('app/public/' . $path);
+                    $destPath = public_path('storage/' . $path);
+                    $destDir = dirname($destPath);
+                    if (!is_dir($destDir)) {
+                        mkdir($destDir, 0755, true);
                     }
-                    $image->move($uploadsPath, $imageName);
-                    
-                    // Store in storage directory
-                    $storagePath = storage_path('app/public/school-profiles');
-                    if (!is_dir($storagePath)) {
-                        mkdir($storagePath, 0755, true);
-                    }
-                    copy($uploadsPath . '/' . $imageName, $storagePath . '/' . $imageName);
-                    
-                    $data['image'] = 'storage/school-profiles/' . $imageName;
+                    @copy($sourcePath, $destPath);
                 } catch (Exception $e) {
                     return redirect()->back()->withErrors(['image' => 'Failed to upload image: ' . $e->getMessage()]);
                 }
@@ -191,22 +188,7 @@ class SchoolProfileController extends Controller
 
             $schoolProfile->update($data);
 
-            // Copy uploaded files to public/storage for immediate access
-            if ($request->hasFile('image')) {
-                $sourcePath = storage_path('app/public/school-profiles/' . basename($data['image']));
-                $destPath = public_path('storage/school-profiles/' . basename($data['image']));
-                $destDir = dirname($destPath);
-                
-                if (!is_dir($destDir)) {
-                    mkdir($destDir, 0755, true);
-                }
-                
-                if (copy($sourcePath, $destPath)) {
-                    \Log::info('School profile image copied to public storage: ' . basename($data['image']));
-                } else {
-                    \Log::error('Failed to copy school profile image to public storage: ' . basename($data['image']));
-                }
-            }
+            // Mirror copy sudah dilakukan saat upload di atas untuk menghindari duplikasi.
 
             return redirect()->route('admin.school-profile.index')
                 ->with('success', 'Section berhasil diperbarui!');
@@ -398,47 +380,44 @@ class SchoolProfileController extends Controller
         // Handle image upload for struktur section
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            
+
             // Validate file
             if (!$image->isValid()) {
                 return redirect()->back()->withErrors(['image' => 'Invalid file upload.']);
             }
-            
-            // Delete old image if exists
+
+            // Delete old image if exists (normalize path)
             if ($strukturSection->image) {
-                $oldImagePath = public_path($strukturSection->image);
-                $oldStoragePath = storage_path('app/public/school-profiles/' . basename($strukturSection->image));
-                
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
+                $old = $strukturSection->image;
+                $normalizedOld = str_starts_with($old, 'storage/') ? 'school-profiles/' . basename($old) : $old;
+                if (\Storage::disk('public')->exists($normalizedOld)) {
+                    \Storage::disk('public')->delete($normalizedOld);
                 }
-                if (file_exists($oldStoragePath)) {
-                    unlink($oldStoragePath);
+                $publicMirror = public_path('storage/' . $normalizedOld);
+                if (file_exists($publicMirror)) {
+                    @unlink($publicMirror);
                 }
             }
-            
+
             // Generate safe filename
             $originalName = $image->getClientOriginalName();
             $extension = $image->getClientOriginalExtension();
             $safeName = preg_replace('/[^a-zA-Z0-9._-]/', '_', pathinfo($originalName, PATHINFO_FILENAME));
             $imageName = time() . '_' . $safeName . '.' . $extension;
-            
+
             try {
-                // Store in uploads directory
-                $uploadsPath = public_path('uploads/school-profiles');
-                if (!is_dir($uploadsPath)) {
-                    mkdir($uploadsPath, 0755, true);
+                // Store via Laravel Storage (public disk)
+                $path = $image->storeAs('school-profiles', $imageName, 'public');
+                $data['image'] = $path; // e.g. 'school-profiles/filename.jpg'
+
+                // Mirror copy to public/storage for hosts without symlink
+                $sourcePath = storage_path('app/public/' . $path);
+                $destPath = public_path('storage/' . $path);
+                $destDir = dirname($destPath);
+                if (!is_dir($destDir)) {
+                    mkdir($destDir, 0755, true);
                 }
-                $image->move($uploadsPath, $imageName);
-                
-                // Store in storage directory
-                $storagePath = storage_path('app/public/school-profiles');
-                if (!is_dir($storagePath)) {
-                    mkdir($storagePath, 0755, true);
-                }
-                copy($uploadsPath . '/' . $imageName, $storagePath . '/' . $imageName);
-                
-                $data['image'] = 'storage/school-profiles/' . $imageName;
+                @copy($sourcePath, $destPath);
             } catch (Exception $e) {
                 return redirect()->back()->withErrors(['image' => 'Failed to upload image: ' . $e->getMessage()]);
             }

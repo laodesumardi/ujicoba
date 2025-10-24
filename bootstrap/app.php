@@ -18,4 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->withCommands([
+        \App\Console\Commands\StorageMirrorCommand::class,
+        \App\Console\Commands\CreateAdminUser::class,
+        \App\Console\Commands\AddFacilityImages::class,
+    ])
+    ->create();
