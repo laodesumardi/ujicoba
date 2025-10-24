@@ -49,7 +49,7 @@
                     <div class="p-2 sm:p-3 bg-primary-100 rounded-full">
                         <svg class="w-5 h-5 sm:w-6 sm:h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253m0 13C13.168 18.477 14.754 19 16.5 19c1.746 0 3.332-.477 4.5-1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253m0 13C13.168 18.477 14.754 19 16.5 19c1.746 0 3.332-.477 4.5-1.253"></path>
-                        </svg>
+                    </svg>
                     </div>
                     <div class="ml-3 sm:ml-4">
                         <p class="text-xs sm:text-sm font-medium text-gray-600">Total Perpustakaan</p>
@@ -129,7 +129,7 @@
                                         <img src="{{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => ($library->updated_at ? $library->updated_at->timestamp : time())], false) }}" alt="Organization Chart" 
                                              class="h-16 w-16 rounded-lg object-cover border border-gray-200" 
                                              loading="lazy" 
-                                             onerror="this.src='{{ asset('images/default-library-org-chart.png') }}'; this.alt='Gambar tidak tersedia';">
+                                             onerror="this.src='{{ asset('images/default-struktur.png') }}'; this.alt='Gambar tidak tersedia';">
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
@@ -187,7 +187,7 @@
                                     <img src="{{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => ($library->updated_at ? $library->updated_at->timestamp : time())], false) }}" alt="Organization Chart" 
                                          class="h-12 w-12 rounded-lg object-cover border border-gray-200" 
                                          loading="lazy" 
-                                         onerror="this.src='{{ asset('images/default-library-org-chart.png') }}'; this.alt='Gambar tidak tersedia';">
+                                         onerror="this.src='{{ asset('images/default-struktur.png') }}'; this.alt='Gambar tidak tersedia';">
                                 </div>
                                 <div class="flex-1">
                                     <div class="text-sm font-medium text-gray-900 mb-1">

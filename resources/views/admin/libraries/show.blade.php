@@ -61,20 +61,13 @@
                         <!-- Organization Chart -->
                         <div class="col-md-6">
                             <h5 class="text-primary mb-3">Organization Chart</h5>
-                            
-                            @if($library->organization_chart)
-                                <div class="text-center">
-                                    <img src="{{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => ($library->updated_at ? $library->updated_at->timestamp : time())], false) }}" alt="Organization Chart" 
-                                         class="img-fluid rounded border" style="max-height: 300px;"
-                                         loading="lazy"
-                                         onerror="this.src='{{ asset('images/default-struktur.png') }}'; this.alt='Gambar tidak tersedia';">
-                                </div>
-                            @else
-                                <div class="text-center text-muted">
-                                    <i class="fas fa-image fa-3x mb-2"></i>
-                                    <p>No organization chart uploaded</p>
-                                </div>
-                            @endif
+
+                            <div class="text-center">
+                                <img src="{{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => ($library->updated_at ? $library->updated_at->timestamp : time())], false) }}" alt="Organization Chart" 
+                                     class="img-fluid rounded border" style="max-height: 300px;"
+                                     loading="lazy"
+                                     onerror="this.src='{{ asset('images/default-struktur.png') }}'; this.alt='Gambar tidak tersedia';">
+                            </div>
                         </div>
                     </div>
 
