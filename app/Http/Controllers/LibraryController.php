@@ -12,7 +12,8 @@ class LibraryController extends Controller
      */
     public function index()
     {
-        $library = Library::where('is_active', true)->first();
+        // Gunakan perpustakaan aktif; jika tidak ada, fallback ke record pertama
+        $library = Library::where('is_active', true)->first() ?? Library::first();
         
         return view('library', compact('library'));
     }

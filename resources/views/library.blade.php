@@ -18,9 +18,9 @@
                 <div class="bg-white p-8">
                     <h2 class="text-2xl font-bold text-gray-900 mb-4">Struktur Organisasi Perpustakaan</h2>
                     <div class="text-center">
-                        <img src="{{ url('images/default-library-org-chart.png') }}" alt="Struktur Organisasi Perpustakaan" 
+                        <img src="{{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => $library->updated_at?->timestamp], false) }}" alt="Struktur Organisasi Perpustakaan" 
                              class="mx-auto rounded-lg shadow-lg max-w-full h-auto" style="max-height: 500px;" loading="lazy"
-                             onerror="this.src='{{ url('images/default-library-org-chart.png') }}'; this.alt='Gambar tidak tersedia';">
+                             onerror="this.src='{{ asset('images/default-struktur.png') }}'; this.alt='Gambar tidak tersedia';">
                         <p class="text-gray-500 mt-2">Struktur Organisasi Perpustakaan SMP Negeri 01 Namrole</p>
                     </div>
                 </div>
