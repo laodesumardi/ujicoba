@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\HomeSection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\StorageHelper;
 
 class HomeSectionController extends Controller
 {
@@ -72,6 +73,9 @@ class HomeSectionController extends Controller
                 // Store in storage using Laravel Storage facade
                 $path = $image->storeAs('home-sections', $imageName, 'public');
                 $data['image'] = $path;
+
+                // Auto copy to public storage for immediate access
+                StorageHelper::autoCopyToPublic($path);
             } catch (\Exception $e) {
                 return redirect()->back()->withErrors(['image' => 'Failed to upload image: ' . $e->getMessage()]);
             }
@@ -154,20 +158,8 @@ class HomeSectionController extends Controller
                 $path = $image->storeAs('home-sections', $imageName, 'public');
                 $data['image'] = $path;
 
-                // Copy file to public storage for immediate access
-                $sourcePath = storage_path('app/public/' . $path);
-                $destPath = public_path('storage/' . $path);
-                $destDir = dirname($destPath);
-
-                if (!is_dir($destDir)) {
-                    mkdir($destDir, 0755, true);
-                }
-
-                if (copy($sourcePath, $destPath)) {
-                    \Log::info('Image uploaded and copied to public storage: ' . $path);
-                } else {
-                    \Log::error('Failed to copy image to public storage: ' . $path);
-                }
+                // Auto copy to public storage for immediate access
+                StorageHelper::autoCopyToPublic($path);
             } catch (\Exception $e) {
                 return redirect()->back()->withErrors(['image' => 'Failed to upload image: ' . $e->getMessage()]);
             }

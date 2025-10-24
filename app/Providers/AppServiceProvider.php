@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Artisan;
+use App\Events\ModelUpdated;
+use App\Listeners\AutoSyncStorageListener;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,5 +41,8 @@ class AppServiceProvider extends ServiceProvider
             // Silently ignore to avoid breaking boot; admins can run manual fix route
             // logger()->warning('Storage link setup failed: '.$e->getMessage());
         }
+
+        // Register event listeners for auto sync
+        $this->app['events']->listen(ModelUpdated::class, AutoSyncStorageListener::class);
     }
 }

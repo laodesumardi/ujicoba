@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\StorageHelper;
+use App\Events\ModelUpdated;
 
 class Facility extends Model
 {
@@ -22,6 +23,14 @@ class Facility extends Model
         'is_active' => 'boolean',
         'is_featured' => 'boolean',
         'sort_order' => 'integer'
+    ];
+
+    /**
+     * The event map for the model.
+     */
+    protected $dispatchesEvents = [
+        'updated' => ModelUpdated::class,
+        'created' => ModelUpdated::class,
     ];
 
     // Scopes

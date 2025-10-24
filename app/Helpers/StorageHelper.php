@@ -173,4 +173,47 @@ class StorageHelper
         
         return $results;
     }
+
+    /**
+     * Auto copy file to public storage after upload
+     * 
+     * @param string $storagePath Path relatif dari storage/app/public
+     * @return bool Success status
+     */
+    public static function autoCopyToPublic($storagePath)
+    {
+        if (empty($storagePath)) {
+            return false;
+        }
+
+        // Clean path
+        $cleanPath = ltrim($storagePath, '/');
+        
+        $sourcePath = storage_path('app/public/' . $cleanPath);
+        $destPath = public_path('storage/' . $cleanPath);
+        $destDir = dirname($destPath);
+
+        // Check if source file exists
+        if (!file_exists($sourcePath)) {
+            \Log::warning("Source file not found: {$sourcePath}");
+            return false;
+        }
+
+        // Create destination directory if not exists
+        if (!is_dir($destDir)) {
+            if (!mkdir($destDir, 0755, true)) {
+                \Log::error("Failed to create directory: {$destDir}");
+                return false;
+            }
+        }
+
+        // Copy file
+        if (copy($sourcePath, $destPath)) {
+            \Log::info("Auto copy successful: {$cleanPath}");
+            return true;
+        } else {
+            \Log::error("Auto copy failed: {$cleanPath}");
+            return false;
+        }
+    }
 }

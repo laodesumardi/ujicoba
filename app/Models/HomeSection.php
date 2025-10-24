@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\StorageHelper;
+use App\Events\ModelUpdated;
 
 class HomeSection extends Model
 {
@@ -28,6 +29,14 @@ class HomeSection extends Model
 
     protected $casts = [
         'is_active' => 'boolean',
+    ];
+
+    /**
+     * The event map for the model.
+     */
+    protected $dispatchesEvents = [
+        'updated' => ModelUpdated::class,
+        'created' => ModelUpdated::class,
     ];
 
     // Accessor for image URL - Hosting compatible

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Helpers\StorageHelper;
+use App\Events\ModelUpdated;
 
 class News extends Model
 {
@@ -34,6 +35,14 @@ class News extends Model
         'published_at' => 'datetime',
         'tags' => 'array',
         'meta_data' => 'array'
+    ];
+
+    /**
+     * The event map for the model.
+     */
+    protected $dispatchesEvents = [
+        'updated' => ModelUpdated::class,
+        'created' => ModelUpdated::class,
     ];
 
     // Auto-generate slug from title
