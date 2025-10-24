@@ -54,6 +54,15 @@ class ImageController extends Controller
             // Simpan ke storage/app/public/uploads
             $path = $file->storeAs('uploads', $filename, 'public');
             
+            // Mirror copy ke public/storage agar tidak perlu symlink
+            $sourcePath = storage_path('app/public/' . $path);
+            $destPath = public_path('storage/' . $path);
+            $destDir = dirname($destPath);
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+            @copy($sourcePath, $destPath);
+            
             return response()->json([
                 'success' => true,
                 'filename' => $filename,
