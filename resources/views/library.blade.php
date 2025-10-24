@@ -15,25 +15,15 @@
             <!-- Library Profile -->
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
                 <!-- Organization Chart Section -->
-                @if($library->organization_chart)
                 <div class="bg-white p-8">
                     <h2 class="text-2xl font-bold text-gray-900 mb-4">Struktur Organisasi Perpustakaan</h2>
                     <div class="text-center">
-                        <img src="{{ $library->organization_chart_url }}" alt="Struktur Organisasi Perpustakaan" 
+                        <img src="{{ url('images/default-library-org-chart.png') }}" alt="Struktur Organisasi Perpustakaan" 
                              class="mx-auto rounded-lg shadow-lg max-w-full h-auto" style="max-height: 500px;" loading="lazy"
-                             onerror="this.src='{{ asset('images/default-library-org-chart.png') }}'; this.alt='Gambar tidak tersedia';">
+                             onerror="this.src='{{ url('images/default-library-org-chart.png') }}'; this.alt='Gambar tidak tersedia';">
+                        <p class="text-gray-500 mt-2">Struktur Organisasi Perpustakaan SMP Negeri 01 Namrole</p>
                     </div>
                 </div>
-                @else
-                <div class="bg-white p-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Struktur Organisasi Perpustakaan</h2>
-                    <div class="text-center">
-                        <img src="{{ asset('images/default-library-org-chart.png') }}" alt="Struktur Organisasi Perpustakaan" 
-                             class="mx-auto rounded-lg shadow-lg max-w-full h-auto" style="max-height: 500px;" loading="lazy">
-                        <p class="text-gray-500 mt-2">Gambar struktur organisasi akan segera ditambahkan</p>
-                    </div>
-                </div>
-                @endif
 
                 <!-- Library Information -->
                 <div class="p-8">

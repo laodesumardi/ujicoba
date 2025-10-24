@@ -39,7 +39,7 @@ class Library extends Model
     public function getOrganizationChartUrlAttribute()
     {
         if (!$this->organization_chart) {
-            return asset('images/default-library-org-chart.png');
+            return url('images/default-library-org-chart.png');
         }
         
         // Check if it's already a full URL
@@ -50,8 +50,8 @@ class Library extends Model
         // Check if it's a public file (not in storage)
         if (!str_starts_with($this->organization_chart, 'libraries/') && 
             !str_starts_with($this->organization_chart, 'storage/')) {
-            // It's a public file
-            return asset($this->organization_chart);
+            // It's a public file - use url() which includes correct port
+            return url($this->organization_chart);
         }
         
         // Use StorageHelper for consistent URL generation
