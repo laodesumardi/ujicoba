@@ -21,6 +21,8 @@ use App\Http\Controllers\Admin\GalleryController as AdminGalleryController;
 use App\Http\Controllers\Admin\DocumentController as AdminDocumentController;
 use App\Http\Controllers\SetupController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -50,7 +52,7 @@ Route::post('/login', function (Illuminate\Http\Request $request) {
         $request->session()->regenerate();
         
         // Debug info (remove in production)
-        \Log::info('Login successful', [
+        Log::info('Login successful', [
             'user_role' => $user->role ?? 'NULL',
             'user_name' => $user->name ?? 'NULL',
             'user_email' => $user->email ?? 'NULL',
@@ -59,25 +61,25 @@ Route::post('/login', function (Illuminate\Http\Request $request) {
         
         // Force redirect based on user role
         if ($user->role === 'teacher') {
-            \Log::info('Redirecting teacher to dashboard');
+            Log::info('Redirecting teacher to dashboard');
             return response()->view('auth.redirect', [
                 'url' => '/teacher/dashboard',
                 'message' => 'Login berhasil! Selamat datang di Dashboard Guru.'
             ]);
         } elseif ($user->role === 'admin') {
-            \Log::info('Redirecting admin to dashboard');
+            Log::info('Redirecting admin to dashboard');
             return response()->view('auth.redirect', [
                 'url' => '/admin/dashboard',
                 'message' => 'Login berhasil! Selamat datang di Admin Dashboard.'
             ]);
         } elseif ($user->role === 'student') {
-            \Log::info('Redirecting student to dashboard');
+            Log::info('Redirecting student to dashboard');
             return response()->view('auth.redirect', [
                 'url' => '/student/dashboard',
                 'message' => 'Login berhasil! Selamat datang di Student Dashboard.'
             ]);
         } else {
-            \Log::info('Redirecting to fallback dashboard');
+            Log::info('Redirecting to fallback dashboard');
             return response()->view('auth.redirect', [
                 'url' => '/dashboard',
                 'message' => 'Login berhasil!'
@@ -390,3 +392,6 @@ Route::get("/ppdb/auto-refresh", function() {
         "timestamp" => time()
     ]);
 })->name('ppdb.auto-refresh');
+
+// Admin tools: storage fix route
+Route::get('/admin/tools/storage-fix', [SetupController::class, 'setup'])->middleware(['auth','role:admin'])->name('admin.tools.storage-fix');
