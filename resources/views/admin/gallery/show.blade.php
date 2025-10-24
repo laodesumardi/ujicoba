@@ -136,7 +136,7 @@
                 <div>
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Gambar Cover</h3>
                     @if($gallery->cover_image)
-                        <img src="{{ $gallery->cover_image_url }}" 
+                        <img src="{{ route('image.serve.model', ['model' => 'gallery', 'id' => $gallery->id, 'field' => 'cover_image']) }}" 
                              alt="{{ $gallery->title }}" 
                              class="w-full h-64 object-cover rounded-lg border border-gray-300">
                     @else
@@ -165,8 +165,8 @@
                 @foreach($items as $item)
                 <div class="relative group">
                     @if($item->isImage())
-                        <img src="{{ $item- onerror="this.src='{{ asset('images/default-gallery.png') }}'">file_url }}" 
-                             alt="{{ $item- onerror="this.src='{{ asset('images/default-gallery.png') }}'">title }}" 
+                        <img src="{{ route('image.serve.model', ['model' => 'gallery-item', 'id' => $item->id, 'field' => 'image']) }}" 
+                             alt="{{ $item->title }}" onerror="this.src='{{ asset('images/default-gallery-item.png') }}'" 
                              class="w-full h-24 object-cover rounded-lg border border-gray-300">
                     @else
                         <div class="w-full h-24 bg-gray-200 rounded-lg border border-gray-300 flex items-center justify-center">
