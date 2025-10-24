@@ -238,8 +238,9 @@
                 <div class="md:col-span-2">
                     <label for="photo" class="block text-sm font-medium text-gray-700 mb-2">Foto</label>
                     <div class="mb-2">
-                        <img id="current-photo" src="{{ $teacher->photo ? Storage::url('teachers/' . $teacher->photo) : asset('images/default-teacher.png') }}" alt="{{ $teacher->name }}" 
-                             class="h-20 w-20 rounded-full object-cover border-2 border-gray-200">
+                        <img id="current-photo" src="{{ $teacher->photo_url }}" alt="{{ $teacher->name }}" 
+                             class="h-20 w-20 rounded-full object-cover border-2 border-gray-200"
+                             onerror="this.src='{{ asset('images/default-teacher.png') }}'">
                         <p class="text-sm text-gray-500 mt-1">Foto saat ini</p>
                     </div>
                     <div class="mb-2">
