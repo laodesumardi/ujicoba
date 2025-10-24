@@ -12,12 +12,14 @@ class Gallery extends Model
         'title',
         'slug',
         'description',
+        'image',
         'cover_image',
         'type',
         'category',
         'status',
         'is_featured',
         'is_public',
+        'is_active',
         'sort_order',
         'metadata'
     ];
@@ -25,6 +27,7 @@ class Gallery extends Model
     protected $casts = [
         'is_featured' => 'boolean',
         'is_public' => 'boolean',
+        'is_active' => 'boolean',
         'metadata' => 'array'
     ];
 
@@ -38,7 +41,7 @@ class Gallery extends Model
                 $gallery->slug = Str::slug($gallery->title);
             }
         });
-
+        
         static::updating(function ($gallery) {
             if ($gallery->isDirty('title') && empty($gallery->slug)) {
                 $gallery->slug = Str::slug($gallery->title);
@@ -87,6 +90,36 @@ class Gallery extends Model
         return asset('images/default-gallery.jpg');
     }
 
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return asset('images/default-gallery.png');
+        }
+        
+        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+            return $this->image;
+        }
+        
+        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+            return $this->image;
+        }
+        
+        if (str_starts_with($this->image, 'gallery/')) {
+            return asset('storage/' . $this->image);
+        }
+        
+        if (str_starts_with($this->image, 'storage/')) {
+            return asset($this->image);
+        }
+        
+        if (!str_starts_with($this->image, 'gallery/') && 
+            !str_starts_with($this->image, 'storage/')) {
+            return asset('storage/' . $this->image);
+        }
+        
+        return asset('images/default-gallery.png');
+    }
+
     public function getTypeLabelAttribute()
     {
         $types = [
@@ -111,11 +144,6 @@ class Gallery extends Model
         ];
 
         return $categories[$this->category] ?? ucfirst($this->category);
-    }
-
-    public function getCategoryLabel()
-    {
-        return $this->getCategoryLabelAttribute();
     }
 
     public function getStatusLabelAttribute()
