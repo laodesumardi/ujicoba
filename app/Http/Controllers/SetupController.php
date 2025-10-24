@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use App\Models\HomeSection;
 
 class SetupController extends Controller
 {
@@ -77,50 +78,90 @@ class SetupController extends Controller
     public function setup()
     {
         try {
-            // Create storage directories
-            $directories = [
-                'storage/app/public',
-                'storage/app/public/home-sections',
-                'public/uploads',
-                'public/uploads/home-sections'
+            $baseStorage = storage_path('app/public');
+            $basePublic = public_path('storage');
+            $baseUploads = public_path('uploads');
+
+            // Direktori yang umum digunakan di seluruh aplikasi
+            $subdirs = [
+                'home-sections',
+                'school-profiles',
+                'facilities',
+                'galleries',
+                'headmaster-greetings',
+                'teachers',
+                'students',
+                'students/photos',
+                'documents',
+                'assignments',
+                'submissions',
+                'lessons',
+                'libraries',
+                'ppdb',
+                'news',
             ];
 
-            foreach ($directories as $dir) {
+            // Pastikan base directories ada
+            foreach ([$baseStorage, $basePublic, $baseUploads] as $dir) {
                 if (!is_dir($dir)) {
                     mkdir($dir, 0755, true);
                 }
             }
 
-            // Create storage link
-            Artisan::call('storage:link');
-            
-            // Copy images to storage
-            $sourceDir = 'public/uploads/home-sections';
-            $targetDir = 'storage/app/public/home-sections';
-            
-            if (is_dir($sourceDir)) {
-                $files = scandir($sourceDir);
-                foreach ($files as $file) {
-                    if ($file != '.' && $file != '..' && is_file($sourceDir . '/' . $file)) {
-                        copy($sourceDir . '/' . $file, $targetDir . '/' . $file);
-                    }
+            // Buat subdirektori di storage dan public/storage
+            foreach ($subdirs as $sub) {
+                $storageDir = $baseStorage . DIRECTORY_SEPARATOR . $sub;
+                $publicDir = $basePublic . DIRECTORY_SEPARATOR . $sub;
+
+                if (!is_dir($storageDir)) {
+                    mkdir($storageDir, 0755, true);
+                }
+                if (!is_dir($publicDir)) {
+                    mkdir($publicDir, 0755, true);
                 }
             }
 
-            // Create .htaccess for storage
-            $htaccessContent = "Options -Indexes\n<Files ~ \"\\.(jpg|jpeg|png|gif|svg|webp)$\">\n    Order allow,deny\n    Allow from all\n</Files>\n";
-            file_put_contents('public/storage/.htaccess', $htaccessContent);
-            
-            // Clear caches
+            // Legacy uploads yang perlu dijaga (untuk kompatibilitas lama)
+            $legacyUploadDirs = ['home-sections', 'school-profiles'];
+            foreach ($legacyUploadDirs as $sub) {
+                $legacyDir = $baseUploads . DIRECTORY_SEPARATOR . $sub;
+                if (!is_dir($legacyDir)) {
+                    mkdir($legacyDir, 0755, true);
+                }
+            }
+
+            // Buat symlink storage
+            Artisan::call('storage:link');
+
+            // Jika symlink gagal atau diblokir, lakukan mirror copy dari storage ke public/storage
+            if (!is_link($basePublic)) {
+                $this->copyDirectory($baseStorage, $basePublic);
+            }
+
+            // Copy dari public/uploads ke storage untuk direktori legacy jika ada file lama
+            foreach ($legacyUploadDirs as $sub) {
+                $src = $baseUploads . DIRECTORY_SEPARATOR . $sub;
+                $dst = $baseStorage . DIRECTORY_SEPARATOR . $sub;
+                if (is_dir($src)) {
+                    $this->copyDirectory($src, $dst);
+                }
+            }
+
+            // Pastikan .htaccess ada di public/storage
+            $htaccessPath = $basePublic . DIRECTORY_SEPARATOR . '.htaccess';
+            if (!file_exists($htaccessPath)) {
+                $htaccessContent = "Options -Indexes\n<Files ~ \"\\.(jpg|jpeg|png|gif|svg|webp|pdf)$\">\n    Order allow,deny\n    Allow from all\n</Files>\n";
+                file_put_contents($htaccessPath, $htaccessContent);
+            }
+
+            // Bersihkan cache
             Artisan::call('cache:clear');
             Artisan::call('config:clear');
             Artisan::call('route:clear');
             Artisan::call('view:clear');
-            
-            // Rebuild config cache
             Artisan::call('config:cache');
-            
-            return response('<h1>Setup Completed Successfully!</h1><p>✅ Storage link created</p><p>✅ Images copied to storage</p><p>✅ .htaccess created</p><p>✅ Caches cleared</p><p>✅ Config cache rebuilt</p><p><a href="/test-images">Test Images</a></p><p><a href="/">Go to Homepage</a></p><p><a href="/admin/home-sections">Go to Admin Panel</a></p>');
+
+            return response('<h1>Setup Completed Successfully!</h1><p>✅ Directories ensured</p><p>✅ Storage link created or fallback mirrored</p><p>✅ Legacy uploads copied</p><p>✅ .htaccess ensured</p><p>✅ Caches cleared</p><p><a href="/admin/home-sections">Admin Home Sections</a></p>');
         } catch (\Exception $e) {
             return response('<h1>Error During Setup</h1><p>Error: ' . $e->getMessage() . '</p><p>Please try again or contact administrator.</p>');
         }
@@ -164,5 +205,30 @@ class SetupController extends Controller
         $html .= '<p><a href="/setup">Run Complete Setup</a></p>';
         
         return response($html);
+    }
+    
+    private function copyDirectory(string $src, string $dst): void
+    {
+        if (!is_dir($src)) {
+            return;
+        }
+        if (!is_dir($dst)) {
+            mkdir($dst, 0755, true);
+        }
+
+        $items = scandir($src);
+        foreach ($items as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+            $source = $src . DIRECTORY_SEPARATOR . $item;
+            $dest = $dst . DIRECTORY_SEPARATOR . $item;
+
+            if (is_dir($source)) {
+                $this->copyDirectory($source, $dest);
+            } else {
+                @copy($source, $dest);
+            }
+        }
     }
 }
