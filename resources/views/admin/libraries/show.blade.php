@@ -80,9 +80,9 @@
                         <div class="text-center">
                             @if($library->organization_chart)
                                 <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                                    <img src="{{ $library->organization_chart_url }}" alt="Organization Chart" 
-                                         class="max-w-full h-auto rounded-lg shadow-sm" style="max-height: 300px;"
-                                         loading="lazy"
+                                    <img src="{{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => ($library->updated_at ? $library->updated_at->timestamp : time())], false) }}" alt="Struktur Organisasi Perpustakaan" 
+                                         class="w-full max-w-md rounded-lg border border-gray-200 object-contain" 
+                                         loading="lazy" 
                                          onerror="this.src='{{ asset('images/default-struktur.png') }}'; this.alt='Gambar tidak tersedia';">
                                     <p class="text-xs text-gray-500 mt-2">
                                         <strong>Storage Path:</strong> {{ $library->organization_chart }}
