@@ -43,9 +43,10 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="text-center mb-4">
-                                @if($headmasterGreeting->photo_url)
-                                    <img src="{{ $headmasterGreeting->photo_url }}" alt="{{ $headmasterGreeting->headmaster_name }}" 
-                                         class="img-fluid rounded-circle shadow" style="width: 200px; height: 200px; object-fit: cover;">
+                                @if($headmasterGreeting->photo)
+                                    <img src="{{ route('image.serve.model', ['model' => 'headmaster-greeting', 'id' => $headmasterGreeting->id, 'field' => 'photo', 'v' => $headmasterGreeting->updated_at->timestamp]) }}" alt="{{ $headmasterGreeting->headmaster_name }}" 
+                                         class="img-fluid rounded-circle shadow" style="width: 200px; height: 200px; object-fit: cover;"
+                                         onerror="this.onerror=null; this.src='{{ asset('images/default-headmaster.png') }}';">
                                 @else
                                     <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto shadow" 
                                          style="width: 200px; height: 200px;">
@@ -77,7 +78,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-4">
                                         <h6 class="text-primary mb-2">Foto</h6>
-                                        @if($headmasterGreeting->photo_url)
+                                        @if($headmasterGreeting->photo)
                                             <span class="badge bg-info">
                                                 <i class="fas fa-check me-1"></i>Ada Foto
                                             </span>

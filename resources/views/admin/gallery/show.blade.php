@@ -164,9 +164,8 @@
                 @foreach($items as $item)
                 <div class="relative group">
                     @if($item->isImage())
-                        <img src="{{ route('image.serve.model', ['model' => 'gallery-item', 'id' => $item->id, 'field' => 'image', 'v' => ($item->updated_at ? $item->updated_at->timestamp : time())]) }}"
-                             alt="{{ $item->title }}" onerror="this.src='{{ asset('images/default-gallery-item.png') }}'" 
-                             class="w-full h-24 object-cover rounded-lg border border-gray-300">
+                        <img src="{{ route('image.serve.model', ['model' => 'gallery-item', 'id' => $item->id, 'field' => ($item->file_path ? 'file_path' : 'image'), 'v' => ($item->updated_at ? $item->updated_at->timestamp : time())]) }}"
+                             alt="{{ $item->title ?: 'Gallery Item' }}" class="w-full h-24 object-cover rounded-lg border border-gray-300" onerror="this.src='{{ asset('images/default-gallery-item.png') }}'">
                     @else
                         <div class="w-full h-24 bg-gray-200 rounded-lg border border-gray-300 flex items-center justify-center">
                             <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

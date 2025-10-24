@@ -118,9 +118,9 @@
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $loop->iteration }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($greeting->photo_url)
+                                    @if($greeting->photo)
                                         <div class="h-16 w-16 relative">
-                                            <img src="{{ $greeting->photo_url }}" alt="{{ $greeting->headmaster_name }}" 
+                                            <img src="{{ route('image.serve.model', ['model' => 'headmaster-greeting', 'id' => $greeting->id, 'field' => 'photo', 'v' => $greeting->updated_at->timestamp]) }}" alt="{{ $greeting->headmaster_name }}" 
                                                  class="h-16 w-16 object-cover rounded-lg border border-gray-200"
                                                  style="display: block !important; max-width: 100% !important; max-height: 100% !important; width: 64px !important; height: 64px !important;"
                                                  onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';"
@@ -196,10 +196,10 @@
                         <div class="flex items-start justify-between mb-3">
                             <div class="flex-1">
                                 <div class="flex items-center mb-2">
-                                    @if($greeting->photo_url)
+                                    @if($greeting->photo)
                                     <div class="flex-shrink-0 h-16 w-16 mr-3">
                                         <img class="h-16 w-16 rounded-lg object-cover border border-gray-200" 
-                                             src="{{ $greeting->photo_url }}" 
+                                             src="{{ route('image.serve.model', ['model' => 'headmaster-greeting', 'id' => $greeting->id, 'field' => 'photo', 'v' => $greeting->updated_at->timestamp]) }}" 
                                              alt="{{ $greeting->headmaster_name }}">
                                     </div>
                                     @else

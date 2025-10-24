@@ -63,8 +63,7 @@
                 <div class="mb-4">
                     <p class="text-sm text-gray-600 mb-2">Gambar Cover Saat Ini:</p>
                     <img src="{{ route('image.serve.model', ['model' => 'gallery', 'id' => $gallery->id, 'field' => 'cover_image', 'v' => ($gallery->updated_at ? $gallery->updated_at->timestamp : time())]) }}" 
-                         alt="{{ $gallery->title }}" class="w-full h-32 object-cover rounded-lg border border-gray-300">
-                         onerror="this.src='{{ asset('images/default-gallery.png') }}'">
+                         alt="{{ $gallery->title }}" class="w-full h-32 object-cover rounded-lg border border-gray-300" onerror="this.src='{{ asset('images/default-gallery.png') }}'">
                 </div>
                 @endif
                 
