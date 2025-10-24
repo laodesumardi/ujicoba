@@ -19,9 +19,18 @@
                 <div class="bg-white p-8">
                     <h2 class="text-2xl font-bold text-gray-900 mb-4">Struktur Organisasi Perpustakaan</h2>
                     <div class="text-center">
-                        <img src="{{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => \Illuminate\Support\Str::random(8)]) }}" alt="Struktur Organisasi Perpustakaan" 
+                        <img src="{{ $library->organization_chart_url }}" alt="Struktur Organisasi Perpustakaan" 
                              class="mx-auto rounded-lg shadow-lg max-w-full h-auto" style="max-height: 500px;" loading="lazy"
-                             onerror="this.src='{{ asset('images/default-struktur.png') }}'; this.alt='Gambar tidak tersedia';">
+                             onerror="this.src='{{ asset('images/default-library-org-chart.png') }}'; this.alt='Gambar tidak tersedia';">
+                    </div>
+                </div>
+                @else
+                <div class="bg-white p-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Struktur Organisasi Perpustakaan</h2>
+                    <div class="text-center">
+                        <img src="{{ asset('images/default-library-org-chart.png') }}" alt="Struktur Organisasi Perpustakaan" 
+                             class="mx-auto rounded-lg shadow-lg max-w-full h-auto" style="max-height: 500px;" loading="lazy">
+                        <p class="text-gray-500 mt-2">Gambar struktur organisasi akan segera ditambahkan</p>
                     </div>
                 </div>
                 @endif
