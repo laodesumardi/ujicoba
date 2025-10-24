@@ -121,7 +121,7 @@
                                 @if($library->organization_chart)
                                     <div class="mt-4">
                                         <p class="text-sm font-medium text-gray-700 mb-2">Current image:</p>
-                                        <img src="{{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => ($library->updated_at ? $library->updated_at->timestamp : time())]) }}" alt="Current Organization Chart" 
+                                        <img src="{{ $library->organization_chart_url }}" alt="Current Organization Chart" 
                                              class="max-w-xs rounded-lg shadow-md" id="current-image" loading="lazy" onerror="this.style.display='none';">
                                     </div>
                                 @endif
