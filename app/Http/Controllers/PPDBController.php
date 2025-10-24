@@ -23,6 +23,7 @@ class PPDBController extends Controller
         return view('ppdb.index', compact('ppdb'));
     }
 
+
     /**
      * Show registration form
      */
@@ -88,10 +89,11 @@ class PPDBController extends Controller
             $data['report_card'] = $this->uploadFile($request->file('report_card'), 'documents');
         }
 
-        PPDBRegistration::create($data);
+        $registration = PPDBRegistration::create($data);
 
         return redirect()->route('ppdb.success')
-                       ->with('success', 'Pendaftaran berhasil! Nomor pendaftaran Anda: ' . $data['registration_number']);
+                       ->with('success', 'Pendaftaran berhasil! Nomor pendaftaran Anda: ' . $data['registration_number'])
+                       ->with('registration_id', $registration->id);
     }
 
     /**
@@ -110,10 +112,48 @@ class PPDBController extends Controller
     }
 
     /**
+     * Download registration form as PDF
+     */
+    public function downloadForm($id)
+    {
+        $registration = PPDBRegistration::findOrFail($id);
+        
+        // Generate PDF using DomPDF
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('ppdb.registration-form-pdf', compact('registration'));
+        
+        $filename = 'Form_Pendaftaran_' . $registration->registration_number . '.pdf';
+        
+        return $pdf->download($filename);
+    }
+
+    /**
      * Check registration status
      */
     public function checkStatus(Request $request)
     {
+        // Handle AJAX request for email-based status check
+        if ($request->ajax() || $request->wantsJson()) {
+            $request->validate([
+                'email' => 'required|email'
+            ]);
+
+            $registration = PPDBRegistration::where('email', $request->email)->first();
+            
+            if (!$registration) {
+                return response()->json([
+                    'status' => 'not_found',
+                    'message' => 'Email tidak ditemukan dalam database PPDB.'
+                ]);
+            }
+
+            return response()->json([
+                'status' => $registration->status,
+                'message' => $this->getStatusMessage($registration->status),
+                'registration_number' => $registration->registration_number
+            ]);
+        }
+
+        // Handle regular form submission
         $registrationNumber = $request->input('registration_number');
         
         if (!$registrationNumber) {
@@ -123,6 +163,23 @@ class PPDBController extends Controller
         $registration = PPDBRegistration::where('registration_number', $registrationNumber)->first();
         
         return view('ppdb.check-status', compact('registration'));
+    }
+
+    /**
+     * Get status message based on PPDB status
+     */
+    private function getStatusMessage($status)
+    {
+        switch ($status) {
+            case 'pending':
+                return 'Pendaftaran Anda sedang dalam proses review. Silakan tunggu konfirmasi dari admin.';
+            case 'approved':
+                return 'Pendaftaran Anda telah disetujui! Anda sekarang dapat melakukan registrasi sebagai siswa.';
+            case 'rejected':
+                return 'Maaf, pendaftaran Anda ditolak. Silakan hubungi admin untuk informasi lebih lanjut.';
+            default:
+                return 'Status pendaftaran tidak diketahui.';
+        }
     }
 
     /**

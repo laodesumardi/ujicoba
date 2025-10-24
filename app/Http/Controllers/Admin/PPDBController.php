@@ -142,13 +142,90 @@ class PPDBController extends Controller
             'notes' => 'nullable|string'
         ]);
 
+        $oldStatus = $registration->status;
+        
         $registration->update([
             'status' => $request->status,
             'notes' => $request->notes
         ]);
 
+        // Jika status berubah menjadi approved, buat akun siswa otomatis
+        if ($request->status === 'approved' && $oldStatus !== 'approved') {
+            $this->createStudentAccount($registration);
+        }
+
         return redirect()->route('admin.ppdb.registrations')
                        ->with('success', 'Status pendaftaran berhasil diperbarui!');
+    }
+
+    /**
+     * Create student account automatically when PPDB is approved
+     */
+    private function createStudentAccount(PPDBRegistration $registration)
+    {
+        // Gunakan email sebagai username
+        $username = $registration->email;
+        
+        // Generate password acak
+        $password = $this->generateRandomPassword();
+        
+        // Cek apakah user sudah ada
+        $existingUser = \App\Models\User::where('email', $registration->email)->first();
+        
+        if ($existingUser) {
+            // Update existing user dengan role student
+            $existingUser->update([
+                'role' => 'student',
+                'student_id' => $registration->registration_number,
+                'name' => $registration->student_name,
+                'phone' => $registration->phone_number,
+                'date_of_birth' => $registration->birth_date,
+                'gender' => $registration->gender,
+                'address' => $registration->address,
+                'username' => $username,
+                'class_level' => 'VII', // Default class level
+                'class_section' => 'A', // Default class section
+            ]);
+        } else {
+            // Buat user baru
+            \App\Models\User::create([
+                'name' => $registration->student_name,
+                'email' => $registration->email,
+                'password' => \Hash::make($password),
+                'role' => 'student',
+                'student_id' => $registration->registration_number,
+                'phone' => $registration->phone_number,
+                'date_of_birth' => $registration->birth_date,
+                'gender' => $registration->gender,
+                'address' => $registration->address,
+                'username' => $username,
+                'is_active' => true,
+                'class_level' => 'VII', // Default class level
+                'class_section' => 'A', // Default class section
+            ]);
+        }
+        
+        // Simpan informasi login di PPDB registration
+        $registration->update([
+            'student_username' => $username,
+            'student_password' => $password, // Simpan password plain untuk ditampilkan
+        ]);
+    }
+
+    /**
+     * Generate random password for student account
+     */
+    private function generateRandomPassword()
+    {
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $password = '';
+        $length = 8;
+        
+        for ($i = 0; $i < $length; $i++) {
+            $password .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        
+        return $password;
     }
 
     /**

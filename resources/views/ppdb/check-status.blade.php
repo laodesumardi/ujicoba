@@ -136,6 +136,60 @@
                         </div>
                         @endif
 
+                        <!-- Login Information for Approved Status -->
+                        @if($registration->status == 'approved' && $registration->student_username)
+                        <div class="mt-6 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg">
+                            <div class="text-center mb-6">
+                                <div class="mb-4">
+                                    <svg class="w-16 h-16 text-blue-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold text-blue-900 mb-2">Informasi Login Siswa</h3>
+                                <p class="text-blue-700">Akun siswa telah dibuat otomatis. Gunakan informasi berikut untuk login:</p>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 mb-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="text-center">
+                                        <label class="block text-sm font-medium text-gray-500 mb-2">Username</label>
+                                        <div class="bg-gray-100 px-4 py-3 rounded-lg">
+                                            <code class="text-lg font-mono text-gray-900">{{ $registration->student_username }}</code>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <label class="block text-sm font-medium text-gray-500 mb-2">Password</label>
+                                        <div class="bg-gray-100 px-4 py-3 rounded-lg">
+                                            <code class="text-lg font-mono text-gray-900">{{ $registration->student_password }}</code>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <a href="{{ route('login') }}" 
+                                   class="inline-flex items-center bg-blue-600 text-white px-8 py-3 rounded-xl font-semibold text-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                                    <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                                    </svg>
+                                    Login Sekarang
+                                </a>
+                            </div>
+                            
+                            <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-yellow-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                                    </svg>
+                                    <div>
+                                        <p class="text-sm text-yellow-800 font-medium">Penting!</p>
+                                        <p class="text-sm text-yellow-700">Simpan informasi login ini dengan baik. Anda dapat mengubah password setelah login pertama kali.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
                         <!-- Status Information -->
                         <div class="mt-6 p-4 rounded-lg 
                             @if($registration->status == 'pending') bg-yellow-50 border border-yellow-200
@@ -159,7 +213,7 @@
                                     </svg>
                                     <div>
                                         <h4 class="font-semibold text-green-800">Selamat! Anda Diterima</h4>
-                                        <p class="text-sm text-green-700 mt-1">Pendaftaran Anda telah disetujui. Silakan hubungi panitia untuk informasi lebih lanjut.</p>
+                                        <p class="text-sm text-green-700 mt-1">Pendaftaran Anda telah disetujui. Akun siswa telah dibuat otomatis untuk Anda.</p>
                                     </div>
                                 </div>
                             @elseif($registration->status == 'rejected')

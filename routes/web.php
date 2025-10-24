@@ -197,10 +197,15 @@ Route::prefix('download')->name('documents.')->group(function () {
 });
 
 // Student Registration Routes
+// Arahkan langsung ke form agar /register tidak membingungkan
 Route::get('/register', function () {
-    return view('auth.student-registration-info');
+    return redirect()->route('register.form');
 })->name('register');
 
+// Download registration form
+Route::get('/ppdb/{id}/download-form', [App\Http\Controllers\PPDBController::class, 'downloadForm'])->name('ppdb.download-form');
+
+// Halaman informasi tetap tersedia di /register/info
 Route::get('/register/info', function () {
     return view('auth.student-registration-info');
 })->name('student.register');

@@ -200,6 +200,272 @@
                     </div>
                 @endif
             </div>
+
+            <!-- Assignments Tab -->
+            <div id="assignments" class="tab-content hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Tugas & Ujian</h3>
+                    <span class="text-sm text-gray-500">{{ $course->assignments->count() }} tugas tersedia</span>
+                </div>
+                
+                @if($course->assignments->count() > 0)
+                    <div class="space-y-4">
+                        @foreach($course->assignments as $assignment)
+                        <div class="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all duration-300 bg-gradient-to-br from-white to-gray-50">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-3 mb-2">
+                                        <h4 class="text-lg font-semibold text-gray-900">{{ $assignment->title }}</h4>
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                            {{ $assignment->type_label }}
+                                        </span>
+                                        @if($assignment->due_date && $assignment->due_date->isFuture())
+                                            <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                                <i class="fas fa-clock mr-1"></i>
+                                                Aktif
+                                            </span>
+                                        @elseif($assignment->due_date && $assignment->due_date->isPast())
+                                            <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
+                                                <i class="fas fa-exclamation-triangle mr-1"></i>
+                                                Deadline Terlewat
+                                            </span>
+                                        @endif
+                                    </div>
+                                    
+                                    <p class="text-sm text-gray-600 mb-3">{{ Str::limit($assignment->description, 150) }}</p>
+                                    
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                        @if($assignment->due_date)
+                                            <span class="flex items-center">
+                                                <i class="fas fa-calendar-alt mr-1"></i>
+                                                Deadline: {{ $assignment->due_date->format('d M Y H:i') }}
+                                            </span>
+                                        @endif
+                                        @if($assignment->points)
+                                            <span class="flex items-center">
+                                                <i class="fas fa-star mr-1"></i>
+                                                {{ $assignment->points }} poin
+                                            </span>
+                                        @endif
+                                        @if($assignment->estimated_time)
+                                            <span class="flex items-center">
+                                                <i class="fas fa-clock mr-1"></i>
+                                                {{ $assignment->estimated_time }} menit
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center space-x-2">
+                                    @if($assignment->due_date && $assignment->due_date->isFuture())
+                                        <a href="{{ route('student.assignments.show', $assignment) }}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                                            <i class="fas fa-edit mr-2"></i>
+                                            Kerjakan
+                                        </a>
+                                    @else
+                                        <button disabled class="bg-gray-300 text-gray-500 px-4 py-2 rounded-lg font-medium cursor-not-allowed">
+                                            <i class="fas fa-lock mr-2"></i>
+                                            Tidak Tersedia
+                                        </button>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-center py-12">
+                        <i class="fas fa-tasks text-4xl text-gray-300 mb-4"></i>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada tugas</h3>
+                        <p class="text-gray-600">Tugas akan muncul setelah guru menambahkannya.</p>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Forums Tab -->
+            <div id="forums" class="tab-content hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Forum Diskusi</h3>
+                    <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                        <i class="fas fa-plus mr-2"></i>
+                        Buat Topik Baru
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <!-- Sample Forum Topics -->
+                    <div class="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all duration-300 bg-gradient-to-br from-white to-gray-50">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <h4 class="text-lg font-semibold text-gray-900">Diskusi Materi Pertama</h4>
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                        <i class="fas fa-comments mr-1"></i>
+                                        Aktif
+                                    </span>
+                                </div>
+                                
+                                <p class="text-sm text-gray-600 mb-3">Mari kita diskusikan materi yang baru saja dipelajari...</p>
+                                
+                                <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                    <span class="flex items-center">
+                                        <i class="fas fa-user mr-1"></i>
+                                        Oleh: Guru Matematika
+                                    </span>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        2 jam yang lalu
+                                    </span>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-comments mr-1"></i>
+                                        5 balasan
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-2">
+                                <a href="#" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                                    <i class="fas fa-eye mr-2"></i>
+                                    Lihat Diskusi
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all duration-300 bg-gradient-to-br from-white to-gray-50">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3 mb-2">
+                                    <h4 class="text-lg font-semibold text-gray-900">Tanya Jawab Tugas</h4>
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                        <i class="fas fa-question-circle mr-1"></i>
+                                        Q&A
+                                    </span>
+                                </div>
+                                
+                                <p class="text-sm text-gray-600 mb-3">Ada yang mengalami kesulitan dengan tugas yang diberikan?</p>
+                                
+                                <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                    <span class="flex items-center">
+                                        <i class="fas fa-user mr-1"></i>
+                                        Oleh: Siswa A
+                                    </span>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        1 hari yang lalu
+                                    </span>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-comments mr-1"></i>
+                                        3 balasan
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center space-x-2">
+                                <a href="#" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                                    <i class="fas fa-eye mr-2"></i>
+                                    Lihat Diskusi
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grades Tab -->
+            <div id="grades" class="tab-content hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900">Nilai & Progress</h3>
+                    <span class="text-sm text-gray-500">Progress belajar Anda</span>
+                </div>
+                
+                <!-- Progress Overview -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="text-lg font-semibold mb-2">Progress Materi</h4>
+                                <p class="text-3xl font-bold">75%</p>
+                                <p class="text-blue-100 text-sm">3 dari 4 materi selesai</p>
+                            </div>
+                            <i class="fas fa-book text-4xl text-blue-200"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="text-lg font-semibold mb-2">Tugas Selesai</h4>
+                                <p class="text-3xl font-bold">5</p>
+                                <p class="text-green-100 text-sm">dari 7 tugas</p>
+                            </div>
+                            <i class="fas fa-tasks text-4xl text-green-200"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-6 text-white">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h4 class="text-lg font-semibold mb-2">Nilai Rata-rata</h4>
+                                <p class="text-3xl font-bold">85</p>
+                                <p class="text-purple-100 text-sm">Sangat Baik</p>
+                            </div>
+                            <i class="fas fa-star text-4xl text-purple-200"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Grades -->
+                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                        <h4 class="text-lg font-semibold text-gray-900">Detail Nilai</h4>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tugas/Ujian</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nilai</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Tugas 1: Aljabar Dasar</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">90</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                            Selesai
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15 Okt 2024</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Ujian Tengah Semester</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">85</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                            Selesai
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">20 Okt 2024</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Tugas 2: Geometri</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
+                                            Menunggu Penilaian
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">25 Okt 2024</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -230,4 +496,45 @@
         </a>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Tab switching functionality
+    const tabLinks = document.querySelectorAll('nav a[href^="#"]');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove active class from all links
+            tabLinks.forEach(l => {
+                l.classList.remove('border-primary-500', 'text-primary-600');
+                l.classList.add('border-transparent', 'text-gray-500');
+            });
+            
+            // Add active class to clicked link
+            this.classList.remove('border-transparent', 'text-gray-500');
+            this.classList.add('border-primary-500', 'text-primary-600');
+            
+            // Hide all tab contents
+            tabContents.forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Show selected tab content
+            const targetId = this.getAttribute('href').substring(1);
+            const targetContent = document.getElementById(targetId);
+            if (targetContent) {
+                targetContent.classList.remove('hidden');
+            }
+        });
+    });
+    
+    // Initialize first tab as active
+    if (tabLinks.length > 0) {
+        tabLinks[0].click();
+    }
+});
+</script>
 @endsection

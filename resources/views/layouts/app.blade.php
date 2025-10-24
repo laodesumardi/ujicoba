@@ -286,11 +286,8 @@
                                 </button>
                             </form>
                         @else
-                            <a href="{{ route('login') }}" class="text-white hover:text-primary-200 px-3 py-2 text-base font-bold transition-colors">
+                            <a href="{{ route('login') }}" class="bg-white text-primary-600 hover:bg-primary-50 hover:text-primary-700 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center border-2 border-primary-600">
                                 <i class="fas fa-sign-in-alt mr-2"></i>Login
-                            </a>
-                            <a href="{{ route('register') }}" class="bg-white text-primary-600 hover:bg-primary-50 px-4 py-2 rounded-md text-base font-bold transition-colors">
-                                <i class="fas fa-user-plus mr-2"></i>Daftar
                             </a>
                         @endauth
                     </div>
@@ -433,11 +430,8 @@
                                     </button>
                                 </form>
                             @else
-                                <a href="{{ route('login') }}" class="text-white hover:text-primary-200 hover:bg-primary-700 block px-4 py-3 rounded-lg text-base font-medium mb-3 transition-colors">
-                                    <i class="fas fa-sign-in-alt mr-3"></i>Login
-                                </a>
-                                <a href="{{ route('register') }}" class="bg-white text-primary-600 hover:bg-primary-50 block px-4 py-3 rounded-lg text-base font-medium transition-colors">
-                                    <i class="fas fa-user-plus mr-3"></i>Daftar
+                                <a href="{{ route('login') }}" class="bg-white text-primary-600 hover:bg-primary-50 hover:text-primary-700 px-4 py-3 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center mb-4 border-2 border-primary-600">
+                                    <i class="fas fa-sign-in-alt mr-2"></i>Login
                                 </a>
                             @endauth
                         </div>

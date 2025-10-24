@@ -22,7 +22,7 @@
                     <div class="flex items-center space-x-6">
                         <div class="relative">
                             @if($teacher->photo)
-                                <img src="{{ Storage::url($teacher->photo) }}" 
+                                <img src="{{ $teacher->photo_url }}" 
                                      alt="{{ $teacher->name }}" 
                                      class="w-24 h-24 rounded-full object-cover border-4 border-gray-200">
                             @else

@@ -16,7 +16,7 @@
                 <!-- Profile Photo -->
                 <div class="relative">
                     @if($teacher->photo)
-                        <img src="{{ Storage::url($teacher->photo) }}" 
+                        <img src="{{ $teacher->photo_url }}" 
                              alt="{{ $teacher->name }}" 
                              class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
                     @else

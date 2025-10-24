@@ -29,7 +29,9 @@ class PPDBRegistration extends Model
         'family_card',
         'report_card',
         'status',
-        'notes'
+        'notes',
+        'student_username',
+        'student_password'
     ];
 
     protected $casts = [

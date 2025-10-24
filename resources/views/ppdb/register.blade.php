@@ -112,6 +112,32 @@
             </div>
         @endif
 
+        @if(session('success'))
+            <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <!-- Student Registration Notice -->
+        <div class="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zm7 4a1 1 0 11-2 0 1 1 0 012 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <h3 class="text-sm font-medium text-blue-800">
+                        Informasi Penting
+                    </h3>
+                    <div class="mt-2 text-sm text-blue-700">
+                        <p>Setelah menyelesaikan pendaftaran PPDB dan mendapat persetujuan, Anda dapat melakukan registrasi sebagai siswa di portal sekolah.</p>
+                        <p class="mt-1">Untuk registrasi siswa, silakan <a href="{{ route('register') }}" class="font-medium underline hover:text-blue-600">klik di sini</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="bg-white rounded-lg shadow-lg p-8">
             <!-- CSRF Token Refresh Button -->
             <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">

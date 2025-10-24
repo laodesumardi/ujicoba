@@ -43,6 +43,7 @@ class User extends Authenticatable
         'parent_phone',
         'parent_email',
         'is_active',
+        'username',
         // Teacher fields
         'subject',
         'position',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Notification;
+use App\Models\PPDBRegistration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -21,10 +22,30 @@ class StudentRegisterController extends Controller
     }
 
     /**
+     * Check if student has completed PPDB registration
+     */
+    private function checkPPDBRegistration($email, $studentName)
+    {
+        // Check if student has PPDB registration with approved status
+        $ppdbRegistration = PPDBRegistration::where('email', $email)
+            ->orWhere('student_name', $studentName)
+            ->where('status', 'approved')
+            ->first();
+            
+        return $ppdbRegistration !== null;
+    }
+
+    /**
      * Handle student registration.
      */
     public function register(Request $request)
     {
+        // Check if student has completed PPDB registration first
+        if (!$this->checkPPDBRegistration($request->email, $request->name)) {
+            return redirect()->route('ppdb.index')
+                ->with('warning', 'Anda harus menyelesaikan pendaftaran PPDB terlebih dahulu sebelum dapat melakukan registrasi sebagai siswa. Silakan daftar PPDB terlebih dahulu.');
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
