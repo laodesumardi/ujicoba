@@ -64,8 +64,10 @@
                             
                             @if($library->organization_chart)
                                 <div class="text-center">
-                                    <img src="{{ $library->organization_chart_url }}" alt="Organization Chart" 
-                                         class="img-fluid rounded border" style="max-height: 300px;">
+                                    <img src="{{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => ($library->updated_at ? $library->updated_at->timestamp : time())]) }}" alt="Organization Chart" 
+                                         class="img-fluid rounded border" style="max-height: 300px;"
+                                         loading="lazy"
+                                         onerror="this.src='{{ asset('images/default-struktur.png') }}'; this.alt='Gambar tidak tersedia';">
                                 </div>
                             @else
                                 <div class="text-center text-muted">

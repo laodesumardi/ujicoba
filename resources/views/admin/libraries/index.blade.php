@@ -126,7 +126,7 @@
                             <tr class="hover:bg-gray-50">
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="flex-shrink-0 h-16 w-16">
-                                        <img src="{{ $library->organization_chart_url }}" alt="Organization Chart" 
+                                        <img src="{{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => ($library->updated_at ? $library->updated_at->timestamp : time())]) }}" alt="Organization Chart" 
                                              class="h-16 w-16 rounded-lg object-cover border border-gray-200" 
                                              loading="lazy" 
                                              onerror="this.src='{{ asset('images/default-library-org-chart.png') }}'; this.alt='Gambar tidak tersedia';">
@@ -184,7 +184,7 @@
                         <div class="flex items-start justify-between mb-3">
                             <div class="flex items-start space-x-3 flex-1">
                                 <div class="flex-shrink-0 h-12 w-12">
-                                    <img src="{{ $library->organization_chart_url }}" alt="Organization Chart" 
+                                    <img src="{{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => ($library->updated_at ? $library->updated_at->timestamp : time())]) }}" alt="Organization Chart" 
                                          class="h-12 w-12 rounded-lg object-cover border border-gray-200" 
                                          loading="lazy" 
                                          onerror="this.src='{{ asset('images/default-library-org-chart.png') }}'; this.alt='Gambar tidak tersedia';">
