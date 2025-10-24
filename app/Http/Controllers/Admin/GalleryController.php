@@ -107,7 +107,18 @@ class GalleryController extends Controller
         ]);
 
         $data = $request->all();
-        $data['slug'] = Str::slug($request->title);
+        
+        // Generate unique slug
+        $baseSlug = Str::slug($request->title);
+        $slug = $baseSlug;
+        $counter = 1;
+        
+        while (Gallery::where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+        
+        $data['slug'] = $slug;
         $data['is_featured'] = $request->has('is_featured');
         $data['is_public'] = $request->has('is_public');
 
@@ -231,7 +242,21 @@ class GalleryController extends Controller
         ]);
 
         $data = $request->all();
-        $data['slug'] = Str::slug($request->title);
+        
+        // Generate unique slug (only if title changed)
+        if ($request->title !== $gallery->title) {
+            $baseSlug = Str::slug($request->title);
+            $slug = $baseSlug;
+            $counter = 1;
+            
+            while (Gallery::where('slug', $slug)->where('id', '!=', $gallery->id)->exists()) {
+                $slug = $baseSlug . '-' . $counter;
+                $counter++;
+            }
+            
+            $data['slug'] = $slug;
+        }
+        
         $data['is_featured'] = $request->has('is_featured');
         $data['is_public'] = $request->has('is_public');
 
