@@ -60,35 +60,17 @@ class SchoolProfile extends Model
             return asset('images/default-school-profile.png');
         }
         
-        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+        if (filter_var($this->image, FILTER_VALIDATE_URL) || str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
             return $this->image;
         }
         
-        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
-            return $this->image;
-        }
-        
-        // If it starts with storage/, use it directly with asset()
-        if (str_starts_with($this->image, 'storage/')) {
-            return asset($this->image);
-        }
-        
-        // If it starts with school-profiles/, add storage/ prefix
-        if (str_starts_with($this->image, 'school-profiles/')) {
-            return asset('storage/' . $this->image);
-        }
-        
-        // If it starts with uploads/school-profiles/, change to storage/school-profiles/
-        if (str_starts_with($this->image, 'uploads/school-profiles/')) {
-            return asset(str_replace('uploads/school-profiles/', 'storage/school-profiles/', $this->image));
-        }
-        
-        // If it's just a filename, add the full path
-        if (!str_contains($this->image, '/')) {
-            return asset('storage/school-profiles/' . $this->image);
-        }
-        
-        // Default fallback
-        return asset('images/default-school-profile.png');
+        $version = $this->updated_at ? $this->updated_at->timestamp : time();
+        // Generate RELATIVE URL to avoid APP_URL/mixed-content issues on hosting
+        return route('image.serve.model', [
+            'model' => 'school-profile',
+            'id' => $this->id,
+            'field' => 'image',
+            'v' => $version,
+        ], false);
     }
 }
