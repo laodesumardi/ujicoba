@@ -41,7 +41,7 @@ class ProfilController extends Controller
                 'judul' => $sections->get('sejarah')->title ?? 'Sejarah Singkat SMP Negeri 01 Namrole',
                 'konten' => $sections->get('sejarah')->content ?? 'SMP Negeri 01 Namrole didirikan pada tahun 1985 sebagai salah satu sekolah menengah pertama negeri di Kabupaten Maluku Tengah. Sekolah ini dibangun dengan tujuan untuk memberikan akses pendidikan yang berkualitas kepada masyarakat di wilayah Namrole dan sekitarnya. Sejak berdiri, sekolah ini telah mengalami berbagai perkembangan dan peningkatan fasilitas untuk mendukung proses pembelajaran yang optimal.',
                 'tahun_berdiri' => '1985',
-                'lokasi' => 'Namrole, Maluku Tengah'
+                'lokasi' => '5P4H+V2M, Elfule, Kec. Namrole, Kabupaten Buru Selatan, Maluku, Indonesia'
             ],
             'visi_misi' => [
                 'images' => $visionImages,
