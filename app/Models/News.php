@@ -66,7 +66,7 @@ class News extends Model
     // Scopes
     public function scopePublished($query)
     {
-        return $query->where('status', 'published')
+        return $query->whereIn('status', ['published', 'public'])
                     ->where(function($q) {
                         $q->whereNull('published_at')
                           ->orWhere('published_at', '<=', now());
@@ -146,7 +146,7 @@ class News extends Model
 
     public function isPublished()
     {
-        return $this->status === 'published' && 
+        return in_array($this->status, ['published', 'public']) && 
                ($this->published_at === null || $this->published_at <= now());
     }
 
