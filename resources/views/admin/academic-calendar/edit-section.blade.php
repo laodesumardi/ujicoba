@@ -154,8 +154,7 @@ use Illuminate\Support\Facades\Storage;
                                     </p>
                                     @if($section->image)
                                     <div class="mt-4">
-                                        <img src="{{ asset('storage/' . $section->image) }}" alt="{{ $section->image_alt }}" 
-                                             class="w-full h-32 object-cover rounded-lg">
+                                        <x-storage-image :path="$section->image" :alt="$section->image_alt" class="w-full h-32 object-cover rounded-lg" default="images/default-section.png" />
                                     </div>
                                     @endif
                                 </div>
