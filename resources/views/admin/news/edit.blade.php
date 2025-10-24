@@ -151,11 +151,12 @@
                                 
                                 <input type="file" name="featured_image" id="featured_image" accept="image/*"
                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 @error('featured_image') border-red-500 @enderror"
-                                       onchange="previewImage(this)">
+                                       onchange="previewImage(this)" />
                                 @error('featured_image')
                                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                                 @enderror
                                 <p class="text-sm text-gray-500 mt-1">Format: JPG, PNG, GIF, WebP. Maksimal 5MB.</p>
+                                <p id="featuredImageHint" class="text-xs text-gray-500 mt-1">Jika upload gagal tanpa error, coba kompres gambar &lt; 2MB atau hubungi admin hosting untuk menaikkan limit upload.</p>
                             </div>
                         </div>
                     </div>
@@ -277,6 +278,19 @@ document.getElementById('content').addEventListener('input', function() {
     this.style.height = this.scrollHeight + 'px';
 });
 
+function validateFeaturedImageSize() {
+    const input = document.getElementById('featured_image');
+    if (input && input.files && input.files[0]) {
+        const file = input.files[0];
+        const maxSizeBytes = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSizeBytes) {
+            alert('Ukuran gambar melebihi 5MB. Silakan kompres gambar atau pilih file yang lebih kecil.');
+            return false;
+        }
+    }
+    return true;
+}
+
 // Form validation
 document.querySelector('form').addEventListener('submit', function(e) {
     const title = document.getElementById('title').value.trim();
@@ -317,6 +331,11 @@ document.querySelector('form').addEventListener('submit', function(e) {
         e.preventDefault();
         alert('Status berita harus dipilih!');
         document.getElementById('status').focus();
+        return;
+    }
+
+    if (!validateFeaturedImageSize()) {
+        e.preventDefault();
         return;
     }
 });
