@@ -13,6 +13,12 @@
                     <div>
                         <h2 class="text-2xl font-bold text-primary-900">Edit Acara Kalender Akademik</h2>
                         <p class="text-gray-600 mt-1">Edit acara: {{ $academicCalendar->title }}</p>
+                        <div class="mt-2">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                {{ $academicCalendar->is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
+                                {{ $academicCalendar->is_active ? 'Aktif' : 'Tidak Aktif' }}
+                            </span>
+                        </div>
                     </div>
                     <a href="{{ route('admin.academic-calendar.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md text-sm font-medium">
                         <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -226,6 +232,14 @@
                                    class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
                             <label for="is_downloadable" class="ml-2 block text-sm text-gray-900">
                                 Dapat Diunduh
+                            </label>
+                        </div>
+
+                        <div class="flex items-center">
+                            <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', $academicCalendar->is_active) ? 'checked' : '' }}
+                                   class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                            <label for="is_active" class="ml-2 block text-sm text-gray-900">
+                                Aktif
                             </label>
                         </div>
                     </div>
