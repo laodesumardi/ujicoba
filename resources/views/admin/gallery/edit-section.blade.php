@@ -78,7 +78,7 @@
                 @if($section->image)
                 <div class="mb-4">
                     <p class="text-sm text-gray-600 mb-2">Gambar Background Saat Ini:</p>
-                    <img src="{{ route('image.serve.model', ['model' => 'home-section', 'id' => $section->id, 'field' => 'image']) }}" 
+                    <img src="{{ $section->image_url }}" 
                          alt="{{ $section->image_alt ?? 'Gambar Section Galeri' }}" 
                          class="w-full h-48 object-cover rounded-lg border border-gray-300">
                 </div>
