@@ -40,7 +40,7 @@
     <!-- News Section Full Width Image -->
     @if($newsSection && $newsSection->image)
     <div class="relative h-96 overflow-hidden">
-        <img src="{{ asset('storage/' . $newsSection->image) }}" 
+        <img src="{{ $newsSection->image_url }}" 
              alt="{{ $newsSection->image_alt }}" 
              class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">

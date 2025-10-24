@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
     <!-- Hero Section with Full Width Image -->
     @if($newsSection && $newsSection->image)
     <div class="relative h-96 overflow-hidden">
-        <img src="{{ Storage::url($newsSection->image) }}" 
+        <img src="{{ $newsSection->image_url }}" 
              alt="{{ $newsSection->image_alt }}" 
              class="w-full h-full object-cover"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
