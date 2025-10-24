@@ -332,7 +332,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         // Gallery Admin Routes
         Route::resource('gallery', AdminGalleryController::class);
         Route::get('gallery-section/edit', [AdminGalleryController::class, 'editSection'])->name('gallery.edit-section');
-        Route::put('gallery-section/update', [AdminGalleryController::class, 'updateSection'])->name('gallery.update-section');
+        Route::match(['PUT', 'POST'], 'gallery-section/update', [AdminGalleryController::class, 'updateSection'])->name('gallery.update-section');
 
         // Document Admin Routes
         Route::resource('documents', AdminDocumentController::class);

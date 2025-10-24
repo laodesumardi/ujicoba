@@ -16,6 +16,7 @@ class SecurityHeaders
      */
     public function handle(Request $request, Closure $next)
     {
+        // Let the request pass through first
         $response = $next($request);
 
         // Security Headers
