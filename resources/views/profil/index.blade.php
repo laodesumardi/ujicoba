@@ -136,121 +136,6 @@ use Illuminate\Support\Facades\Storage;
                     <h2 class="text-3xl font-bold text-gray-900">Visi & Misi Sekolah</h2>
                 </div>
 
-                <!-- Visi Section -->
-                <div class="mb-12">
-                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-8 text-white">
-                        <div class="flex items-center mb-6">
-                            <div class="bg-white bg-opacity-20 rounded-full p-3 mr-4">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                </svg>
-                            </div>
-                            <h3 class="text-2xl font-bold">VISI SEKOLAH</h3>
-                        </div>
-                        <p class="text-xl leading-relaxed">
-                            "Menjadi sekolah unggul yang berkarakter, berprestasi, dan berdaya saing global dalam menghasilkan generasi yang cerdas, berakhlak mulia, dan siap menghadapi tantangan masa depan."
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Misi Section -->
-                <div class="mb-12">
-                    <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl p-8 text-white">
-                        <div class="flex items-center mb-6">
-                            <div class="bg-white bg-opacity-20 rounded-full p-3 mr-4">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
-                                </svg>
-                            </div>
-                            <h3 class="text-2xl font-bold">MISI SEKOLAH</h3>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="space-y-4">
-                                <div class="flex items-start">
-                                    <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3 mt-1">
-                                        <span class="text-sm font-bold">1</span>
-                                    </div>
-                                    <p class="text-lg">Menyelenggarakan pendidikan berkualitas dengan kurikulum yang relevan dan inovatif</p>
-                                </div>
-                                <div class="flex items-start">
-                                    <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3 mt-1">
-                                        <span class="text-sm font-bold">2</span>
-                                    </div>
-                                    <p class="text-lg">Mengembangkan karakter siswa yang berakhlak mulia dan berintegritas tinggi</p>
-                                </div>
-                                <div class="flex items-start">
-                                    <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3 mt-1">
-                                        <span class="text-sm font-bold">3</span>
-                                    </div>
-                                    <p class="text-lg">Meningkatkan prestasi akademik dan non-akademik siswa secara berkelanjutan</p>
-                                </div>
-                            </div>
-                            <div class="space-y-4">
-                                <div class="flex items-start">
-                                    <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3 mt-1">
-                                        <span class="text-sm font-bold">4</span>
-                                    </div>
-                                    <p class="text-lg">Mengembangkan kompetensi guru dan tenaga kependidikan secara profesional</p>
-                                </div>
-                                <div class="flex items-start">
-                                    <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3 mt-1">
-                                        <span class="text-sm font-bold">5</span>
-                                    </div>
-                                    <p class="text-lg">Menyediakan fasilitas pembelajaran yang modern dan memadai</p>
-                                </div>
-                                <div class="flex items-start">
-                                    <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3 mt-1">
-                                        <span class="text-sm font-bold">6</span>
-                                    </div>
-                                    <p class="text-lg">Membangun kemitraan dengan masyarakat dan stakeholder pendidikan</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tujuan Sekolah -->
-                <div class="mb-12">
-                    <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl p-8 text-white">
-                        <div class="flex items-center mb-6">
-                            <div class="bg-white bg-opacity-20 rounded-full p-3 mr-4">
-                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                            </div>
-                            <h3 class="text-2xl font-bold">TUJUAN SEKOLAH</h3>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="text-center">
-                                <div class="bg-white bg-opacity-20 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                </div>
-                                <h4 class="text-lg font-semibold mb-2">Akademik</h4>
-                                <p class="text-sm opacity-90">Mencapai standar kelulusan 100% dengan nilai rata-rata di atas 75</p>
-                            </div>
-                            <div class="text-center">
-                                <div class="bg-white bg-opacity-20 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-                                    </svg>
-                                </div>
-                                <h4 class="text-lg font-semibold mb-2">Karakter</h4>
-                                <p class="text-sm opacity-90">Membentuk siswa berakhlak mulia dan berintegritas tinggi</p>
-                            </div>
-                            <div class="text-center">
-                                <div class="bg-white bg-opacity-20 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                    </svg>
-                                </div>
-                                <h4 class="text-lg font-semibold mb-2">Prestasi</h4>
-                                <p class="text-sm opacity-90">Mencapai prestasi di tingkat kabupaten, provinsi, dan nasional</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Gambar Visi Misi -->
                 @php $images = $profilData['visi_misi']['images'] ?? []; @endphp
@@ -435,19 +320,90 @@ use Illuminate\Support\Facades\Storage;
     </div>
 </div>
 
-<!-- Fullscreen Image Modal -->
-<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-50">
-    <div class="max-w-5xl w-full px-4">
-        <div class="relative">
-            <img id="modalImage" src="" alt="" class="max-h-[80vh] w-auto mx-auto rounded shadow-lg">
-            <button onclick="closeImageModal()" class="absolute top-2 right-2 bg-black bg-opacity-50 hover:bg-opacity-80 text-white rounded-full w-8 h-8 flex items-center justify-center" aria-label="Tutup">&times;</button>
+<!-- Enhanced Fullscreen Image Modal -->
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-90 hidden z-50 transition-opacity duration-300">
+    <div class="w-full h-full flex flex-col">
+        <!-- Modal Header -->
+        <div class="flex justify-between items-center p-4 bg-black bg-opacity-50">
+            <div class="text-white">
+                <h3 id="modalTitle" class="text-xl font-semibold"></h3>
+                <p id="modalSubtitle" class="text-sm text-gray-300"></p>
+            </div>
+            <button onclick="closeImageModal()" class="bg-red-500 hover:bg-red-600 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors duration-200 shadow-lg" aria-label="Tutup">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
         </div>
-        <div id="modalCaption" class="text-center text-white mt-3 text-sm"></div>
+        
+        <!-- Modal Content -->
+        <div class="flex-1 overflow-auto" id="imageContainer" style="height: calc(100vh - 200px); overflow-x: auto; overflow-y: auto;">
+            <div class="flex justify-center p-4" style="min-height: 100%;">
+                <img id="modalImage" src="" alt="" class="rounded-lg shadow-2xl transition-transform duration-300 cursor-grab active:cursor-grabbing" 
+                     style="transform-origin: center; transform: scale(1); max-width: none; max-height: none; width: auto; height: auto;"
+                     onmousedown="startDrag(event)" 
+                     onmousemove="drag(event)" 
+                     onmouseup="endDrag(event)"
+                     onwheel="zoom(event)">
+            </div>
+            
+            <!-- Navigation Arrows -->
+            <button id="prevBtn" onclick="navigateImage(-1)" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 text-white rounded-full w-12 h-12 flex items-center justify-center transition-all duration-200 backdrop-blur-sm">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <button id="nextBtn" onclick="navigateImage(1)" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-20 hover:bg-opacity-40 text-white rounded-full w-12 h-12 flex items-center justify-center transition-all duration-200 backdrop-blur-sm">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Modal Footer -->
+        <div class="p-4 bg-black bg-opacity-50 text-center">
+            <div id="modalCaption" class="text-white text-lg mb-2"></div>
+            <div class="text-white text-sm mb-3 opacity-75">
+                💡 Gunakan <kbd class="bg-white bg-opacity-20 px-2 py-1 rounded">Ctrl + Scroll</kbd> untuk zoom, atau scroll normal untuk melihat gambar
+            </div>
+            <div class="flex justify-center space-x-2">
+                <button onclick="resetZoom()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.005 12.3M20 12v5h-.582m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    <span>Reset Zoom</span>
+                </button>
+                <button onclick="downloadImage()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>Download</span>
+                </button>
+                <button onclick="shareImage()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                    </svg>
+                    <span>Share</span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- JavaScript for Tab Navigation & Image Modal -->
+<!-- Enhanced JavaScript for Tab Navigation & Image Modal -->
 <script>
+// Global variables for image navigation
+let currentImageIndex = 0;
+let imageList = [];
+
+// Global variables for zoom and pan
+let isDragging = false;
+let startX = 0;
+let startY = 0;
+let currentScale = 1;
+let currentTranslateX = 0;
+let currentTranslateY = 0;
+
 function showSection(sectionId) {
     // Hide all content sections
     const sections = document.querySelectorAll('.content-section');
@@ -473,28 +429,267 @@ function showSection(sectionId) {
 function openImageModal(url, caption) {
     const modal = document.getElementById('imageModal');
     const img = document.getElementById('modalImage');
+    const title = document.getElementById('modalTitle');
+    const subtitle = document.getElementById('modalSubtitle');
     const cap = document.getElementById('modalCaption');
+    
+    // Set image and captions
     img.src = url;
     img.alt = caption || '';
+    title.textContent = 'Dokumentasi Visi & Misi';
+    subtitle.textContent = 'SMP Negeri 01 Namrole';
     cap.textContent = caption || '';
+    
+    // Find all images in current section for navigation
+    const currentSection = document.querySelector('.content-section:not(.hidden)');
+    const images = currentSection.querySelectorAll('img[onclick*="openImageModal"]');
+    imageList = Array.from(images).map(img => ({
+        src: img.src,
+        caption: img.alt
+    }));
+    
+    // Find current image index
+    currentImageIndex = imageList.findIndex(item => item.src === url);
+    
+    // Update navigation buttons
+    updateNavigationButtons();
+    
+    // Show modal with animation
     modal.classList.remove('hidden');
     modal.classList.add('flex');
+    
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
 }
 
 function closeImageModal() {
     const modal = document.getElementById('imageModal');
     const img = document.getElementById('modalImage');
-    img.src = '';
+    
+    // Hide modal
     modal.classList.add('hidden');
     modal.classList.remove('flex');
+    
+    // Clear image
+    img.src = '';
+    
+    // Restore body scroll
+    document.body.style.overflow = 'auto';
 }
 
+function navigateImage(direction) {
+    if (imageList.length <= 1) return;
+    
+    currentImageIndex += direction;
+    
+    // Loop around
+    if (currentImageIndex >= imageList.length) {
+        currentImageIndex = 0;
+    } else if (currentImageIndex < 0) {
+        currentImageIndex = imageList.length - 1;
+    }
+    
+    // Update image
+    const img = document.getElementById('modalImage');
+    const cap = document.getElementById('modalCaption');
+    const currentImage = imageList[currentImageIndex];
+    
+    img.src = currentImage.src;
+    img.alt = currentImage.caption;
+    cap.textContent = currentImage.caption;
+    
+    // Update navigation buttons
+    updateNavigationButtons();
+}
+
+function updateNavigationButtons() {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    
+    if (imageList.length <= 1) {
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+    } else {
+        prevBtn.style.display = 'flex';
+        nextBtn.style.display = 'flex';
+    }
+}
+
+function downloadImage() {
+    const img = document.getElementById('modalImage');
+    const link = document.createElement('a');
+    link.href = img.src;
+    link.download = `visi-misi-${Date.now()}.jpg`;
+    link.click();
+}
+
+function shareImage() {
+    const img = document.getElementById('modalImage');
+    const caption = document.getElementById('modalCaption').textContent;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'Dokumentasi Visi & Misi - SMP Negeri 01 Namrole',
+            text: caption,
+            url: window.location.href
+        });
+    } else {
+        // Fallback: copy to clipboard
+        navigator.clipboard.writeText(`${caption} - ${window.location.href}`).then(() => {
+            alert('Link telah disalin ke clipboard!');
+        });
+    }
+}
+
+// Keyboard navigation
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeImageModal();
+    if (document.getElementById('imageModal').classList.contains('flex')) {
+        switch(e.key) {
+            case 'Escape':
+                closeImageModal();
+                break;
+            case 'ArrowLeft':
+                navigateImage(-1);
+                break;
+            case 'ArrowRight':
+                navigateImage(1);
+                break;
+        }
+    }
 });
 
+// Click outside to close
 document.getElementById('imageModal')?.addEventListener('click', function(e) {
     if (e.target.id === 'imageModal') closeImageModal();
 });
+
+// Touch/swipe support for mobile
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.getElementById('imageModal')?.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+});
+
+document.getElementById('imageModal')?.addEventListener('touchend', function(e) {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+});
+
+function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+            // Swipe left - next image
+            navigateImage(1);
+        } else {
+            // Swipe right - previous image
+            navigateImage(-1);
+        }
+    }
+}
+
+// Zoom and Pan Functions
+function zoom(event) {
+    // Check if Ctrl key is pressed for zoom, otherwise allow normal scrolling
+    if (event.ctrlKey || event.metaKey) {
+        event.preventDefault();
+        const img = document.getElementById('modalImage');
+        const delta = event.deltaY > 0 ? 0.9 : 1.1;
+        const newScale = Math.max(0.5, Math.min(5, currentScale * delta));
+        
+        currentScale = newScale;
+        img.style.transform = `scale(${currentScale}) translate(${currentTranslateX}px, ${currentTranslateY}px)`;
+    }
+    // If not Ctrl+scroll, allow normal page scrolling
+}
+
+function startDrag(event) {
+    if (currentScale > 1) {
+        isDragging = true;
+        startX = event.clientX - currentTranslateX;
+        startY = event.clientY - currentTranslateY;
+        event.preventDefault();
+    }
+}
+
+function drag(event) {
+    if (isDragging && currentScale > 1) {
+        currentTranslateX = event.clientX - startX;
+        currentTranslateY = event.clientY - startY;
+        
+        const img = document.getElementById('modalImage');
+        img.style.transform = `scale(${currentScale}) translate(${currentTranslateX}px, ${currentTranslateY}px)`;
+    }
+}
+
+function endDrag(event) {
+    isDragging = false;
+}
+
+function resetZoom() {
+    const img = document.getElementById('modalImage');
+    currentScale = 1;
+    currentTranslateX = 0;
+    currentTranslateY = 0;
+    img.style.transform = 'scale(1) translate(0px, 0px)';
+}
+
+// Reset zoom when opening new image
+function openImageModal(url, caption) {
+    const modal = document.getElementById('imageModal');
+    const img = document.getElementById('modalImage');
+    const title = document.getElementById('modalTitle');
+    const subtitle = document.getElementById('modalSubtitle');
+    const cap = document.getElementById('modalCaption');
+    
+    // Reset zoom first
+    resetZoom();
+    
+    // Set image and captions
+    img.src = url;
+    img.alt = caption || '';
+    title.textContent = 'Dokumentasi Visi & Misi';
+    subtitle.textContent = 'SMP Negeri 01 Namrole';
+    cap.textContent = caption || '';
+    
+    // Wait for image to load, then adjust size
+    img.onload = function() {
+        // Force image to show at natural size for scrolling
+        img.style.maxWidth = 'none';
+        img.style.maxHeight = 'none';
+        img.style.width = 'auto';
+        img.style.height = 'auto';
+        
+        // Ensure container can scroll
+        const container = document.getElementById('imageContainer');
+        container.style.overflow = 'auto';
+        container.style.overflowX = 'auto';
+        container.style.overflowY = 'auto';
+    };
+    
+    // Find all images in current section for navigation
+    const currentSection = document.querySelector('.content-section:not(.hidden)');
+    const images = currentSection.querySelectorAll('img[onclick*="openImageModal"]');
+    imageList = Array.from(images).map(img => ({
+        src: img.src,
+        caption: img.alt
+    }));
+    
+    // Find current image index
+    currentImageIndex = imageList.findIndex(item => item.src === url);
+    
+    // Update navigation buttons
+    updateNavigationButtons();
+    
+    // Show modal with animation
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+}
 </script>
 @endsection
