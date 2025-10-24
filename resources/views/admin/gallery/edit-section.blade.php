@@ -20,6 +20,7 @@
     <div class="bg-white rounded-lg shadow">
         <form action="{{ route('admin.gallery.update-section') }}" method="POST" enctype="multipart/form-data" class="p-6 space-y-6">
             @csrf
+            @method('PUT')
             
             <!-- Title -->
             <div>
