@@ -171,16 +171,35 @@
                                                 </svg>
                                             </button>
                                         </form>
-                                        <form action="{{ route('admin.subjects.destroy', $subject) }}" method="POST" class="inline"
-                                              onsubmit="return confirm('Apakah Anda yakin ingin menghapus mata pelajaran ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-900 p-1 rounded" title="Hapus">
+                                        <!-- Delete Dropdown -->
+                                        <div class="relative inline-block text-left">
+                                            <button type="button" class="text-red-600 hover:text-red-900 p-1 rounded" onclick="toggleDeleteMenu({{ $subject->id }})" title="Hapus">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                                 </svg>
                                             </button>
-                                        </form>
+                                            
+                                            <div id="deleteMenu{{ $subject->id }}" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                                                <div class="py-1">
+                                                    <form action="{{ route('admin.subjects.destroy', $subject) }}" method="POST" class="block"
+                                                          onsubmit="return confirm('Apakah Anda yakin ingin menghapus mata pelajaran ini?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                            Hapus Normal
+                                                        </button>
+                                                    </form>
+                                                    <form action="{{ route('admin.subjects.force-delete', $subject) }}" method="POST" class="block"
+                                                          onsubmit="return confirm('PERINGATAN: Ini akan menghapus mata pelajaran dan memindahkan semua guru dan kelas terkait. Apakah Anda yakin?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50">
+                                                            Hapus Paksa (Pindahkan Guru)
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -245,16 +264,35 @@
                                         </svg>
                                     </button>
                                 </form>
-                                <form action="{{ route('admin.subjects.destroy', $subject) }}" method="POST" class="inline"
-                                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus mata pelajaran ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900 p-1 rounded" title="Hapus">
+                                <!-- Delete Dropdown Mobile -->
+                                <div class="relative inline-block text-left">
+                                    <button type="button" class="text-red-600 hover:text-red-900 p-1 rounded" onclick="toggleDeleteMenu({{ $subject->id }})" title="Hapus">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                         </svg>
                                     </button>
-                                </form>
+                                    
+                                    <div id="deleteMenu{{ $subject->id }}" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                                        <div class="py-1">
+                                            <form action="{{ route('admin.subjects.destroy', $subject) }}" method="POST" class="block"
+                                                  onsubmit="return confirm('Apakah Anda yakin ingin menghapus mata pelajaran ini?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    Hapus Normal
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('admin.subjects.force-delete', $subject) }}" method="POST" class="block"
+                                                  onsubmit="return confirm('PERINGATAN: Ini akan menghapus mata pelajaran dan memindahkan semua guru dan kelas terkait. Apakah Anda yakin?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-700 hover:bg-red-50">
+                                                    Hapus Paksa (Pindahkan Guru)
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -289,6 +327,30 @@
             </div>
         @endif
 </div>
+
+<script>
+function toggleDeleteMenu(subjectId) {
+    // Close all other menus
+    document.querySelectorAll('[id^="deleteMenu"]').forEach(menu => {
+        if (menu.id !== 'deleteMenu' + subjectId) {
+            menu.classList.add('hidden');
+        }
+    });
+    
+    // Toggle current menu
+    const menu = document.getElementById('deleteMenu' + subjectId);
+    menu.classList.toggle('hidden');
+}
+
+// Close menus when clicking outside
+document.addEventListener('click', function(event) {
+    if (!event.target.closest('[onclick*="toggleDeleteMenu"]') && !event.target.closest('[id^="deleteMenu"]')) {
+        document.querySelectorAll('[id^="deleteMenu"]').forEach(menu => {
+            menu.classList.add('hidden');
+        });
+    }
+});
+</script>
 @endsection
 
 

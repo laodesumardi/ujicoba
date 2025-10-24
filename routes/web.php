@@ -359,6 +359,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         // Subject routes
         Route::resource('subjects', SubjectController::class);
         Route::post('subjects/{subject}/toggle-active', [SubjectController::class, 'toggleActive'])->name('subjects.toggle-active');
+        Route::delete('subjects/{subject}/force-delete', [SubjectController::class, 'forceDelete'])->name('subjects.force-delete');
     Route::resource('home-sections', HomeSectionController::class);
     
         // PPDB Admin Routes

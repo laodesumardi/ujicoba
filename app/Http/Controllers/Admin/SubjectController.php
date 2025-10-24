@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Subject;
+use App\Models\Course;
 use Illuminate\Http\Request;
 
 class SubjectController extends Controller
@@ -98,15 +99,54 @@ class SubjectController extends Controller
     public function destroy(Subject $subject)
     {
         // Check if subject has teachers
-        if ($subject->teachers()->count() > 0) {
+        $teachersCount = $subject->teachers()->count();
+        
+        if ($teachersCount > 0) {
+            // Get teachers details for better error message
+            $teachers = $subject->teachers()->pluck('name')->toArray();
+            $teachersList = implode(', ', $teachers);
+            
             return redirect()->back()
-                ->with('error', 'Tidak dapat menghapus mata pelajaran yang memiliki guru.');
+                ->with('error', "Tidak dapat menghapus mata pelajaran karena masih memiliki {$teachersCount} guru: {$teachersList}. Silakan pindahkan atau hapus guru terlebih dahulu.");
+        }
+
+        // Check if subject has courses
+        $coursesCount = Course::where('subject', $subject->name)->count();
+        
+        if ($coursesCount > 0) {
+            return redirect()->back()
+                ->with('error', "Tidak dapat menghapus mata pelajaran karena masih memiliki {$coursesCount} kelas. Silakan hapus atau pindahkan kelas terlebih dahulu.");
         }
 
         $subject->delete();
 
         return redirect()->route('admin.subjects.index')
             ->with('success', 'Mata pelajaran berhasil dihapus.');
+    }
+
+    /**
+     * Force delete subject and handle related data
+     */
+    public function forceDelete(Subject $subject)
+    {
+        // Get teachers and courses before deletion
+        $teachers = $subject->teachers()->get();
+        $courses = Course::where('subject', $subject->name)->get();
+        
+        // Update teachers to have no subject
+        foreach ($teachers as $teacher) {
+            $teacher->update(['subject' => null]);
+        }
+        
+        // Update courses to have no subject
+        foreach ($courses as $course) {
+            $course->update(['subject' => null]);
+        }
+        
+        $subject->delete();
+        
+        return redirect()->route('admin.subjects.index')
+            ->with('success', 'Mata pelajaran berhasil dihapus. Guru dan kelas terkait telah dipindahkan.');
     }
 
     /**
