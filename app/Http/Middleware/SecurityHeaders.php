@@ -39,7 +39,7 @@ class SecurityHeaders
                "frame-src 'none'; " .
                "object-src 'none'; " .
                "base-uri 'self'; " .
-               "form-action 'self';";
+               "form-action 'self' 'unsafe-inline';";
         
         $response->headers->set('Content-Security-Policy', $csp);
         
