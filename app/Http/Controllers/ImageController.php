@@ -147,6 +147,8 @@ class ImageController extends Controller
             'headmaster-greeting' => \App\Models\HeadmasterGreeting::class,
             'school-profile' => \App\Models\SchoolProfile::class,
             'user' => \App\Models\User::class,
+            // Added support for VisionMission
+            'vision-mission' => \App\Models\VisionMission::class,
         ];
         
         return $models[$model] ?? null;
@@ -205,6 +207,8 @@ class ImageController extends Controller
             'headmaster-greeting' => 'headmaster-greetings',
             'school-profile' => 'school-profiles',
             'user' => 'students/photos',
+            // Added folder mapping for VisionMission
+            'vision-mission' => 'vision-missions',
         ];
         
         return $modelFolders[$model] ?? 'general';
