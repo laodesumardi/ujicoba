@@ -38,16 +38,8 @@ class Library extends Model
     // Accessors
     public function getOrganizationChartUrlAttribute()
     {
-        // Cache-busting versi berdasarkan updated_at
-        $version = $this->updated_at ? $this->updated_at->timestamp : time();
-
         if (!$this->organization_chart) {
-            return route('image.serve.model', [
-                'model' => 'library',
-                'id' => $this->id,
-                'field' => 'organization_chart',
-                'v' => $version,
-            ], false);
+            return asset('images/default-struktur.png');
         }
         
         // URL eksternal
@@ -57,12 +49,7 @@ class Library extends Model
             return $this->organization_chart;
         }
         
-        // Gunakan direct image serving route dengan cache-busting (RELATIVE URL)
-        return route('image.serve.model', [
-            'model' => 'library',
-            'id' => $this->id,
-            'field' => 'organization_chart',
-            'v' => $version,
-        ], false);
+        // Gunakan storage link yang lebih sederhana
+        return \Storage::url($this->organization_chart);
     }
 }
