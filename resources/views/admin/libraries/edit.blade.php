@@ -122,7 +122,7 @@
                                     <div class="mt-4">
                                         <p class="text-sm font-medium text-gray-700 mb-2">Current image:</p>
                                         <img src="{{ $library->organization_chart_url }}" alt="Current Organization Chart" 
-                                             class="max-w-xs rounded-lg shadow-md" id="current-image" loading="lazy" onerror="this.style.display='none';">
+                                             class="max-w-xs rounded-lg shadow-md" id="current-image" loading="lazy" onerror="this.src='{{ asset('images/default-struktur.png') }}'; this.alt='Gambar tidak tersedia';">
                                     </div>
                                 @endif
                             </div>
