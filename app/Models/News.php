@@ -113,8 +113,14 @@ class News extends Model
             return $this->featured_image;
         }
         
-        // Use direct image serving route
-        return route('image.serve.model', ['model' => 'news', 'id' => $this->id, 'field' => 'featured_image']);
+        // Use direct image serving route with cache-busting
+        $version = $this->updated_at ? $this->updated_at->timestamp : time();
+        return route('image.serve.model', [
+            'model' => 'news',
+            'id' => $this->id,
+            'field' => 'featured_image',
+            'v' => $version,
+        ]);
     }
 
     public function getExcerptAttribute($value)
