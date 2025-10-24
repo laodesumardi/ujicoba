@@ -431,7 +431,7 @@
                     @foreach($featuredGalleries as $gallery)
                     <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
                         <div class="relative">
-                            <img src="{{ $gallery->cover_image_url }}" alt="{{ $gallery->title }}" class="w-full h-48 object-cover">
+                            <img src="{{ route('image.serve.model', ['model' => 'gallery', 'id' => $gallery->id, 'field' => 'cover_image', 'v' => optional($gallery->updated_at)->timestamp]) }}" alt="{{ $gallery->title }}" class="w-full h-48 object-cover" onerror="this.src='{{ asset('images/default-gallery.png') }}'">
                             <div class="absolute top-4 right-4">
                                 <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary-600 text-white">
                                     <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
