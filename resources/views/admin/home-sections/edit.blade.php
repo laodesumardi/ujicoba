@@ -63,7 +63,7 @@ use Illuminate\Support\Facades\Storage;
                         </div>
 
                         <!-- Current Image - Only for Hero Section -->
-                        @if($homeSection->image && $homeSection->section_key === 'hero')
+                        @if($homeSection->image && strtolower(trim($homeSection->section_key)) === 'hero')
                         <div class="md:col-span-2" id="current-image">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Current Image</label>
                             <div class="flex items-center space-x-4">
@@ -78,7 +78,7 @@ use Illuminate\Support\Facades\Storage;
                         @endif
 
                         <!-- Image Upload - Only for Hero Section -->
-                        <div class="md:col-span-2" id="image-fields" style="display: {{ $homeSection->section_key === 'hero' ? 'block' : 'none' }};">
+                        <div class="md:col-span-2" id="image-fields" style="display: {{ strtolower(trim($homeSection->section_key)) === 'hero' ? 'block' : 'none' }};">
                             <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
                                 {{ $homeSection->image ? 'Replace Image' : 'Upload Image' }}
                             </label>
@@ -91,7 +91,7 @@ use Illuminate\Support\Facades\Storage;
                         </div>
 
                         <!-- Image Alt Text - Only for Hero Section -->
-                        <div id="image-alt-field" style="display: {{ $homeSection->section_key === 'hero' ? 'block' : 'none' }};">
+                        <div id="image-alt-field" style="display: {{ strtolower(trim($homeSection->section_key)) === 'hero' ? 'block' : 'none' }};">
                             <label for="image_alt" class="block text-sm font-medium text-gray-700 mb-2">Image Alt Text</label>
                             <input type="text" id="image_alt" name="image_alt" value="{{ old('image_alt', $homeSection->image_alt) }}" 
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('image_alt') border-red-500 @enderror"
@@ -102,7 +102,7 @@ use Illuminate\Support\Facades\Storage;
                         </div>
 
                         <!-- Image Position - Only for Hero Section -->
-                        <div id="image-position-field" style="display: {{ $homeSection->section_key === 'hero' ? 'block' : 'none' }};">
+                        <div id="image-position-field" style="display: {{ strtolower(trim($homeSection->section_key)) === 'hero' ? 'block' : 'none' }};">
                             <label for="image_position" class="block text-sm font-medium text-gray-700 mb-2">Image Position</label>
                             <select id="image_position" name="image_position" 
                                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('image_position') border-red-500 @enderror">
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentImage = document.getElementById('current-image');
     
     function toggleImageFields() {
-        const sectionKey = sectionKeyInput.value.toLowerCase();
+        const sectionKey = sectionKeyInput.value.toLowerCase().trim();
         if (sectionKey === 'hero') {
             imageFields.style.display = 'block';
             imageAltField.style.display = 'block';

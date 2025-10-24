@@ -133,8 +133,9 @@ class HomeSectionController extends Controller
 
         $data = $request->all();
 
-        // Handle image upload - only for hero section
-        if ($request->hasFile('image') && $data['section_key'] === 'hero') {
+        // Handle image upload - only for hero section (normalize section_key)
+        $sectionKeyNormalized = strtolower(trim($data['section_key'] ?? $homeSection->section_key));
+        if ($request->hasFile('image') && $sectionKeyNormalized === 'hero') {
             $image = $request->file('image');
             
             // Validate file
