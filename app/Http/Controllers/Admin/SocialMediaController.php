@@ -37,7 +37,10 @@ class SocialMediaController extends Controller
             'sort_order' => 'required|integer|min:0',
         ]);
 
-        SocialMedia::create($request->all());
+        $data = $request->all();
+        $data['icon'] = strtolower($request->name); // Set icon based on name
+        
+        SocialMedia::create($data);
 
         return redirect()->route('admin.social-media.index')
             ->with('success', 'Sosial media berhasil ditambahkan!');
@@ -63,7 +66,10 @@ class SocialMediaController extends Controller
             'sort_order' => 'required|integer|min:0',
         ]);
 
-        $socialMedia->update($request->all());
+        $data = $request->all();
+        $data['icon'] = strtolower($request->name); // Set icon based on name
+        
+        $socialMedia->update($data);
 
         return redirect()->route('admin.social-media.index')
             ->with('success', 'Sosial media berhasil diperbarui!');
