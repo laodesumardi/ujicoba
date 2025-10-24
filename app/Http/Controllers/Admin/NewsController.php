@@ -335,6 +335,16 @@ class NewsController extends Controller
                     $image = $request->file('image');
                     $filename = time() . '_news_section.' . $image->getClientOriginalExtension();
                     $path = $image->storeAs('home-sections', $filename, 'public');
+
+                    // Mirror copy to public/storage for hosts without symlink
+                    $sourcePath = storage_path('app/public/' . $path);
+                    $destPath = public_path('storage/' . $path);
+                    $destDir = dirname($destPath);
+                    if (!is_dir($destDir)) {
+                        mkdir($destDir, 0755, true);
+                    }
+                    @copy($sourcePath, $destPath);
+
                     $data['image'] = $path;
                 }
 

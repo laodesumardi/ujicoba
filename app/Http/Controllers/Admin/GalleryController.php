@@ -305,14 +305,19 @@ class GalleryController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            // Delete old image
-            if ($section->image && Storage::disk('public')->exists($section->image)) {
-                Storage::disk('public')->delete($section->image);
-            }
-
             $image = $request->file('image');
-            $filename = time() . '_gallery.' . $image->getClientOriginalExtension();
+            $filename = time() . '_home_gallery.' . $image->getClientOriginalExtension();
             $path = $image->storeAs('home-sections', $filename, 'public');
+        
+            // Mirror copy to public/storage for hosts without symlink
+            $sourcePath = storage_path('app/public/' . $path);
+            $destPath = public_path('storage/' . $path);
+            $destDir = dirname($destPath);
+            if (!is_dir($destDir)) {
+                mkdir($destDir, 0755, true);
+            }
+            @copy($sourcePath, $destPath);
+        
             $data['image'] = $path;
         }
 

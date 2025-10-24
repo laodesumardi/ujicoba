@@ -153,17 +153,16 @@ class HomeSectionController extends Controller
                 // Store in storage using Laravel Storage facade
                 $path = $image->storeAs('home-sections', $imageName, 'public');
                 $data['image'] = $path;
-                
+
                 // Copy file to public storage for immediate access
                 $sourcePath = storage_path('app/public/' . $path);
                 $destPath = public_path('storage/' . $path);
                 $destDir = dirname($destPath);
-                
-                // Ensure destination directory exists
+
                 if (!is_dir($destDir)) {
                     mkdir($destDir, 0755, true);
                 }
-                
+
                 if (copy($sourcePath, $destPath)) {
                     \Log::info('Image uploaded and copied to public storage: ' . $path);
                 } else {

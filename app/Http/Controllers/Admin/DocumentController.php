@@ -218,7 +218,18 @@ class DocumentController extends Controller
                 $image = $request->file('image');
                 $imageName = time() . '_download_center.' . $image->getClientOriginalExtension();
                 $imagePath = $image->storeAs('home-sections', $imageName, 'public');
-                $data['image'] = 'storage/' . $imagePath;
+                
+                // Mirror copy to public/storage for hosts without symlink
+                $sourcePath = storage_path('app/public/' . $imagePath);
+                $destPath = public_path('storage/' . $imagePath);
+                $destDir = dirname($destPath);
+                if (!is_dir($destDir)) {
+                    mkdir($destDir, 0755, true);
+                }
+                @copy($sourcePath, $destPath);
+                
+                // Save path without leading 'storage/' so Storage::url works
+                $data['image'] = $imagePath;
             }
             
             $section->update($data);
