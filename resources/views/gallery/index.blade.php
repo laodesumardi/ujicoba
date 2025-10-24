@@ -7,7 +7,7 @@
     <!-- Hero Section with Full Width Image -->
     @if($gallerySection && $gallerySection->image)
     <div class="relative h-96 overflow-hidden">
-        <img src="{{ asset('storage/' . $gallerySection->image) }}" 
+        <img src="{{ $gallerySection->image_url }}" 
              alt="{{ $gallerySection->image_alt }}" 
              class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
@@ -118,7 +118,7 @@
                     <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                         <!-- Gallery Cover -->
                         <div class="relative h-48 overflow-hidden">
-                            <img src="{{ $gallery->cover_image_url }}" 
+                            <img src="{{ route('image.serve.model', ['model' => 'gallery', 'id' => $gallery->id, 'field' => 'cover_image', 'v' => optional($gallery->updated_at)->timestamp]) }}" 
                                  alt="{{ $gallery->title }}" 
                                  class="w-full h-full object-cover">
                             

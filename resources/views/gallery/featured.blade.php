@@ -57,7 +57,7 @@
                     <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                         <!-- Gallery Cover -->
                         <div class="relative h-48 overflow-hidden">
-                            <img src="{{ $gallery->cover_image_url }}" 
+                            <img src="{{ route('image.serve.model', ['model' => 'gallery', 'id' => $gallery->id, 'field' => 'cover_image', 'v' => optional($gallery->updated_at)->timestamp]) }}" 
                                  alt="{{ $gallery->title }}" 
                                  class="w-full h-full object-cover">
                             

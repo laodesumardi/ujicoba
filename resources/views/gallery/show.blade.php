@@ -47,7 +47,7 @@
                         <!-- Item Image/Video -->
                         <div class="relative h-48 overflow-hidden">
                             @if($item->isImage())
-                                <img src="{{ $item->file_url }}" 
+                                <img src="{{ route('image.serve.model', ['model' => 'gallery-item', 'id' => $item->id, 'field' => $item->image ? 'image' : 'file_path', 'v' => optional($item->updated_at)->timestamp]) }}" 
                                      alt="{{ $item->title }}" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                             @else
@@ -151,7 +151,7 @@
                 @foreach($relatedGalleries as $relatedGallery)
                 <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                     <div class="relative h-32 overflow-hidden">
-                        <img src="{{ $relatedGallery->cover_image_url }}" 
+                        <img src="{{ route('image.serve.model', ['model' => 'gallery', 'id' => $relatedGallery->id, 'field' => 'cover_image', 'v' => optional($relatedGallery->updated_at)->timestamp]) }}" 
                              alt="{{ $relatedGallery->title }}" 
                              class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
