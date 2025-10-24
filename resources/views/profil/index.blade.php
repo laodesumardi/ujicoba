@@ -126,7 +126,7 @@ use Illuminate\Support\Facades\Storage;
         <!-- Visi Misi Section -->
         <div id="visi-misi" class="content-section hidden">
             <div class="bg-white rounded-lg shadow-lg p-8">
-                <div class="flex items-center mb-6">
+                <div class="flex items-center mb-8">
                     <div class="bg-primary-100 p-3 rounded-full mr-4">
                         <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -135,21 +135,150 @@ use Illuminate\Support\Facades\Storage;
                     </div>
                     <h2 class="text-3xl font-bold text-gray-900">Visi & Misi Sekolah</h2>
                 </div>
-                @php $images = $profilData['visi_misi']['images'] ?? []; @endphp
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 justify-items-center max-w-5xl mx-auto">
-                    @forelse($images as $idx => $img)
-                        <div class="bg-gray-50 rounded-lg p-2 sm:p-3">
-                            <button onclick="openImageModal('{{ $img }}', 'Visi & Misi — Gambar {{ $idx + 1 }}')" class="block focus:outline-none">
-                                <img src="{{ $img }}" alt="Visi & Misi Sekolah — Gambar {{ $idx + 1 }}" class="w-full h-48 object-cover rounded border" onerror="this.src='{{ asset('images/default-image.png') }}'" />
-                            </button>
-                            <p class="text-xs text-gray-500 mt-1">Klik untuk melihat penuh — Gambar {{ $idx + 1 }}</p>
+
+                <!-- Visi Section -->
+                <div class="mb-12">
+                    <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-8 text-white">
+                        <div class="flex items-center mb-6">
+                            <div class="bg-white bg-opacity-20 rounded-full p-3 mr-4">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold">VISI SEKOLAH</h3>
                         </div>
-                    @empty
-                        <div class="col-span-1 sm:col-span-2 md:col-span-3">
-                            <div class="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded p-4 text-center">Belum ada gambar visi & misi. Silakan atur di admin.</div>
-                        </div>
-                    @endforelse
+                        <p class="text-xl leading-relaxed">
+                            "Menjadi sekolah unggul yang berkarakter, berprestasi, dan berdaya saing global dalam menghasilkan generasi yang cerdas, berakhlak mulia, dan siap menghadapi tantangan masa depan."
+                        </p>
+                    </div>
                 </div>
+
+                <!-- Misi Section -->
+                <div class="mb-12">
+                    <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl p-8 text-white">
+                        <div class="flex items-center mb-6">
+                            <div class="bg-white bg-opacity-20 rounded-full p-3 mr-4">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold">MISI SEKOLAH</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3 mt-1">
+                                        <span class="text-sm font-bold">1</span>
+                                    </div>
+                                    <p class="text-lg">Menyelenggarakan pendidikan berkualitas dengan kurikulum yang relevan dan inovatif</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3 mt-1">
+                                        <span class="text-sm font-bold">2</span>
+                                    </div>
+                                    <p class="text-lg">Mengembangkan karakter siswa yang berakhlak mulia dan berintegritas tinggi</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3 mt-1">
+                                        <span class="text-sm font-bold">3</span>
+                                    </div>
+                                    <p class="text-lg">Meningkatkan prestasi akademik dan non-akademik siswa secara berkelanjutan</p>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3 mt-1">
+                                        <span class="text-sm font-bold">4</span>
+                                    </div>
+                                    <p class="text-lg">Mengembangkan kompetensi guru dan tenaga kependidikan secara profesional</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3 mt-1">
+                                        <span class="text-sm font-bold">5</span>
+                                    </div>
+                                    <p class="text-lg">Menyediakan fasilitas pembelajaran yang modern dan memadai</p>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3 mt-1">
+                                        <span class="text-sm font-bold">6</span>
+                                    </div>
+                                    <p class="text-lg">Membangun kemitraan dengan masyarakat dan stakeholder pendidikan</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tujuan Sekolah -->
+                <div class="mb-12">
+                    <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl p-8 text-white">
+                        <div class="flex items-center mb-6">
+                            <div class="bg-white bg-opacity-20 rounded-full p-3 mr-4">
+                                <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold">TUJUAN SEKOLAH</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="text-center">
+                                <div class="bg-white bg-opacity-20 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <h4 class="text-lg font-semibold mb-2">Akademik</h4>
+                                <p class="text-sm opacity-90">Mencapai standar kelulusan 100% dengan nilai rata-rata di atas 75</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="bg-white bg-opacity-20 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <h4 class="text-lg font-semibold mb-2">Karakter</h4>
+                                <p class="text-sm opacity-90">Membentuk siswa berakhlak mulia dan berintegritas tinggi</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="bg-white bg-opacity-20 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                    </svg>
+                                </div>
+                                <h4 class="text-lg font-semibold mb-2">Prestasi</h4>
+                                <p class="text-sm opacity-90">Mencapai prestasi di tingkat kabupaten, provinsi, dan nasional</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gambar Visi Misi -->
+                @php $images = $profilData['visi_misi']['images'] ?? []; @endphp
+                @if(count($images) > 0)
+                <div class="mb-8">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Dokumentasi Visi & Misi</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @foreach($images as $idx => $img)
+                            <div class="bg-gray-50 rounded-xl p-4 hover:shadow-lg transition-shadow">
+                                <button onclick="openImageModal('{{ $img }}', 'Visi & Misi — Gambar {{ $idx + 1 }}')" class="block focus:outline-none w-full">
+                                    <img src="{{ $img }}" alt="Visi & Misi Sekolah — Gambar {{ $idx + 1 }}" class="w-full h-48 object-cover rounded-lg border-2 border-gray-200 hover:border-primary-300 transition-colors" onerror="this.src='{{ asset('images/default-image.png') }}'" />
+                                </button>
+                                <p class="text-sm text-gray-600 mt-3 text-center">Klik untuk melihat penuh — Gambar {{ $idx + 1 }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @else
+                <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-8 text-center">
+                    <div class="bg-yellow-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-yellow-800 mb-2">Dokumentasi Visi & Misi</h3>
+                    <p class="text-yellow-700">Gambar dokumentasi visi & misi akan segera ditambahkan. Silakan hubungi admin untuk mengatur konten ini.</p>
+                </div>
+                @endif
             </div>
         </div>
 
