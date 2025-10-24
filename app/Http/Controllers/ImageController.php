@@ -25,18 +25,16 @@ class ImageController extends Controller
             
             $imagePath = $folder . '/' . $filename;
             
-            // Try to get image from public/storage first (for hosting)
+            // Prefer storage/app/public first (no symlink/copy)
+            $storagePath = storage_path('app/public/' . $imagePath);
+            if (file_exists($storagePath) && is_readable($storagePath)) {
+                return $this->serveImageFile($storagePath);
+            }
+            
+            // Fallback to public/storage if present
             $publicPath = public_path('storage/' . $imagePath);
             if (file_exists($publicPath) && is_readable($publicPath)) {
                 return $this->serveImageFile($publicPath);
-            }
-            
-            // Fallback to storage/app/public
-            $storagePath = storage_path('app/public/' . $imagePath);
-            if (file_exists($storagePath) && is_readable($storagePath)) {
-                // Auto copy to public for future requests
-                StorageHelper::autoCopyToPublic($imagePath);
-                return $this->serveImageFile($storagePath);
             }
             
             // If not found, serve default image
@@ -55,53 +53,59 @@ class ImageController extends Controller
     {
         try {
             $modelClass = $this->getModelClass($model);
+            $defaultOverride = ($model === 'library' && $field === 'organization_chart') ? 'images/default-struktur.png' : null;
             if (!$modelClass) {
-                return $this->serveDefaultImage();
+                return $this->serveDefaultImage($defaultOverride);
             }
             
             $record = $modelClass::find($id);
             if (!$record) {
-                return $this->serveDefaultImage();
+                return $this->serveDefaultImage($defaultOverride);
             }
             
             $imagePath = $record->getAttribute($field);
             if (empty($imagePath)) {
-                return $this->serveDefaultImage();
+                return $this->serveDefaultImage($defaultOverride);
             }
             
             // Clean path
             $cleanPath = $this->cleanImagePath($imagePath, $model, $field);
             if (!$cleanPath) {
-                return $this->serveDefaultImage();
+                return $this->serveDefaultImage($defaultOverride);
             }
             
-            // Try to get image from public/storage first
+            // Prefer storage/app/public first (no symlink/copy)
+            $storagePath = storage_path('app/public/' . $cleanPath);
+            if (file_exists($storagePath) && is_readable($storagePath)) {
+                return $this->serveImageFile($storagePath);
+            }
+            
+            // Fallback to public/storage if present
             $publicPath = public_path('storage/' . $cleanPath);
             if (file_exists($publicPath) && is_readable($publicPath)) {
                 return $this->serveImageFile($publicPath);
             }
             
-            // Fallback to storage/app/public
-            $storagePath = storage_path('app/public/' . $cleanPath);
-            if (file_exists($storagePath) && is_readable($storagePath)) {
-                // Auto copy to public for future requests
-                StorageHelper::autoCopyToPublic($cleanPath);
-                return $this->serveImageFile($storagePath);
-            }
-            
-            return $this->serveDefaultImage();
+            return $this->serveDefaultImage($defaultOverride);
             
         } catch (\Exception $e) {
             \Log::error("Model image serve error: " . $e->getMessage());
-            return $this->serveDefaultImage();
+            return $this->serveDefaultImage($defaultOverride ?? null);
         }
     }
     
     /**
      * Serve default image
      */
-    private function serveDefaultImage()
+    private function serveDefaultImage(?string $overridePath = null)
     {
+        if ($overridePath) {
+            $candidate = is_file($overridePath) ? $overridePath : public_path($overridePath);
+            if (file_exists($candidate) && is_readable($candidate)) {
+                return $this->serveImageFile($candidate);
+            }
+        }
+        
         $defaultPath = public_path('images/default-image.png');
         
         if (file_exists($defaultPath)) {
