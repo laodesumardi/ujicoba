@@ -37,6 +37,12 @@ class ImageController extends Controller
                 return $this->serveImageFile($publicPath);
             }
             
+            // Support direct public path (e.g. images/, uploads/)
+            $directPublicPath = public_path($imagePath);
+            if (file_exists($directPublicPath) && is_readable($directPublicPath)) {
+                return $this->serveImageFile($directPublicPath);
+            }
+            
             // If not found, serve default image
             return $this->serveDefaultImage();
             
@@ -66,6 +72,17 @@ class ImageController extends Controller
             $imagePath = $record->getAttribute($field);
             if (empty($imagePath)) {
                 return $this->serveDefaultImage($defaultOverride);
+            }
+            
+            // Support direct public paths (images/, uploads/, or public/)
+            $publicCandidate = null;
+            if (str_starts_with($imagePath, 'public/')) {
+                $publicCandidate = public_path(substr($imagePath, 7));
+            } else {
+                $publicCandidate = public_path($imagePath);
+            }
+            if ($publicCandidate && file_exists($publicCandidate) && is_readable($publicCandidate)) {
+                return $this->serveImageFile($publicCandidate);
             }
             
             // Clean path
