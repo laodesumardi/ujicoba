@@ -96,6 +96,8 @@ class GalleryController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'cover_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+            'gallery_images' => 'required|array|min:1',
+            'gallery_images.*' => 'file|mimes:jpeg,png,jpg,gif,webp,mp4,avi,mov|max:5120',
             'type' => 'required|in:photo,video,mixed',
             'category' => 'required|string',
             'status' => 'required|in:draft,published,archived',
@@ -117,7 +119,44 @@ class GalleryController extends Controller
             $data['cover_image'] = $path;
         }
 
-        Gallery::create($data);
+        $gallery = Gallery::create($data);
+
+        // Handle gallery images upload
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $index => $file) {
+                $filename = time() . '_' . $index . '_' . Str::slug($request->title) . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('gallery-items', $filename, 'public');
+                
+                // Determine file type
+                $fileType = $file->getMimeType();
+                $type = str_starts_with($fileType, 'video/') ? 'video' : 'image';
+                
+                // Create gallery item
+                GalleryItem::create([
+                    'gallery_id' => $gallery->id,
+                    'filename' => $filename,
+                    'file_path' => $path,
+                    'file_type' => $type,
+                    'sort_order' => $index,
+                    'is_active' => true
+                ]);
+                
+                // Copy to public/storage for immediate access
+                $sourcePath = storage_path('app/public/' . $path);
+                $destPath = public_path('storage/' . $path);
+                $destDir = dirname($destPath);
+                
+                if (!is_dir($destDir)) {
+                    mkdir($destDir, 0755, true);
+                }
+                
+                if (copy($sourcePath, $destPath)) {
+                    \Log::info('Gallery item copied to public storage: ' . $path);
+                } else {
+                    \Log::error('Failed to copy gallery item to public storage: ' . $path);
+                }
+            }
+        }
 
         // Copy uploaded files to public/storage for immediate access
         if ($request->hasFile('cover_image')) {
