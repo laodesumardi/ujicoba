@@ -120,7 +120,6 @@
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Media</h3>
                         <div class="space-y-6">
                             <!-- Current Image -->
-                            @if($news->featured_image)
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Gambar Saat Ini</label>
                                 <div class="flex items-center space-x-4">
@@ -133,7 +132,6 @@
                                     </div>
                                 </div>
                             </div>
-                            @endif
 
                             <!-- Featured Image -->
                             <div>
