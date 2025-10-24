@@ -89,36 +89,6 @@ use Illuminate\Support\Facades\Storage;
                         </div>
                     </div>
                     
-                    <div class="lg:col-span-1">
-                        <div class="bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg p-6 text-white">
-                            <div class="space-y-3">
-                                <div class="flex items-center">
-                                    <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3">
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                    </div>
-                                    <span class="text-sm">Sekolah Berakreditasi A</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3">
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                    </div>
-                                    <span class="text-sm">Fasilitas Lengkap</span>
-                                </div>
-                                <div class="flex items-center">
-                                    <div class="bg-white bg-opacity-20 rounded-full p-2 mr-3">
-                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                    </div>
-                                    <span class="text-sm">Guru Berpengalaman</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
