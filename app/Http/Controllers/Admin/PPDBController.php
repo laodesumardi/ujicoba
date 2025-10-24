@@ -316,4 +316,35 @@ class PPDBController extends Controller
 
         return response()->stream($callback, 200, $headers);
     }
+
+    /**
+     * Delete PPDB registration.
+     */
+    public function deleteRegistration(PPDBRegistration $registration)
+    {
+        try {
+            // Delete associated files if they exist
+            $files = [
+                $registration->photo,
+                $registration->birth_certificate,
+                $registration->family_card,
+                $registration->report_card
+            ];
+
+            foreach ($files as $file) {
+                if ($file && Storage::disk('public')->exists($file)) {
+                    Storage::disk('public')->delete($file);
+                }
+            }
+
+            // Delete the registration
+            $registration->delete();
+
+            return redirect()->route('admin.ppdb.registrations')
+                ->with('success', 'Pendaftaran PPDB berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.ppdb.registrations')
+                ->with('error', 'Gagal menghapus pendaftaran PPDB: ' . $e->getMessage());
+        }
+    }
 }
