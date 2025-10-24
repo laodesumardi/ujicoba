@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\SchoolProfile;
 use App\Models\Accreditation;
 use App\Models\Achievement;
+use App\Models\VisionMission;
 
 class ProfilController extends Controller
 {
@@ -20,6 +21,15 @@ class ProfilController extends Controller
         // Ambil data akreditasi dan prestasi dari database
         $accreditation = Accreditation::active()->first();
         $achievements = Achievement::active()->orderBy('year', 'desc')->get();
+
+        // Ambil Visi & Misi aktif untuk gambar
+        $activeVisionMission = VisionMission::where('is_active', true)->orderBy('created_at', 'desc')->first();
+        $visionImages = [];
+        if ($activeVisionMission) {
+            if (!empty($activeVisionMission->image_one_url)) { $visionImages[] = $activeVisionMission->image_one_url; }
+            if (!empty($activeVisionMission->image_two_url)) { $visionImages[] = $activeVisionMission->image_two_url; }
+            if (!empty($activeVisionMission->image_three_url)) { $visionImages[] = $activeVisionMission->image_three_url; }
+        }
         
         // Data profil sekolah dari database
         $profilData = [
@@ -34,14 +44,7 @@ class ProfilController extends Controller
                 'lokasi' => 'Namrole, Maluku Tengah'
             ],
             'visi_misi' => [
-                'visi' => $sections->get('visi-misi')->content ?? 'Menjadi sekolah unggul yang menghasilkan lulusan berkarakter, berprestasi, dan berdaya saing global',
-                'misi' => [
-                    'Menyelenggarakan pendidikan yang berkualitas dengan mengintegrasikan nilai-nilai karakter',
-                    'Mengembangkan potensi siswa melalui pembelajaran yang kreatif dan inovatif',
-                    'Membina hubungan yang harmonis antara sekolah, orang tua, dan masyarakat',
-                    'Menyediakan fasilitas pembelajaran yang memadai dan modern',
-                    'Membentuk siswa yang memiliki kepedulian sosial dan lingkungan'
-                ]
+                'images' => $visionImages,
             ],
             'struktur_organisasi' => [
                 // gunakan URL relatif dari accessor image_url ketika gambar tersedia; fallback ke gambar default

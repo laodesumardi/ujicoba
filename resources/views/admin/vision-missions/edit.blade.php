@@ -99,6 +99,50 @@
                     @enderror
                 </div>
 
+                <!-- Images -->
+                <div class="mb-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                        <i class="fas fa-image text-pink-600 mr-3"></i>
+                        Gambar Visi & Misi
+                    </h3>
+                    <p class="text-xs text-gray-500 mb-4">Masukkan path gambar di folder public, contoh: <code>/images/visi-1.jpg</code></p>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="image_one" class="block text-sm font-medium text-gray-700 mb-2">Gambar 1</label>
+                            <input type="text" id="image_one" name="image_one" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('image_one') border-red-500 @enderror" value="{{ old('image_one', $visionMission->image_one) }}" placeholder="/images/visi-1.jpg">
+                            @error('image_one')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                            @php $preview1 = old('image_one', $visionMission->image_one_url); @endphp
+                            @if($preview1)
+                                <img src="{{ $preview1 }}" alt="Preview Gambar 1" class="mt-2 w-full h-32 object-cover rounded border">
+                            @endif
+                        </div>
+                        <div>
+                            <label for="image_two" class="block text-sm font-medium text-gray-700 mb-2">Gambar 2</label>
+                            <input type="text" id="image_two" name="image_two" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('image_two') border-red-500 @enderror" value="{{ old('image_two', $visionMission->image_two) }}" placeholder="/images/visi-2.jpg">
+                            @error('image_two')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                            @php $preview2 = old('image_two', $visionMission->image_two_url); @endphp
+                            @if($preview2)
+                                <img src="{{ $preview2 }}" alt="Preview Gambar 2" class="mt-2 w-full h-32 object-cover rounded border">
+                            @endif
+                        </div>
+                        <div>
+                            <label for="image_three" class="block text-sm font-medium text-gray-700 mb-2">Gambar 3</label>
+                            <input type="text" id="image_three" name="image_three" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('image_three') border-red-500 @enderror" value="{{ old('image_three', $visionMission->image_three) }}" placeholder="/images/visi-3.jpg">
+                            @error('image_three')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                            @php $preview3 = old('image_three', $visionMission->image_three_url); @endphp
+                            @if($preview3)
+                                <img src="{{ $preview3 }}" alt="Preview Gambar 3" class="mt-2 w-full h-32 object-cover rounded border">
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Status -->
                 <div class="mb-8">
                     <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">

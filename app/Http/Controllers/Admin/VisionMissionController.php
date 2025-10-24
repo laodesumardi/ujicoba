@@ -34,7 +34,10 @@ class VisionMissionController extends Controller
             'vision' => 'required|string',
             'missions' => 'required|array|min:1',
             'missions.*' => 'required|string|max:500',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
+            'image_one' => 'nullable|string',
+            'image_two' => 'nullable|string',
+            'image_three' => 'nullable|string',
         ]);
 
         $data = $request->all();
@@ -71,7 +74,10 @@ class VisionMissionController extends Controller
             'vision' => 'required|string',
             'missions' => 'required|array|min:1',
             'missions.*' => 'required|string|max:500',
-            'is_active' => 'boolean'
+            'is_active' => 'boolean',
+            'image_one' => 'nullable|string',
+            'image_two' => 'nullable|string',
+            'image_three' => 'nullable|string',
         ]);
 
         $data = $request->all();

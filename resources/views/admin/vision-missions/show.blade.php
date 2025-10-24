@@ -56,6 +56,34 @@
                 </div>
             </div>
 
+            <!-- Images Section -->
+            <div class="p-8 border-b border-gray-200">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                    <i class="fas fa-image text-pink-600 mr-3"></i>
+                    Gambar Visi & Misi
+                </h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    @if($visionMission->image_one_url)
+                        <div>
+                            <img src="{{ $visionMission->image_one_url }}" alt="Gambar 1" class="w-full h-40 object-cover rounded border">
+                            <p class="text-xs text-gray-500 mt-2">Gambar 1</p>
+                        </div>
+                    @endif
+                    @if($visionMission->image_two_url)
+                        <div>
+                            <img src="{{ $visionMission->image_two_url }}" alt="Gambar 2" class="w-full h-40 object-cover rounded border">
+                            <p class="text-xs text-gray-500 mt-2">Gambar 2</p>
+                        </div>
+                    @endif
+                    @if($visionMission->image_three_url)
+                        <div>
+                            <img src="{{ $visionMission->image_three_url }}" alt="Gambar 3" class="w-full h-40 object-cover rounded border">
+                            <p class="text-xs text-gray-500 mt-2">Gambar 3</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
             <!-- Status and Info -->
             <div class="p-8">
                 <h3 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">

@@ -98,6 +98,7 @@
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Visi</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah Misi</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gambar</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Dibuat</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
@@ -113,6 +114,22 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     {{ count($visionMission->missions ?? []) }} misi
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center space-x-2">
+                                        @if($visionMission->image_one_url)
+                                            <img src="{{ $visionMission->image_one_url }}" alt="Gambar 1" class="w-10 h-10 object-cover rounded border">
+                                        @endif
+                                        @if($visionMission->image_two_url)
+                                            <img src="{{ $visionMission->image_two_url }}" alt="Gambar 2" class="w-10 h-10 object-cover rounded border">
+                                        @endif
+                                        @if($visionMission->image_three_url)
+                                            <img src="{{ $visionMission->image_three_url }}" alt="Gambar 3" class="w-10 h-10 object-cover rounded border">
+                                        @endif
+                                        @if(!$visionMission->image_one_url && !$visionMission->image_two_url && !$visionMission->image_three_url)
+                                            <span class="text-xs text-gray-400">-</span>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($visionMission->is_active)
@@ -181,6 +198,23 @@
                                     <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
                                         Tidak Aktif
                                     </span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <div class="flex space-x-2">
+                                @if($visionMission->image_one_url)
+                                    <img src="{{ $visionMission->image_one_url }}" alt="Gambar 1" class="w-14 h-14 object-cover rounded border">
+                                @endif
+                                @if($visionMission->image_two_url)
+                                    <img src="{{ $visionMission->image_two_url }}" alt="Gambar 2" class="w-14 h-14 object-cover rounded border">
+                                @endif
+                                @if($visionMission->image_three_url)
+                                    <img src="{{ $visionMission->image_three_url }}" alt="Gambar 3" class="w-14 h-14 object-cover rounded border">
+                                @endif
+                                @if(!$visionMission->image_one_url && !$visionMission->image_two_url && !$visionMission->image_three_url)
+                                    <span class="text-xs text-gray-400">Tidak ada gambar</span>
                                 @endif
                             </div>
                         </div>
