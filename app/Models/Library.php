@@ -38,25 +38,31 @@ class Library extends Model
     // Accessors
     public function getOrganizationChartUrlAttribute()
     {
+        // Cache-busting versi berdasarkan updated_at
+        $version = $this->updated_at ? $this->updated_at->timestamp : time();
+
         if (!$this->organization_chart) {
-            return asset('images/default-library-org-chart.png');
+            return route('image.serve.model', [
+                'model' => 'library',
+                'id' => $this->id,
+                'field' => 'organization_chart',
+                'v' => $version,
+            ]);
         }
         
-        // Check if it's already a full URL
+        // URL eksternal
         if (filter_var($this->organization_chart, FILTER_VALIDATE_URL) ||
             str_starts_with($this->organization_chart, 'http://') ||
             str_starts_with($this->organization_chart, 'https://')) {
             return $this->organization_chart;
         }
         
-        // Check if it's a public file (not in storage)
-        if (!str_starts_with($this->organization_chart, 'libraries/') && 
-            !str_starts_with($this->organization_chart, 'storage/')) {
-            // Public file - use asset() for consistent URL
-            return asset($this->organization_chart);
-        }
-        
-        // Use StorageHelper for consistent URL generation (handles hosting storage)
-        return \App\Helpers\StorageHelper::getImageUrl($this->organization_chart, 'images/default-library-org-chart.png');
+        // Gunakan direct image serving route dengan cache-busting
+        return route('image.serve.model', [
+            'model' => 'library',
+            'id' => $this->id,
+            'field' => 'organization_chart',
+            'v' => $version,
+        ]);
     }
 }
