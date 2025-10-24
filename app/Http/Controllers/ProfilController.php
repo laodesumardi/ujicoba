@@ -25,7 +25,8 @@ class ProfilController extends Controller
         $profilData = [
             'hero_title' => $sections->get('hero')->title ?? 'Profil Sekolah',
             'hero_subtitle' => $sections->get('hero')->subtitle ?? $sections->get('hero')->content ?? 'SMP Negeri 01 Namrole - Sekolah Unggul Berkarakter',
-            'hero_background' => $sections->get('hero')->image ?? null,
+            // gunakan URL relatif dari accessor image_url ketika gambar tersedia, selain itu biarkan null agar fallback gradient bekerja
+            'hero_background' => ($sections->get('hero') && $sections->get('hero')->image) ? $sections->get('hero')->image_url : null,
             'sejarah' => [
                 'judul' => $sections->get('sejarah')->title ?? 'Sejarah Singkat SMP Negeri 01 Namrole',
                 'konten' => $sections->get('sejarah')->content ?? 'SMP Negeri 01 Namrole didirikan pada tahun 1985 sebagai salah satu sekolah menengah pertama negeri di Kabupaten Maluku Tengah. Sekolah ini dibangun dengan tujuan untuk memberikan akses pendidikan yang berkualitas kepada masyarakat di wilayah Namrole dan sekitarnya. Sejak berdiri, sekolah ini telah mengalami berbagai perkembangan dan peningkatan fasilitas untuk mendukung proses pembelajaran yang optimal.',
@@ -43,7 +44,8 @@ class ProfilController extends Controller
                 ]
             ],
             'struktur_organisasi' => [
-                'gambar' => $sections->get('struktur')->image ?? 'Struktur Organisasi.png',
+                // gunakan URL relatif dari accessor image_url ketika gambar tersedia; fallback ke gambar default
+                'gambar' => ($sections->get('struktur') && $sections->get('struktur')->image) ? $sections->get('struktur')->image_url : asset('images/default-section.png'),
                 'judul' => $sections->get('struktur')->title ?? 'Struktur Organisasi SMP Negeri 01 Namrole',
                 'deskripsi' => $sections->get('struktur')->content ?? 'Struktur organisasi sekolah yang menunjukkan hierarki kepemimpinan dan pembagian tugas di SMP Negeri 01 Namrole.'
             ],

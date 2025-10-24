@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
     <!-- Hero Section -->
     <div class="text-white relative flex items-center justify-center" 
          @if(isset($profilData['hero_background']) && $profilData['hero_background'])
-         style="background-image: url('{{ Storage::url($profilData['hero_background']) }}'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 500px;"
+         style="background-image: url('{{ $profilData['hero_background'] }}'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 500px;"
          @else
          style="background: linear-gradient(135deg, #14213d 0%, #1e3a8a 100%); min-height: 500px;"
          @endif>
@@ -187,7 +187,7 @@ use Illuminate\Support\Facades\Storage;
                 <!-- Struktur Organisasi Image -->
                 <div class="text-center">
                     <div class="bg-gray-50 rounded-lg p-6 mb-6">
-                        <img src="{{ Storage::url($profilData['struktur_organisasi']['gambar']) }}" 
+                        <img src="{{ $profilData['struktur_organisasi']['gambar'] }}" 
                              alt="{{ $profilData['struktur_organisasi']['judul'] }}" 
                              class="max-w-full h-auto mx-auto rounded-lg shadow-lg"
                              onerror="this.src='{{ asset('images/default-section.png') }}'">
