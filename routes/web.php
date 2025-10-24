@@ -248,6 +248,58 @@ Route::get('/kebijakan-privasi', [App\Http\Controllers\PageController::class, 'p
 Route::get('/syarat-ketentuan', [App\Http\Controllers\PageController::class, 'termsConditions'])->name('terms-conditions');
 Route::get('/peta-situs', [App\Http\Controllers\PageController::class, 'sitemap'])->name('sitemap');
 
+// Images audit page: list all public and storage images
+Route::get('/semua-gambar', function () {
+    $imageExtensions = ['jpg','jpeg','png','gif','webp','svg'];
+
+    // Public images under /public/images
+    $publicImages = [];
+    foreach (\Illuminate\Support\Facades\File::allFiles(public_path('images')) as $file) {
+        $ext = strtolower($file->getExtension());
+        if (!in_array($ext, $imageExtensions)) continue;
+        $relative = str_replace(public_path('images') . DIRECTORY_SEPARATOR, '', $file->getPathname());
+        $relative = str_replace('\\', '/', $relative);
+        $publicImages[] = [
+            'path' => 'images/' . $relative,
+            'url' => asset('images/' . $relative),
+            'name' => $file->getFilename(),
+            'size' => $file->getSize(),
+        ];
+    }
+
+    // Root-level public images
+    $rootFiles = ['logo.png', 'favicon.ico'];
+    $rootImages = [];
+    foreach ($rootFiles as $rf) {
+        $full = public_path($rf);
+        if (file_exists($full)) {
+            $ext = strtolower(pathinfo($rf, PATHINFO_EXTENSION));
+            if (in_array($ext, $imageExtensions)) {
+                $rootImages[] = [
+                    'path' => $rf,
+                    'url' => asset($rf),
+                    'name' => basename($rf),
+                    'size' => filesize($full),
+                ];
+            }
+        }
+    }
+
+    // Storage images under storage/app/public
+    $storageImages = [];
+    foreach (\Illuminate\Support\Facades\Storage::allFiles('public') as $path) {
+        $ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (!in_array($ext, $imageExtensions)) continue;
+        $storageImages[] = [
+            'path' => $path,
+            'url' => \Illuminate\Support\Facades\Storage::url($path),
+            'name' => basename($path),
+        ];
+    }
+
+    return view('pages.images-all', compact('publicImages','storageImages','rootImages'));
+})->name('images.all');
+
 /* Disabled: debug and test routes (debug, ping, test-route, clear-cache, test, test-storage) */
 
 /* Disabled: /generate setup route (manual copy) */
