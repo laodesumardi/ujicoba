@@ -118,22 +118,13 @@
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                                 
-                                @if($library->organization_chart)
-                                    <div class="mt-4">
-                                        <p class="text-sm font-medium text-gray-700 mb-2">Current image:</p>
-                                        <img src="{{ $library->organization_chart_url }}" alt="Current Organization Chart" 
-                                             class="max-w-xs rounded-lg shadow-md" id="current-image" loading="lazy" 
-                                             onerror="this.src='{{ asset('images/default-library-org-chart.png') }}'; this.alt='Default Organization Chart';">
-                                        <p class="text-xs text-gray-500 mt-1">URL: {{ $library->organization_chart_url }}</p>
-                                    </div>
-                                @else
-                                    <div class="mt-4">
-                                        <p class="text-sm font-medium text-gray-700 mb-2">Current image:</p>
-                                        <img src="{{ asset('images/default-library-org-chart.png') }}" alt="Default Organization Chart" 
-                                             class="max-w-xs rounded-lg shadow-md" id="current-image" loading="lazy">
-                                        <p class="text-xs text-gray-500 mt-1">No image uploaded yet</p>
-                                    </div>
-                                @endif
+                                <div class="mt-4">
+                                    <p class="text-sm font-medium text-gray-700 mb-2">Current image:</p>
+                                    <img src="{{ $library->organization_chart_url }}" alt="Current Organization Chart" 
+                                         class="max-w-xs rounded-lg shadow-md" id="current-image" loading="lazy" 
+                                         onerror="this.src='{{ asset('images/default-library-org-chart.png') }}'; this.alt='Default Organization Chart';">
+                                    <p class="text-xs text-gray-500 mt-1">URL: {{ $library->organization_chart_url }}</p>
+                                </div>
                             </div>
 
                             <div>
