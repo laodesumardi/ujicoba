@@ -39,11 +39,19 @@ class HomeSection extends Model
         'created' => ModelUpdated::class,
     ];
 
-    // Accessor for image URL - Direct serving
+    // Accessor for image URL - Direct serving with cache-busting
     public function getImageUrlAttribute()
     {
+        // Use updated_at timestamp to force refresh when record changes
+        $version = $this->updated_at ? $this->updated_at->timestamp : time();
+
         if (!$this->image) {
-            return route('image.serve.model', ['model' => 'home-section', 'id' => $this->id, 'field' => 'image']);
+            return route('image.serve.model', [
+                'model' => 'home-section',
+                'id' => $this->id,
+                'field' => 'image',
+                'v' => $version,
+            ]);
         }
 
         // Absolute URLs
@@ -53,7 +61,12 @@ class HomeSection extends Model
             return $this->image;
         }
 
-        // Use direct image serving route
-        return route('image.serve.model', ['model' => 'home-section', 'id' => $this->id, 'field' => 'image']);
+        // Use direct image serving route with cache-busting
+        return route('image.serve.model', [
+            'model' => 'home-section',
+            'id' => $this->id,
+            'field' => 'image',
+            'v' => $version,
+        ]);
     }
 }
