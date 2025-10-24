@@ -7,7 +7,7 @@
     <!-- Hero Section with Full Width Image -->
     @if($academicCalendarSection && $academicCalendarSection->image)
     <div class="relative h-96 overflow-hidden">
-        <x-storage-image :path="$academicCalendarSection->image" :alt="$academicCalendarSection->image_alt" class="w-full h-full object-cover" default="images/default-section.png" />
+        <img src="{{ $academicCalendarSection->image_url }}" alt="{{ $academicCalendarSection->image_alt }}" class="w-full h-full object-cover" onerror="this.src='{{ asset('images/default-section.png') }}'">
         <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div class="text-center text-white px-4">
                 <h1 class="text-4xl md:text-5xl font-bold mb-4">

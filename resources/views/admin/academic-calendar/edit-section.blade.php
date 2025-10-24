@@ -78,15 +78,13 @@ use Illuminate\Support\Facades\Storage;
                                 <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
                                     Gambar Section
                                 </label>
-                                @if($section->image)
                                 <div class="mb-3">
-                                    <img src="{{ Storage::url($section->image) }}" alt="{{ $section->image_alt }}" 
+                                    <img src="{{ $section->image_url }}" alt="{{ $section->image_alt }}" 
                                          class="w-32 h-20 object-cover rounded-lg border border-gray-300"
                                          onerror="this.src='{{ asset('images/default-section.png') }}'">
                                     <p class="text-sm text-gray-500 mt-1">Gambar saat ini</p>
-                                    <p class="text-xs text-blue-600">URL: {{ Storage::url($section->image) }}</p>
+                                    <p class="text-xs text-blue-600">URL: {{ $section->image_url }}</p>
                                 </div>
-                                @endif
                                 <input type="file" name="image" id="image" 
                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-primary-500 focus:border-primary-500 @error('image') border-red-500 @enderror"
                                        accept="image/*">
@@ -152,11 +150,9 @@ use Illuminate\Support\Facades\Storage;
                                     <p class="text-gray-700 text-sm" id="preview-content">
                                         {{ $section->content }}
                                     </p>
-                                    @if($section->image)
                                     <div class="mt-4">
                                         <x-storage-image :path="$section->image" :alt="$section->image_alt" class="w-full h-32 object-cover rounded-lg" default="images/default-section.png" />
                                     </div>
-                                    @endif
                                 </div>
                             </div>
 

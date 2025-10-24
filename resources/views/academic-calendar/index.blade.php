@@ -5,26 +5,19 @@
 @section('content')
 <div class="bg-white">
     <!-- Hero Section with Full Width Image -->
-    @if($academicCalendarSection && $academicCalendarSection->image)
+    @if($academicCalendarSection)
     <div class="relative h-96 overflow-hidden">
-        <img src="{{ asset('storage/' . $academicCalendarSection->image) }}" 
-             alt="{{ $academicCalendarSection->image_alt }}" 
-             class="w-full h-full object-cover">
+        <img src="{{ $academicCalendarSection->image_url }}" 
+             alt="{{ $academicCalendarSection->image_alt ?? 'Kalender Akademik' }}" 
+             class="w-full h-full object-cover"
+             onerror="this.onerror=null;this.src='{{ asset('images/default-section.png') }}';">
         <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div class="text-center text-white px-4">
                 <h1 class="text-4xl md:text-5xl font-bold mb-4">
-                    @if($academicCalendarSection->title)
-                        {{ $academicCalendarSection->title }}
-                    @else
-                        Kalender Akademik
-                    @endif
+                    {{ $academicCalendarSection->title ?? 'Kalender Akademik' }}
                 </h1>
                 <p class="text-xl md:text-2xl text-gray-200 mb-4">
-                    @if($academicCalendarSection->subtitle)
-                        {{ $academicCalendarSection->subtitle }}
-                    @else
-                        Jadwal penting dan kegiatan sekolah SMP Negeri 01 Namrole
-                    @endif
+                    {{ $academicCalendarSection->subtitle ?? 'Jadwal penting dan kegiatan sekolah SMP Negeri 01 Namrole' }}
                 </p>
                 @if($academicCalendarSection->content)
                     <p class="text-lg text-gray-300 max-w-3xl mx-auto">{{ $academicCalendarSection->content }}</p>

@@ -7,6 +7,7 @@ use App\Models\AcademicCalendar;
 use App\Models\HomeSection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\StorageHelper;
 
 class AcademicCalendarController extends Controller
 {
@@ -290,14 +291,8 @@ class AcademicCalendarController extends Controller
             $filename = time() . '_academic_calendar.' . $image->getClientOriginalExtension();
             $path = $image->storeAs('home-sections', $filename, 'public');
 
-            // Mirror copy to public/storage for hosts without symlink
-            $sourcePath = storage_path('app/public/' . $path);
-            $destPath = public_path('storage/' . $path);
-            $destDir = dirname($destPath);
-            if (!is_dir($destDir)) {
-                mkdir($destDir, 0755, true);
-            }
-            @copy($sourcePath, $destPath);
+            // Auto copy to public/storage for hosts without symlink
+            StorageHelper::autoCopyToPublic($path);
 
             $data['image'] = $path;
         }
