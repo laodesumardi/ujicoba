@@ -29,7 +29,7 @@
             <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
                 @if($facility->image)
                 <div class="h-48 relative overflow-hidden">
-                    <img src="{{ $facility->image_url }}" alt="{{ $facility->name }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <img src="{{ route('image.serve.model', ['model' => 'facility', 'id' => $facility->id, 'field' => 'image', 'v' => ($facility->updated_at ? $facility->updated_at->timestamp : time())]) }}" alt="{{ $facility->name }}" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <div class="h-48 bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center hidden">
                         @if($facility->icon)
                         <i class="{{ $facility->icon }} text-6xl text-white"></i>
@@ -97,7 +97,7 @@
             <div class="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
                 @if($facility->image)
                 <div class="h-32 relative overflow-hidden">
-                    <img src="{{ $facility->image_url }}" alt="{{ $facility->name }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <img src="{{ route('image.serve.model', ['model' => 'facility', 'id' => $facility->id, 'field' => 'image', 'v' => ($facility->updated_at ? $facility->updated_at->timestamp : time())]) }}" alt="{{ $facility->name }}" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <div class="h-32 bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center hidden">
                         @if($facility->icon)
                         <i class="{{ $facility->icon }} text-4xl text-white"></i>
