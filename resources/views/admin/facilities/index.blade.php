@@ -119,7 +119,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $loop->iteration }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="h-16 w-16 relative">
-                                        <img src="{{ $facility->image_url }}" alt="{{ $facility->name }}" 
+                                        <img src="{{ route('image.serve.model', ['model' => 'facility', 'id' => $facility->id, 'field' => 'image', 'v' => $facility->updated_at->timestamp]) }}" alt="{{ $facility->name }}" 
                                              class="h-16 w-16 object-cover rounded-lg border border-gray-200"
                                              style="display: block !important; max-width: 100% !important; max-height: 100% !important; width: 64px !important; height: 64px !important;"
                                              onerror="this.src='{{ asset('images/default-facility.png') }}'">
@@ -187,7 +187,7 @@
                             <div class="flex-1">
                                 <div class="flex items-center mb-2">
                                     <div class="flex-shrink-0 h-16 w-16 mr-3">
-                                        <img src="{{ $facility->image_url }}" alt="{{ $facility->name }}" 
+                                        <img src="{{ route('image.serve.model', ['model' => 'facility', 'id' => $facility->id, 'field' => 'image', 'v' => $facility->updated_at->timestamp]) }}" alt="{{ $facility->name }}" 
                                              class="h-16 w-16 object-cover rounded-lg border border-gray-200"
                                              onerror="this.src='{{ asset('images/default-facility.png') }}'">
                                     </div>

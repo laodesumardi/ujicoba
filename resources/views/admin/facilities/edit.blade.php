@@ -86,7 +86,7 @@
                             @if($facility->image)
                             <div class="mb-4">
                                 <div class="w-40 h-40 border border-gray-300 rounded-lg overflow-hidden bg-gray-100 relative">
-                                    <img src="{{ $facility->image_url }}" alt="{{ $facility->name }}" 
+                                    <img src="{{ route('image.serve.model', ['model' => 'facility', 'id' => $facility->id, 'field' => 'image', 'v' => $facility->updated_at->timestamp]) }}" alt="{{ $facility->name }}" 
                                          class="w-full h-full object-cover"
                                          style="max-width: 100% !important; max-height: 100% !important; display: block !important; width: 160px !important; height: 160px !important;"
                                          onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.nextElementSibling.style.display='flex';"
@@ -101,7 +101,7 @@
                                     </div>
                                 </div>
                                 <p class="text-sm text-gray-500 mt-2">Gambar saat ini</p>
-                                <p class="text-xs text-gray-400 mt-1">URL: {{ $facility->image_url }}</p>
+                                <p class="text-xs text-gray-400 mt-1">URL: {{ route('image.serve.model', ['model' => 'facility', 'id' => $facility->id, 'field' => 'image', 'v' => $facility->updated_at->timestamp]) }}</p>
                             </div>
                             @else
                             <div class="mb-4">

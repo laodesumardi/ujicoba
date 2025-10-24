@@ -126,7 +126,7 @@
                     </div>
                     <div class="p-6">
                         <div class="relative w-full h-48 border border-gray-300 rounded-lg overflow-hidden">
-                            <img src="{{ $facility->image_url }}" alt="{{ $facility->name }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <img src="{{ route('image.serve.model', ['model' => 'facility', 'id' => $facility->id, 'field' => 'image', 'v' => $facility->updated_at->timestamp]) }}" alt="{{ $facility->name }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                             <div class="absolute inset-0 bg-gray-100 flex items-center justify-center hidden">
                                 <div class="text-center">
                                     <svg class="w-16 h-16 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
