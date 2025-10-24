@@ -74,13 +74,14 @@ use Illuminate\Support\Facades\Storage;
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Gambar Saat Ini</label>
                                 <div class="flex items-center space-x-4">
-                                    <img src="{{ Storage::url($newsSection->image) }}" alt="{{ $newsSection->image_alt }}" 
+                                    <!-- Updated to use accessor with cache-busting -->
+                                    <img src="{{ $newsSection->image_url }}" alt="{{ $newsSection->image_alt }}" 
                                          class="h-24 w-24 object-cover rounded-lg"
                                          onerror="this.src='{{ asset('images/default-section.png') }}'">
                                     <div>
                                         <p class="text-sm text-gray-600">Gambar section saat ini</p>
                                         <p class="text-xs text-gray-500">Upload gambar baru untuk mengganti</p>
-                                        <p class="text-xs text-blue-600">URL: {{ Storage::url($newsSection->image) }}</p>
+                                        <p class="text-xs text-blue-600">URL: {{ $newsSection->image_url }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -148,7 +149,8 @@ use Illuminate\Support\Facades\Storage;
                             <!-- Full Width Preview -->
                             <div id="preview-image-container" class="relative h-64 overflow-hidden">
                                 @if($newsSection->image)
-                                    <img id="preview-image" src="{{ asset('storage/' . $newsSection->image) }}" alt="{{ $newsSection->image_alt }}" class="w-full h-full object-cover">
+                                    <!-- Updated to use accessor with cache-busting and fallback -->
+                                    <img id="preview-image" src="{{ $newsSection->image_url }}" alt="{{ $newsSection->image_alt }}" class="w-full h-full object-cover" onerror="this.src='{{ asset('images/default-section.png') }}'">
                                 @else
                                     <div id="preview-image-placeholder" class="w-full h-full bg-gradient-to-r from-primary-500 to-primary-600 flex items-center justify-center">
                                         <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
