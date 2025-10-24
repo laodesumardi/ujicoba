@@ -134,9 +134,10 @@ class GalleryController extends Controller
                 // Create gallery item
                 GalleryItem::create([
                     'gallery_id' => $gallery->id,
-                    'filename' => $filename,
                     'file_path' => $path,
                     'file_type' => $type,
+                    'mime_type' => $file->getMimeType(),
+                    'file_size' => $file->getSize(),
                     'sort_order' => $index,
                     'is_active' => true
                 ]);

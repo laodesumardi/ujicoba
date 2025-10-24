@@ -11,12 +11,17 @@ class GalleryItem extends Model
         'gallery_id',
         'title',
         'description',
-        'image',
-        'video_url',
-        'type',
+        'file_path',
+        'file_type',
+        'mime_type',
+        'file_size',
+        'width',
+        'height',
+        'duration',
+        'thumbnail_path',
+        'sort_order',
         'is_featured',
         'is_active',
-        'sort_order',
         'metadata'
     ];
 
@@ -51,29 +56,29 @@ class GalleryItem extends Model
     // Accessors
     public function getImageUrlAttribute()
     {
-        if (!$this->image) {
+        if (!$this->file_path) {
             return asset('images/default-gallery-item.png');
         }
         
-        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
-            return $this->image;
+        if (filter_var($this->file_path, FILTER_VALIDATE_URL)) {
+            return $this->file_path;
         }
         
-        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
-            return $this->image;
+        if (str_starts_with($this->file_path, 'http://') || str_starts_with($this->file_path, 'https://')) {
+            return $this->file_path;
         }
         
-        if (str_starts_with($this->image, 'gallery-items/')) {
-            return asset('storage/' . $this->image);
+        if (str_starts_with($this->file_path, 'gallery-items/')) {
+            return asset('storage/' . $this->file_path);
         }
         
-        if (str_starts_with($this->image, 'storage/')) {
-            return asset($this->image);
+        if (str_starts_with($this->file_path, 'storage/')) {
+            return asset($this->file_path);
         }
         
-        if (!str_starts_with($this->image, 'gallery-items/') && 
-            !str_starts_with($this->image, 'storage/')) {
-            return asset('storage/' . $this->image);
+        if (!str_starts_with($this->file_path, 'gallery-items/') && 
+            !str_starts_with($this->file_path, 'storage/')) {
+            return asset('storage/' . $this->file_path);
         }
         
         return asset('images/default-gallery-item.png');
@@ -87,22 +92,22 @@ class GalleryItem extends Model
             'document' => 'Dokumen'
         ];
 
-        return $types[$this->type] ?? ucfirst($this->type);
+        return $types[$this->file_type] ?? ucfirst($this->file_type);
     }
 
     // Methods
     public function isImage()
     {
-        return $this->type === 'image';
+        return $this->file_type === 'image';
     }
 
     public function isVideo()
     {
-        return $this->type === 'video';
+        return $this->file_type === 'video';
     }
 
     public function isDocument()
     {
-        return $this->type === 'document';
+        return $this->file_type === 'document';
     }
 }
