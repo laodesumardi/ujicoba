@@ -129,7 +129,7 @@ use Illuminate\Support\Facades\Storage;
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($section->section_key === 'hero')
                                     @if($section->image)
-                                        <img src="{{ Storage::url($section->image) }}" alt="{{ $section->image_alt }}" class="h-12 w-12 object-cover rounded-lg">
+                                        <img src="{{ $section->image_url }}" alt="{{ $section->image_alt }}" class="h-12 w-12 object-cover rounded-lg">
                                     @else
                                         <span class="text-gray-400 text-sm">No image</span>
                                     @endif
@@ -202,7 +202,7 @@ use Illuminate\Support\Facades\Storage;
                     
                     @if($section->section_key === 'hero' && $section->image)
                     <div class="mb-3">
-                        <img src="{{ Storage::url($section->image) }}" alt="{{ $section->image_alt }}" class="h-16 w-16 object-cover rounded-lg">
+                        <img src="{{ $section->image_url }}" alt="{{ $section->image_alt }}" class="h-16 w-16 object-cover rounded-lg">
                     </div>
                     @endif
                     
