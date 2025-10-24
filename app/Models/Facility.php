@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\StorageHelper;
 
 class Facility extends Model
 {
@@ -61,25 +62,26 @@ class Facility extends Model
             return $this->image;
         }
         
-        // Check if it's a storage path
-        if (str_starts_with($this->image, 'facilities/')) {
-            return asset('storage/' . $this->image);
+        // Clean path untuk StorageHelper
+        $path = $this->image;
+        
+        // Remove public/ prefix if exists
+        if (str_starts_with($path, 'public/')) {
+            $path = substr($path, 7);
         }
         
-        // Check if it's a storage path with storage/ prefix
-        if (str_starts_with($this->image, 'storage/')) {
-            return asset($this->image);
+        // Remove storage/ prefix if exists
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, 8);
         }
         
-        // Check if it's a public file (not in storage)
-        if (!str_starts_with($this->image, 'facilities/') && 
-            !str_starts_with($this->image, 'storage/')) {
-            // It's a public file
-            return asset($this->image);
+        // Ensure facilities folder
+        if (!str_starts_with($path, 'facilities/')) {
+            $path = 'facilities/' . $path;
         }
-        
-        // Default fallback
-        return asset('images/default-facility.png');
+
+        // Use StorageHelper untuk akses hosting yang aman
+        return StorageHelper::getImageUrl($path, 'images/default-facility.png');
     }
 
     public function getCategoryLabelAttribute()

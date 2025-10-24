@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\StorageHelper;
 
 class HomeSection extends Model
 {
@@ -29,11 +30,11 @@ class HomeSection extends Model
         'is_active' => 'boolean',
     ];
 
-    // Accessor for image URL
+    // Accessor for image URL - Hosting compatible
     public function getImageUrlAttribute()
     {
         if (!$this->image) {
-            return null;
+            return asset('images/default-section.png');
         }
 
         // Absolute URLs
@@ -43,22 +44,25 @@ class HomeSection extends Model
             return $this->image;
         }
 
-        // Already storage-prefixed (e.g. storage/home-sections/file.jpg)
-        if (str_starts_with($this->image, 'storage/')) {
-            return asset($this->image);
+        // Clean path untuk StorageHelper
+        $path = $this->image;
+        
+        // Remove public/ prefix if exists
+        if (str_starts_with($path, 'public/')) {
+            $path = substr($path, 7);
+        }
+        
+        // Remove storage/ prefix if exists
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, 8);
+        }
+        
+        // Ensure home-sections folder
+        if (!str_starts_with($path, 'home-sections/')) {
+            $path = 'home-sections/' . $path;
         }
 
-        // Old saved path including 'public/' prefix (e.g. public/home-sections/file.jpg)
-        if (str_starts_with($this->image, 'public/')) {
-            return asset('storage/' . substr($this->image, 7));
-        }
-
-        // Just filename (no slash): assume home-sections/<filename>
-        if (!str_contains($this->image, '/')) {
-            return asset('storage/home-sections/' . $this->image);
-        }
-
-        // Default: prepend storage/
-        return asset('storage/' . $this->image);
+        // Use StorageHelper untuk akses hosting yang aman
+        return StorageHelper::getImageUrl($path, 'images/default-section.png');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use App\Helpers\StorageHelper;
 
 class News extends Model
 {
@@ -103,20 +104,26 @@ class News extends Model
             return $this->featured_image;
         }
         
-        if (str_starts_with($this->featured_image, 'news/')) {
-            return asset('storage/' . $this->featured_image);
+        // Clean path untuk StorageHelper
+        $path = $this->featured_image;
+        
+        // Remove public/ prefix if exists
+        if (str_starts_with($path, 'public/')) {
+            $path = substr($path, 7);
         }
         
-        if (str_starts_with($this->featured_image, 'storage/')) {
-            return asset($this->featured_image);
+        // Remove storage/ prefix if exists
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, 8);
         }
         
-        if (!str_starts_with($this->featured_image, 'news/') && 
-            !str_starts_with($this->featured_image, 'storage/')) {
-            return asset('storage/' . $this->featured_image);
+        // Ensure news folder
+        if (!str_starts_with($path, 'news/')) {
+            $path = 'news/' . $path;
         }
-        
-        return asset('images/default-news.png');
+
+        // Use StorageHelper untuk akses hosting yang aman
+        return StorageHelper::getImageUrl($path, 'images/default-news.png');
     }
 
     public function getExcerptAttribute($value)
