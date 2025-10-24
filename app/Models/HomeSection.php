@@ -39,11 +39,11 @@ class HomeSection extends Model
         'created' => ModelUpdated::class,
     ];
 
-    // Accessor for image URL - Hosting compatible
+    // Accessor for image URL - Direct serving
     public function getImageUrlAttribute()
     {
         if (!$this->image) {
-            return asset('images/default-section.png');
+            return route('image.serve.model', ['model' => 'home-section', 'id' => $this->id, 'field' => 'image']);
         }
 
         // Absolute URLs
@@ -53,25 +53,7 @@ class HomeSection extends Model
             return $this->image;
         }
 
-        // Clean path untuk StorageHelper
-        $path = $this->image;
-        
-        // Remove public/ prefix if exists
-        if (str_starts_with($path, 'public/')) {
-            $path = substr($path, 7);
-        }
-        
-        // Remove storage/ prefix if exists
-        if (str_starts_with($path, 'storage/')) {
-            $path = substr($path, 8);
-        }
-        
-        // Ensure home-sections folder
-        if (!str_starts_with($path, 'home-sections/')) {
-            $path = 'home-sections/' . $path;
-        }
-
-        // Use StorageHelper untuk akses hosting yang aman
-        return StorageHelper::getImageUrl($path, 'images/default-section.png');
+        // Use direct image serving route
+        return route('image.serve.model', ['model' => 'home-section', 'id' => $this->id, 'field' => 'image']);
     }
 }

@@ -263,6 +263,10 @@ Route::post('/upload-storage', [App\Http\Controllers\ImageController::class, 'up
 Route::delete('/delete-public', [App\Http\Controllers\ImageController::class, 'deleteFromPublic'])->name('image.delete.public');
 Route::delete('/delete-storage', [App\Http\Controllers\ImageController::class, 'deleteFromStorage'])->name('image.delete.storage');
 
+// Direct image serving routes (no authentication required)
+Route::get('/image/{folder}/{filename}', [App\Http\Controllers\ImageController::class, 'serve'])->name('image.serve');
+Route::get('/image/{model}/{id}/{field?}', [App\Http\Controllers\ImageController::class, 'serveModelImage'])->name('image.serve.model');
+
 /* Disabled: setup/test controller routes (generate-controller, setup-controller, test-images-controller) */
 
 /* Disabled: /test-upload route */

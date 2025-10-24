@@ -113,26 +113,8 @@ class News extends Model
             return $this->featured_image;
         }
         
-        // Clean path untuk StorageHelper
-        $path = $this->featured_image;
-        
-        // Remove public/ prefix if exists
-        if (str_starts_with($path, 'public/')) {
-            $path = substr($path, 7);
-        }
-        
-        // Remove storage/ prefix if exists
-        if (str_starts_with($path, 'storage/')) {
-            $path = substr($path, 8);
-        }
-        
-        // Ensure news folder
-        if (!str_starts_with($path, 'news/')) {
-            $path = 'news/' . $path;
-        }
-
-        // Use StorageHelper untuk akses hosting yang aman
-        return StorageHelper::getImageUrl($path, 'images/default-news.png');
+        // Use direct image serving route
+        return route('image.serve.model', ['model' => 'news', 'id' => $this->id, 'field' => 'featured_image']);
     }
 
     public function getExcerptAttribute($value)

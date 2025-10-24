@@ -71,26 +71,8 @@ class Facility extends Model
             return $this->image;
         }
         
-        // Clean path untuk StorageHelper
-        $path = $this->image;
-        
-        // Remove public/ prefix if exists
-        if (str_starts_with($path, 'public/')) {
-            $path = substr($path, 7);
-        }
-        
-        // Remove storage/ prefix if exists
-        if (str_starts_with($path, 'storage/')) {
-            $path = substr($path, 8);
-        }
-        
-        // Ensure facilities folder
-        if (!str_starts_with($path, 'facilities/')) {
-            $path = 'facilities/' . $path;
-        }
-
-        // Use StorageHelper untuk akses hosting yang aman
-        return StorageHelper::getImageUrl($path, 'images/default-facility.png');
+        // Use direct image serving route
+        return route('image.serve.model', ['model' => 'facility', 'id' => $this->id, 'field' => 'image']);
     }
 
     public function getCategoryLabelAttribute()

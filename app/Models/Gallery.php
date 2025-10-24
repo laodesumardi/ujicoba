@@ -106,17 +106,8 @@ class Gallery extends Model
             return $this->image;
         }
         
-        // Clean path untuk StorageHelper
-        $path = $this->image;
-        if (str_starts_with($path, 'gallery/')) {
-            $path = $path;
-        } elseif (str_starts_with($path, 'storage/')) {
-            $path = str_replace('storage/', '', $path);
-        } elseif (!str_starts_with($path, 'gallery/') && !str_starts_with($path, 'storage/')) {
-            $path = 'galleries/' . $path;
-        }
-        
-        return StorageHelper::getImageUrl($path, 'images/default-gallery.png');
+        // Use direct image serving route
+        return route('image.serve.model', ['model' => 'gallery', 'id' => $this->id, 'field' => 'image']);
     }
 
     public function getTypeLabelAttribute()
