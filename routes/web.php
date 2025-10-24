@@ -374,7 +374,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
         Route::put('ppdb-registrations/{registration}/status', [AdminPPDBController::class, 'updateRegistrationStatus'])->name('ppdb.update-registration-status');
         // Fallback redirect for GET request to status route
         Route::get('ppdb-registrations/{registration}/status', function($registration) {
-            return redirect()->route('ppdb.show-registration', $registration);
+            return redirect()->route('admin.ppdb.show-registration', $registration);
         });
         Route::get('ppdb-registrations/{registration}/download/{type}', [AdminPPDBController::class, 'downloadDocument'])->name('ppdb.download-document');
         Route::get('ppdb-export', [AdminPPDBController::class, 'exportRegistrations'])->name('ppdb.export');
