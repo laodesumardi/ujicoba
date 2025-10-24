@@ -23,5 +23,6 @@ return Application::configure(basePath: dirname(__DIR__))
         \App\Console\Commands\StorageMirrorCommand::class,
         \App\Console\Commands\CreateAdminUser::class,
         \App\Console\Commands\AddFacilityImages::class,
+        \App\Console\Commands\SyncStorageCommand::class,
     ])
     ->create();
