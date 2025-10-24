@@ -155,9 +155,10 @@
                     <!-- Photo Section -->
                     <div class="p-8 lg:p-12 flex items-center justify-center bg-gray-50">
                         <div class="text-center">
-                            @if($headmasterGreeting->photo_url)
-                                <img src="{{ $headmasterGreeting->photo_url }}" alt="{{ $headmasterGreeting->headmaster_name }}" 
-                                     class="w-48 h-60 rounded-lg mx-auto mb-6 shadow-lg object-cover">
+                            @if($headmasterGreeting->photo)
+                                <img src="{{ route('image.serve.model', ['model' => 'headmaster-greeting', 'id' => $headmasterGreeting->id, 'field' => 'photo', 'v' => $headmasterGreeting->updated_at->timestamp]) }}" alt="{{ $headmasterGreeting->headmaster_name }}" 
+                                     class="w-48 h-60 rounded-lg mx-auto mb-6 shadow-lg object-cover"
+                                     onerror="this.onerror=null; this.src='{{ asset('images/default-headmaster.png') }}';">
                             @else
                                 <div class="w-48 h-60 rounded-lg mx-auto mb-6 bg-gray-200 flex items-center justify-center">
                                     <i class="fas fa-user-tie text-5xl text-gray-400"></i>
