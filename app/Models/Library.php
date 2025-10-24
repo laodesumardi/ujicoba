@@ -39,7 +39,7 @@ class Library extends Model
     public function getOrganizationChartUrlAttribute()
     {
         if (!$this->organization_chart) {
-            return asset('images/default-struktur.png');
+            return asset('images/default-library-org-chart.png');
         }
         
         // Check if it's already a full URL
@@ -57,6 +57,6 @@ class Library extends Model
         }
         
         // Use StorageHelper for consistent URL generation (handles hosting storage)
-        return \App\Helpers\StorageHelper::getImageUrl($this->organization_chart, 'images/default-struktur.png');
+        return \App\Helpers\StorageHelper::getImageUrl($this->organization_chart, 'images/default-library-org-chart.png');
     }
 }

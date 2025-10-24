@@ -113,6 +113,7 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gambar</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pustakawan</th>
@@ -123,6 +124,14 @@
                         <tbody class="bg-white divide-y divide-gray-200">
                             @foreach($libraries as $library)
                             <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex-shrink-0 h-16 w-16">
+                                        <img src="{{ $library->organization_chart_url }}" alt="Organization Chart" 
+                                             class="h-16 w-16 rounded-lg object-cover border border-gray-200" 
+                                             loading="lazy" 
+                                             onerror="this.src='{{ asset('images/default-library-org-chart.png') }}'; this.alt='Gambar tidak tersedia';">
+                                    </div>
+                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">{{ $library->name }}</div>
                                     <div class="text-sm text-gray-500">{{ Str::limit($library->description, 50) }}</div>
@@ -173,15 +182,23 @@
                     @foreach($libraries as $library)
                     <div class="border-b border-gray-200 p-4">
                         <div class="flex items-start justify-between mb-3">
-                            <div class="flex-1">
-                                <div class="text-sm font-medium text-gray-900 mb-1">
-                                    {{ $library->name }}
+                            <div class="flex items-start space-x-3 flex-1">
+                                <div class="flex-shrink-0 h-12 w-12">
+                                    <img src="{{ $library->organization_chart_url }}" alt="Organization Chart" 
+                                         class="h-12 w-12 rounded-lg object-cover border border-gray-200" 
+                                         loading="lazy" 
+                                         onerror="this.src='{{ asset('images/default-library-org-chart.png') }}'; this.alt='Gambar tidak tersedia';">
                                 </div>
-                                <div class="text-xs text-gray-500 mb-2">{{ Str::limit($library->description, 60) }}</div>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-xs text-gray-500">Lokasi: {{ $library->location ?? '-' }}</span>
-                                    <span class="text-xs text-gray-500">•</span>
-                                    <span class="text-xs text-gray-500">Pustakawan: {{ $library->librarian_name ?? '-' }}</span>
+                                <div class="flex-1">
+                                    <div class="text-sm font-medium text-gray-900 mb-1">
+                                        {{ $library->name }}
+                                    </div>
+                                    <div class="text-xs text-gray-500 mb-2">{{ Str::limit($library->description, 60) }}</div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-xs text-gray-500">Lokasi: {{ $library->location ?? '-' }}</span>
+                                        <span class="text-xs text-gray-500">•</span>
+                                        <span class="text-xs text-gray-500">Pustakawan: {{ $library->librarian_name ?? '-' }}</span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="flex flex-col items-end space-y-2">
