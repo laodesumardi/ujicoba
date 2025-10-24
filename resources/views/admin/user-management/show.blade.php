@@ -102,10 +102,8 @@
                     <h2 class="text-lg font-medium text-gray-900">Foto Profil</h2>
                 </div>
                 <div class="px-6 py-4 text-center">
-                    <div class="mx-auto h-24 w-24 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl font-semibold">
-                        {{ substr($user->name, 0, 1) }}
-                    </div>
-                    <p class="mt-2 text-sm text-gray-500">Inisial nama</p>
+                    <img src="{{ $user->photo_url }}" alt="{{ $user->name }}" class="mx-auto h-24 w-24 rounded-full object-cover" onerror="this.src='{{ asset('images/default-user.png') }}'">
+                    <p class="mt-2 text-sm text-gray-500">Foto profil</p>
                 </div>
             </div>
 
