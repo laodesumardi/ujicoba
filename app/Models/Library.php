@@ -38,18 +38,25 @@ class Library extends Model
     // Accessors
     public function getOrganizationChartUrlAttribute()
     {
-        if (!$this->organization_chart) {
-            return asset('images/default-struktur.png');
-        }
-        
-        // URL eksternal
-        if (filter_var($this->organization_chart, FILTER_VALIDATE_URL) ||
+        // Versi untuk cache-busting berdasarkan updated_at
+        $version = $this->updated_at ? $this->updated_at->timestamp : time();
+
+        // Jika URL eksternal, kembalikan apa adanya
+        if ($this->organization_chart && (
+            filter_var($this->organization_chart, FILTER_VALIDATE_URL) ||
             str_starts_with($this->organization_chart, 'http://') ||
-            str_starts_with($this->organization_chart, 'https://')) {
+            str_starts_with($this->organization_chart, 'https://')
+        )) {
             return $this->organization_chart;
         }
-        
-        // Gunakan storage link yang lebih sederhana
-        return \Storage::url($this->organization_chart);
+
+        // Gunakan direct image serving route agar konsisten dengan HomeSections
+        // ImageController akan melakukan fallback ke 'images/default-struktur.png' jika kosong/tidak ditemukan
+        return route('image.serve.model', [
+            'model' => 'library',
+            'id' => $this->id,
+            'field' => 'organization_chart',
+            'v' => $version,
+        ], false);
     }
 }
