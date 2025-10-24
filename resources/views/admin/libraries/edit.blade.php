@@ -2,6 +2,10 @@
 
 @section('title', 'Edit Library Profile')
 
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('content')
 <div class="container mx-auto px-4 py-6">
     <div class="max-w-7xl mx-auto">
@@ -120,10 +124,24 @@
                                 
                                 <div class="mt-4">
                                     <p class="text-sm font-medium text-gray-700 mb-2">Current image:</p>
-                                    <img src="{{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => ($library->updated_at ? $library->updated_at->timestamp : time())], false) }}" alt="Current Organization Chart" 
-                                         loading="lazy"
-                                         onerror="this.onerror=null; this.src='{{ asset('images/default-struktur.png') }}'; this.alt='Gambar tidak tersedia';">
-                                    <p class="text-xs text-gray-500 mt-1">URL: {{ route('image.serve.model', ['model' => 'library', 'id' => $library->id, 'field' => 'organization_chart', 'v' => ($library->updated_at ? $library->updated_at->timestamp : time())], false) }}</p>
+                                    @if($library->organization_chart)
+                                        <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                                            <img src="{{ Storage::url($library->organization_chart) }}" 
+                                                 alt="Current Organization Chart" 
+                                                 class="max-w-full h-auto rounded-lg shadow-sm"
+                                                 loading="lazy"
+                                                 onerror="this.onerror=null; this.src='{{ asset('images/default-struktur.png') }}'; this.alt='Gambar tidak tersedia';">
+                                            <p class="text-xs text-gray-500 mt-2">
+                                                <strong>Storage Path:</strong> {{ $library->organization_chart }}<br>
+                                                <strong>URL:</strong> {{ Storage::url($library->organization_chart) }}
+                                            </p>
+                                        </div>
+                                    @else
+                                        <div class="border border-gray-200 rounded-lg p-4 bg-gray-50 text-center">
+                                            <i class="fas fa-image text-gray-400 text-4xl mb-2"></i>
+                                            <p class="text-sm text-gray-500">No organization chart uploaded</p>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
 
