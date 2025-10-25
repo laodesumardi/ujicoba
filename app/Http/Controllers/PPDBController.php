@@ -124,9 +124,10 @@ class PPDBController extends Controller
         // Try using the Laravel facade first (preferred)
         try {
             if (class_exists(\Barryvdh\DomPDF\Facade\Pdf::class)) {
-                return \Barryvdh\DomPDF\Facade\Pdf::loadView('ppdb.registration-form-pdf', compact('registration'))
-                    ->setPaper('A4', 'portrait')
-                    ->stream($filename);
+                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('ppdb.registration-form-pdf', compact('registration'))
+                    ->setPaper('A4', 'portrait');
+                
+                return $pdf->download($filename);
             }
         } catch (\Throwable $e) {
             \Log::error('PPDB PDF generation via Facade failed', [
@@ -142,9 +143,14 @@ class PPDBController extends Controller
             $dompdf->loadHtml($html);
             $dompdf->setPaper('A4', 'portrait');
             $dompdf->render();
+            
             return response($dompdf->output(), 200, [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="' . $filename . '"',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                'Content-Length' => strlen($dompdf->output()),
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0'
             ]);
         }
 
