@@ -6,7 +6,7 @@
 <div class="min-h-screen bg-gray-50">
     @if($library)
         <!-- Hero Section -->
-        <div class="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+        <div class="relative text-white" style="background-image: url('{{ $library->banner_image_url }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
             <div class="absolute inset-0 bg-black opacity-20"></div>
             <div class="relative container mx-auto px-4 py-16">
                 <div class="max-w-4xl mx-auto text-center">

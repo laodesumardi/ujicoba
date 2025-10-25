@@ -69,7 +69,7 @@ class Library extends Model
     public function getBannerImageUrlAttribute()
     {
         if (!$this->banner_image) {
-            return asset('images/default-library-banner.jpg');
+            return asset('images/default-hero.png');
         }
 
         // Jika URL eksternal, kembalikan apa adanya
