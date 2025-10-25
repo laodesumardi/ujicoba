@@ -453,9 +453,7 @@
                             <!-- Profile Dropdown -->
                             <div class="relative">
                                 <button onclick="toggleProfileDropdown()" class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">
-                                    <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-                                        <span class="text-white font-semibold text-sm">{{ substr(auth()->user()->name, 0, 1) }}</span>
-                                    </div>
+                                    <img src="{{ auth()->user()->photo_url }}" alt="{{ auth()->user()->name }}" class="w-8 h-8 rounded-full object-cover">
                                     <div class="text-left hidden sm:block">
                                         <p class="text-sm font-medium text-gray-900">{{ auth()->user()->name }}</p>
                                         <p class="text-xs text-gray-500">Administrator</p>
@@ -471,7 +469,7 @@
                                         <p class="text-sm font-medium text-gray-900">{{ auth()->user()->name }}</p>
                                         <p class="text-xs text-gray-500">{{ auth()->user()->email }}</p>
                                     </div>
-                                    <a href="{{ route('profile.edit') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <a href="{{ route('admin.profile.show') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <svg class="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                         </svg>

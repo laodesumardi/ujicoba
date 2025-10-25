@@ -207,17 +207,23 @@ class ImageController extends Controller
             $path = substr($path, 8);
         }
         
-        // Determine folder based on model and field
-        $folder = $this->getFolderForModel($model, $field);
-        
-        // Ensure proper folder structure
-        if (!str_starts_with($path, $folder . '/')) {
-            $path = $folder . '/' . $path;
+        // Sanitize path
+        $path = str_replace('\\', '/', $path);
+        $path = ltrim($path, '/');
+        if (str_contains($path, '..')) {
+            return null;
         }
         
-        return $path;
+        // If path already includes a directory, respect it (e.g., admins/photos/..., teachers/..., students/photos/...)
+        if (strpos($path, '/') !== false) {
+            return $path;
+        }
+        
+        // Otherwise, prefix with model-based folder
+        $folder = $this->getFolderForModel($model, $field);
+        return $folder . '/' . $path;
     }
-    
+
     /**
      * Get folder name for model and field
      */
