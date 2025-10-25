@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\PPDB;
 use App\Models\PPDBRegistration;
 use App\Models\Notification;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class PPDBController extends Controller
 {
@@ -120,11 +121,20 @@ class PPDBController extends Controller
         $registration = PPDBRegistration::findOrFail($id);
         
         // Generate PDF using DomPDF
-        $pdf = Pdf::loadView('ppdb.registration-form-pdf', compact('registration'));
+        $html = view('ppdb.registration-form-pdf', compact('registration'))->render();
+        
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $options->set('isRemoteEnabled', true);
+        
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
         
         $filename = 'Form_Pendaftaran_' . $registration->registration_number . '.pdf';
         
-        return $pdf->download($filename);
+        return $dompdf->stream($filename);
     }
 
     /**
