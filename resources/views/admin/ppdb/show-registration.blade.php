@@ -132,6 +132,34 @@
                             </div>
                         </div>
 
+                        <!-- Student Account Information -->
+                        @if($registration->status == 'approved' && $registration->student_username)
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+                            <h3 class="text-lg font-semibold text-green-900 mb-4">✅ Akun Siswa Telah Dibuat</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-sm font-medium text-green-700">Username</label>
+                                    <p class="text-green-900 font-mono text-lg">{{ $registration->student_username }}</p>
+                                </div>
+                                <div>
+                                    <label class="text-sm font-medium text-green-700">Password</label>
+                                    <p class="text-green-900 font-mono text-lg">{{ $registration->student_password }}</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
+                                <p class="text-yellow-800 text-sm">
+                                    <strong>⚠️ Penting:</strong> 
+                                    @if($registration->email)
+                                        Informasi login ini telah dikirim ke email siswa. 
+                                    @else
+                                        Email siswa tidak tersedia, informasi login hanya dapat dilihat di halaman ini. 
+                                    @endif
+                                    Siswa dapat login menggunakan username dan password di atas.
+                                </p>
+                            </div>
+                        </div>
+                        @endif
+
                         <!-- Admin Notes -->
                         @if($registration->notes)
                         <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">

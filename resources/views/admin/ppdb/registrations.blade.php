@@ -141,9 +141,16 @@
                                             Menunggu Review
                                         </span>
                                     @elseif($registration->status == 'approved')
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            Diterima
-                                        </span>
+                                        <div class="flex flex-col space-y-1">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Diterima
+                                            </span>
+                                            @if($registration->student_username)
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                    ✅ Akun Dibuat
+                                                </span>
+                                            @endif
+                                        </div>
                                     @elseif($registration->status == 'rejected')
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                             Ditolak
@@ -199,9 +206,16 @@
                                         Menunggu Review
                                     </span>
                                 @elseif($registration->status == 'approved')
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        Diterima
-                                    </span>
+                                    <div class="flex flex-col space-y-1">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            Diterima
+                                        </span>
+                                        @if($registration->student_username)
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                ✅ Akun Dibuat
+                                            </span>
+                                        @endif
+                                    </div>
                                 @elseif($registration->status == 'rejected')
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                         Ditolak
