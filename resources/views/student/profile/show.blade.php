@@ -12,8 +12,8 @@
     <!-- Profile Header -->
     <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
         <div class="flex items-center space-x-6">
-            @if($user->photo && Storage::disk('public')->exists($user->photo))
-                <img src="{{ Storage::url($user->photo) }}" alt="Foto Profil" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg">
+            @if($user->photo)
+                <img src="{{ $user->photo_url }}" alt="Foto Profil" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg">
             @else
                 <div class="w-20 h-20 bg-primary-500 rounded-full flex items-center justify-center">
                     <span class="text-white font-bold text-2xl">{{ substr($user->name, 0, 1) }}</span>

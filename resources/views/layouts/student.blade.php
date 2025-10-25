@@ -148,7 +148,7 @@
                             <div class="relative">
                                 <button onclick="toggleProfileDropdown()" class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">
                                     @if(auth()->user()->photo)
-                                        <img src="{{ Storage::url(auth()->user()->photo) }}" 
+                                        <img src="{{ auth()->user()->photo_url }}" 
                                              alt="{{ auth()->user()->name }}" 
                                              class="w-8 h-8 rounded-full object-cover border-2 border-white shadow-sm">
                                     @else
@@ -168,7 +168,7 @@
                                     <div class="px-4 py-3 border-b border-gray-100">
                                         <div class="flex items-center space-x-3">
                                             @if(auth()->user()->photo)
-                                                <img src="{{ Storage::url(auth()->user()->photo) }}" 
+                                                <img src="{{ auth()->user()->photo_url }}" 
                                                      alt="{{ auth()->user()->name }}" 
                                                      class="w-10 h-10 rounded-full object-cover border-2 border-gray-200">
                                             @else
