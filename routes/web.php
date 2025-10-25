@@ -26,6 +26,10 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+
+
+
+
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
 Route::get('/kontak', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/kontak', [ContactController::class, 'store'])->name('contact.store');
@@ -107,6 +111,12 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('student')->name('student.')->middleware(['auth', 'role:student', 'student.registered'])->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Student\DashboardController::class, 'index'])->name('dashboard');
         
+        // Student Profile
+        Route::get('/profile', [App\Http\Controllers\Student\ProfileController::class, 'show'])->name('profile.show');
+        Route::get('/profile/edit', [App\Http\Controllers\Student\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [App\Http\Controllers\Student\ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile/photo', [App\Http\Controllers\Student\ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
+        
         // Student Courses
         Route::get('/courses', [App\Http\Controllers\Student\CourseController::class, 'index'])->name('courses.index');
         Route::get('/courses/enrolled', [App\Http\Controllers\Student\CourseController::class, 'enrolled'])->name('courses.enrolled');
@@ -137,11 +147,6 @@ Route::middleware(['auth'])->group(function () {
         // Student Grades
         Route::get('/grades', [App\Http\Controllers\Student\GradeController::class, 'index'])->name('grades.index');
         
-        // Student Profile
-        Route::get('/profile', [App\Http\Controllers\Student\ProfileController::class, 'show'])->name('profile');
-        Route::get('/profile/edit', [App\Http\Controllers\Student\ProfileController::class, 'edit'])->name('profile.edit');
-        Route::put('/profile', [App\Http\Controllers\Student\ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/profile/photo', [App\Http\Controllers\Student\ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
     });
     
     // Teacher Dashboard
@@ -461,6 +466,8 @@ Route::get("/ppdb/auto-refresh", function() {
 
 // Admin tools: storage fix route
 Route::get('/admin/tools/storage-fix', [SetupController::class, 'setup'])->middleware(['auth','role:admin'])->name('admin.tools.storage-fix');
+
+
 // ... existing code ...
 // Embed preview of external student profile page
 Route::get('/preview-student-profile', function () {

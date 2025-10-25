@@ -16,7 +16,94 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         
-        return view('student.profile.show', compact('user'));
+        // Ambil data statistik dari database
+        $stats = [
+            'total_courses' => $user->enrollments()->where('status', 'approved')->count(),
+            'total_assignments' => 0, // Will be calculated from enrolled courses
+            'submitted_assignments' => $user->submissions()->where('status', 'submitted')->count(),
+            'graded_assignments' => $user->submissions()->where('status', 'graded')->count(),
+            'upcoming_assignments' => 0, // Will be calculated
+            'overdue_assignments' => 0, // Will be calculated
+        ];
+        
+        // Ambil data enrolled courses
+        $enrolledCourses = $user->enrollments()
+            ->with('course')
+            ->where('status', 'approved')
+            ->latest()
+            ->get()
+            ->pluck('course');
+        
+        // Hitung statistik dari enrolled courses
+        if ($enrolledCourses->count() > 0) {
+            $courseIds = $enrolledCourses->pluck('id');
+            
+            $stats['total_assignments'] = \App\Models\Assignment::whereIn('course_id', $courseIds)->count();
+            $stats['upcoming_assignments'] = \App\Models\Assignment::whereIn('course_id', $courseIds)
+                ->where('due_date', '>', now())
+                ->where('due_date', '<=', now()->addDays(7))
+                ->count();
+            $stats['overdue_assignments'] = \App\Models\Assignment::whereIn('course_id', $courseIds)
+                ->where('due_date', '<', now())
+                ->whereDoesntHave('submissions', function($query) use ($user) {
+                    $query->where('student_id', $user->id)
+                          ->where('status', 'submitted');
+                })
+                ->count();
+        }
+        
+        // Ambil recent assignments dari enrolled courses
+        $recentAssignments = collect();
+        if ($enrolledCourses->count() > 0) {
+            $courseIds = $enrolledCourses->pluck('id');
+            $recentAssignments = \App\Models\Assignment::whereIn('course_id', $courseIds)
+                ->with('course')
+                ->latest()
+                ->take(5)
+                ->get();
+        }
+        
+        // Ambil upcoming assignments
+        $upcomingAssignments = collect();
+        if ($enrolledCourses->count() > 0) {
+            $courseIds = $enrolledCourses->pluck('id');
+            $upcomingAssignments = \App\Models\Assignment::whereIn('course_id', $courseIds)
+                ->with('course')
+                ->where('due_date', '>', now())
+                ->where('due_date', '<=', now()->addDays(7))
+                ->orderBy('due_date')
+                ->take(5)
+                ->get();
+        }
+        
+        // Ambil overdue assignments
+        $overdueAssignments = collect();
+        if ($enrolledCourses->count() > 0) {
+            $courseIds = $enrolledCourses->pluck('id');
+            $overdueAssignments = \App\Models\Assignment::whereIn('course_id', $courseIds)
+                ->with('course')
+                ->where('due_date', '<', now())
+                ->whereDoesntHave('submissions', function($query) use ($user) {
+                    $query->where('student_id', $user->id)
+                          ->where('status', 'submitted');
+                })
+                ->orderBy('due_date', 'desc')
+                ->take(5)
+                ->get();
+        }
+        
+        // Ambil recent forums dari enrolled courses
+        $recentForums = collect();
+        if ($enrolledCourses->count() > 0) {
+            $courseIds = $enrolledCourses->pluck('id');
+            $recentForums = \App\Models\Forum::whereIn('course_id', $courseIds)
+                ->with(['course', 'author'])
+                ->latest()
+                ->take(5)
+                ->get();
+        }
+        
+        return view('student.profile.show', compact('user', 'stats', 'enrolledCourses', 'recentAssignments', 'upcomingAssignments', 'overdueAssignments', 'recentForums'));
     }
 
     /**
@@ -49,95 +136,46 @@ class ProfileController extends Controller
             'religion' => 'nullable|string|in:Islam,Kristen,Katolik,Hindu,Buddha,Konghucu',
             'parent_name' => 'nullable|string|max:255',
             'parent_phone' => 'nullable|string|max:20',
-            'parent_email' => 'nullable|email|max:255',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Max 2MB
-            'current_password' => 'nullable|string',
-            'password' => 'nullable|string|min:8|confirmed',
+            'parent_email' => 'nullable|string|email|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
-        // Update basic information
-        $user->name = $request->name;
-        $user->email = $request->email;
         
-        // Update student information
-        $user->student_id = $request->student_id;
-        $user->phone = $request->phone;
-        $user->address = $request->address;
+        $data = $request->only([
+            'name', 'email', 'student_id', 'phone', 'address',
+            'class_level', 'class_section', 'date_of_birth', 'gender', 'religion',
+            'parent_name', 'parent_phone', 'parent_email'
+        ]);
         
-        // Update class information
-        $user->class_level = $request->class_level;
-        $user->class_section = $request->class_section;
-        
-        // Update personal information
-        $user->date_of_birth = $request->date_of_birth;
-        $user->gender = $request->gender;
-        $user->religion = $request->religion;
-        
-        // Update parent information
-        $user->parent_name = $request->parent_name;
-        $user->parent_phone = $request->parent_phone;
-        $user->parent_email = $request->parent_email;
-
         // Handle photo upload
         if ($request->hasFile('photo')) {
-            // Delete old photo if exists
-            if ($user->photo && \Storage::disk('public')->exists($user->photo)) {
-                \Storage::disk('public')->delete($user->photo);
-            }
-            
-            // Store new photo
-            $path = $request->file('photo')->store('students/photos', 'public');
-            $user->photo = $path;
-            
-            // Copy uploaded files to public/storage for immediate access
-            $sourcePath = storage_path('app/public/' . $path);
-            $destPath = public_path('storage/' . $path);
-            $destDir = dirname($destPath);
-            
-            if (!is_dir($destDir)) {
-                mkdir($destDir, 0755, true);
-            }
-            
-            if (copy($sourcePath, $destPath)) {
-                \Log::info('Student photo copied to public storage: ' . $path);
-            } else {
-                \Log::error('Failed to copy student photo to public storage: ' . $path);
-            }
+            $photo = $request->file('photo');
+            $filename = time() . '_' . $user->id . '.' . $photo->getClientOriginalExtension();
+            $path = $photo->storeAs('students/photos', $filename, 'public');
+            $data['photo'] = $path;
         }
-
-        // Update password if provided
-        if ($request->filled('password')) {
-            if ($request->filled('current_password')) {
-                if (!Hash::check($request->current_password, $user->password)) {
-                    return redirect()->back()
-                        ->withErrors(['current_password' => 'Password saat ini tidak benar.'])
-                        ->withInput();
-                }
-            }
-            
-            $user->password = Hash::make($request->password);
-        }
-
-        $user->save();
-
-        return redirect()->route('student.profile')
+        
+        $user->update($data);
+        
+        return redirect()->route('student.profile.show')
             ->with('success', 'Profil berhasil diperbarui!');
     }
 
     /**
-     * Delete the student's profile photo.
+     * Delete profile photo.
      */
     public function deletePhoto()
     {
         $user = Auth::user();
-
-        if ($user->photo && \Storage::disk('public')->exists($user->photo)) {
+        
+        if ($user->photo) {
+            // Delete file from storage
             \Storage::disk('public')->delete($user->photo);
-            $user->photo = null;
-            $user->save();
-            return redirect()->route('student.profile.edit')->with('success', 'Foto profil berhasil dihapus.');
+            
+            // Update database
+            $user->update(['photo' => null]);
         }
-
-        return redirect()->route('student.profile.edit')->with('error', 'Tidak ada foto profil untuk dihapus.');
+        
+        return redirect()->route('student.profile.show')
+            ->with('success', 'Foto profil berhasil dihapus!');
     }
 }

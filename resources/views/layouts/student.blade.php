@@ -114,7 +114,7 @@
                 </a>
 
                 <!-- Profile -->
-                <a href="{{ route('student.profile') }}" class="flex items-center px-4 py-2 rounded-lg hover:bg-primary-500 transition-colors {{ request()->routeIs('student.profile') ? 'bg-primary-500' : '' }}">
+                <a href="{{ route('student.profile.show') }}" class="flex items-center px-4 py-2 rounded-lg hover:bg-primary-500 transition-colors {{ request()->routeIs('student.profile.*') ? 'bg-primary-500' : '' }}">
                     <i class="fas fa-user w-5 h-5 mr-3"></i>
                     Profil Saya
                 </a>
@@ -183,7 +183,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <a href="{{ route('student.profile') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <a href="{{ route('student.profile.show') }}" class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         <i class="fas fa-user w-4 h-4 mr-3"></i>
                                         Profil Saya
                                     </a>

@@ -108,6 +108,21 @@ class User extends Authenticatable
         return $this->hasMany(ForumReply::class);
     }
 
+    // Student-specific relationships
+    public function assignments()
+    {
+        return $this->belongsToMany(Assignment::class, 'course_enrollments', 'student_id', 'course_id')
+                    ->join('assignments', 'assignments.course_id', '=', 'course_enrollments.course_id')
+                    ->where('course_enrollments.status', 'approved');
+    }
+
+    public function forums()
+    {
+        return $this->belongsToMany(Forum::class, 'course_enrollments', 'student_id', 'course_id')
+                    ->join('forums', 'forums.course_id', '=', 'course_enrollments.course_id')
+                    ->where('course_enrollments.status', 'approved');
+    }
+
     // Scopes
     public function scopeStudents($query)
     {
@@ -205,12 +220,13 @@ class User extends Authenticatable
             }
         }
         
-        // Bangun route direct serve dengan cache-busting
-        return route('image.serve', [
-            'folder' => $folder,
-            'filename' => $filename,
+        // Bangun route direct serve model dengan cache-busting (RELATIVE URL)
+        return route('image.serve.model', [
+            'model' => 'user',
+            'id' => $this->id,
+            'field' => 'photo',
             'v' => $version,
-        ]);
+        ], false);
     }
 
     public function getIsAdminAttribute()
