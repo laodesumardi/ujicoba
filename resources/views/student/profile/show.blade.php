@@ -176,8 +176,8 @@
             </div>
             
             <div class="text-center">
-                <div class="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
-                    <i class="fas fa-star text-purple-600 text-xl"></i>
+                <div class="bg-primary-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-star text-primary-600 text-xl"></i>
                 </div>
                 <p class="text-2xl font-bold text-gray-900">{{ $user->submissions()->where('status', 'graded')->count() }}</p>
                 <p class="text-sm text-gray-600">Tugas Dinilai</p>
@@ -211,8 +211,8 @@
             </div>
             
             <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                <div class="bg-purple-100 rounded-full w-10 h-10 flex items-center justify-center">
-                    <i class="fas fa-comments text-purple-600"></i>
+                <div class="bg-primary-100 rounded-full w-10 h-10 flex items-center justify-center">
+                    <i class="fas fa-comments text-primary-600"></i>
                 </div>
                 <div class="flex-1">
                     <p class="font-medium text-gray-900">Berpartisipasi di forum</p>
