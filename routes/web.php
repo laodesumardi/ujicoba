@@ -185,7 +185,6 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     });
-});
 
 // Document Routes
 Route::prefix('download')->name('documents.')->group(function () {
