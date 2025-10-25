@@ -59,7 +59,7 @@ class ImageController extends Controller
     {
         try {
             $modelClass = $this->getModelClass($model);
-            $defaultOverride = ($model === 'library' && $field === 'organization_chart') ? 'images/default-struktur.png' : null;
+            $defaultOverride = null;
             if (!$modelClass) {
                 return $this->serveDefaultImage($defaultOverride);
             }
@@ -143,7 +143,10 @@ class ImageController extends Controller
             return $this->serveDefaultImage();
         }
         
-        $mimeType = mime_content_type($filePath);
+        $mimeType = @mime_content_type($filePath);
+        if (!$mimeType || $mimeType === false) {
+            $mimeType = $this->guessMimeType($filePath);
+        }
         $fileSize = filesize($filePath);
         
         return response()->file($filePath, [
@@ -253,6 +256,33 @@ class ImageController extends Controller
             // Create a simple 1x1 transparent PNG
             $pngData = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
             file_put_contents($defaultPath, $pngData);
+        }
+    }
+    
+    /**
+     * Guess MIME type based on file extension
+     */
+    private function guessMimeType($filePath)
+    {
+        $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+        switch ($ext) {
+            case 'jpg':
+            case 'jpeg':
+                return 'image/jpeg';
+            case 'png':
+                return 'image/png';
+            case 'gif':
+                return 'image/gif';
+            case 'webp':
+                return 'image/webp';
+            case 'svg':
+                return 'image/svg+xml';
+            case 'bmp':
+                return 'image/bmp';
+            case 'ico':
+                return 'image/x-icon';
+            default:
+                return 'application/octet-stream';
         }
     }
 }

@@ -1,192 +1,325 @@
 @extends('layouts.admin')
 
-@php
-    use Illuminate\Support\Facades\Storage;
-@endphp
+@section('title', 'Tambah Perpustakaan')
+@section('page-title', 'Tambah Perpustakaan')
 
 @section('content')
-<div class="container mx-auto px-4 py-6">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Tambah Data Perpustakaan</h1>
-        <a href="{{ route('admin.libraries.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md font-medium transition-colors">
-            <i class="fas fa-arrow-left mr-2"></i>Kembali
-        </a>
-    </div>
-
-    <div class="bg-white rounded-lg shadow">
-        <form action="{{ route('admin.libraries.store') }}" method="POST" enctype="multipart/form-data" class="p-6">
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-900">Tambah Perpustakaan Baru</h2>
+                    <p class="text-sm text-gray-600 mt-1">Lengkapi informasi perpustakaan sekolah</p>
+                </div>
+                <div class="mt-4 sm:mt-0">
+                    <a href="{{ route('admin.libraries.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        Kembali
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <form action="{{ route('admin.libraries.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-6 space-y-8">
                 <!-- Basic Information -->
-                <div class="md:col-span-2">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Informasi Dasar</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Informasi Dasar</h3>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Nama Perpustakaan <span class="text-red-500">*</span>
+                                </label>
+                                <input type="text" 
+                                       id="name" 
+                                       name="name" 
+                                       value="{{ old('name') }}" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('name') border-red-300 @enderror"
+                                       required>
+                                @error('name')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                                <textarea id="description" 
+                                          name="description" 
+                                          rows="3" 
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('description') border-red-300 @enderror">{{ old('description') }}</textarea>
+                                @error('description')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="location" class="block text-sm font-medium text-gray-700 mb-2">Lokasi</label>
+                                    <input type="text" 
+                                           id="location" 
+                                           name="location" 
+                                           value="{{ old('location') }}" 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('location') border-red-300 @enderror">
+                                    @error('location')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div>
+                                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Telepon</label>
+                                    <input type="text" 
+                                           id="phone" 
+                                           name="phone" 
+                                           value="{{ old('phone') }}" 
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('phone') border-red-300 @enderror">
+                                    @error('phone')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                                <input type="email" 
+                                       id="email" 
+                                       name="email" 
+                                       value="{{ old('email') }}" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('email') border-red-300 @enderror">
+                                @error('email')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-1">
+                        <h3 class="text-lg font-medium text-gray-900 mb-4">Media & Gambar</h3>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label for="logo" class="block text-sm font-medium text-gray-700 mb-2">Logo Perpustakaan</label>
+                                <input type="file" 
+                                       id="logo" 
+                                       name="logo" 
+                                       accept="image/*" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('logo') border-red-300 @enderror">
+                                <p class="mt-1 text-xs text-gray-500">Format: JPG, PNG, GIF. Maksimal 1MB</p>
+                                @error('logo')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="banner_image" class="block text-sm font-medium text-gray-700 mb-2">Banner Image</label>
+                                <input type="file" 
+                                       id="banner_image" 
+                                       name="banner_image" 
+                                       accept="image/*" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('banner_image') border-red-300 @enderror">
+                                <p class="mt-1 text-xs text-gray-500">Format: JPG, PNG, GIF. Maksimal 2MB</p>
+                                @error('banner_image')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="organization_chart" class="block text-sm font-medium text-gray-700 mb-2">Struktur Organisasi</label>
+                                <input type="file" 
+                                       id="organization_chart" 
+                                       name="organization_chart" 
+                                       accept="image/*" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('organization_chart') border-red-300 @enderror">
+                                <p class="mt-1 text-xs text-gray-500">Format: JPG, PNG, GIF. Maksimal 2MB</p>
+                                @error('organization_chart')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="gallery_images" class="block text-sm font-medium text-gray-700 mb-2">Galeri Foto</label>
+                                <input type="file" 
+                                       id="gallery_images" 
+                                       name="gallery_images[]" 
+                                       accept="image/*" 
+                                       multiple 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('gallery_images.*') border-red-300 @enderror">
+                                <p class="mt-1 text-xs text-gray-500">Pilih beberapa foto. Format: JPG, PNG, GIF. Maksimal 2MB per foto</p>
+                                @error('gallery_images.*')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="md:col-span-2">
-                    <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Nama Perpustakaan <span class="text-red-500">*</span></label>
-                    <input type="text" name="name" id="name" value="{{ old('name') }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('name') border-red-500 @enderror" required>
-                    @error('name')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                <!-- Vision & Mission -->
+                <div class="border-t border-gray-200 pt-8">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Visi & Misi</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="vision" class="block text-sm font-medium text-gray-700 mb-2">Visi</label>
+                            <textarea id="vision" 
+                                      name="vision" 
+                                      rows="3" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('vision') border-red-300 @enderror">{{ old('vision') }}</textarea>
+                            @error('vision')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="mission" class="block text-sm font-medium text-gray-700 mb-2">Misi</label>
+                            <textarea id="mission" 
+                                      name="mission" 
+                                      rows="3" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('mission') border-red-300 @enderror">{{ old('mission') }}</textarea>
+                            @error('mission')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
 
-                <div class="md:col-span-2">
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
-                    <textarea name="description" id="description" rows="3" 
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('description') border-red-500 @enderror">{{ old('description') }}</textarea>
-                    @error('description')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="location" class="block text-sm font-medium text-gray-700 mb-2">Lokasi</label>
-                    <input type="text" name="location" id="location" value="{{ old('location') }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('location') border-red-500 @enderror">
-                    @error('location')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Telepon</label>
-                    <input type="text" name="phone" id="phone" value="{{ old('phone') }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('phone') border-red-500 @enderror">
-                    @error('phone')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                    <input type="email" name="email" id="email" value="{{ old('email') }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('email') border-red-500 @enderror">
-                    @error('email')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="opening_hours" class="block text-sm font-medium text-gray-700 mb-2">Jam Operasional</label>
-                    <textarea name="opening_hours" id="opening_hours" rows="2" 
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('opening_hours') border-red-500 @enderror" 
-                              placeholder="Contoh: Senin - Jumat: 08:00 - 16:00">{{ old('opening_hours') }}</textarea>
-                    @error('opening_hours')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Librarian Information -->
-                <div class="md:col-span-2">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4 mt-6">Informasi Pustakawan</h3>
-                </div>
-
-                <div>
-                    <label for="librarian_name" class="block text-sm font-medium text-gray-700 mb-2">Nama Pustakawan</label>
-                    <input type="text" name="librarian_name" id="librarian_name" value="{{ old('librarian_name') }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('librarian_name') border-red-500 @enderror">
-                    @error('librarian_name')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="librarian_phone" class="block text-sm font-medium text-gray-700 mb-2">Telepon Pustakawan</label>
-                    <input type="text" name="librarian_phone" id="librarian_phone" value="{{ old('librarian_phone') }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('librarian_phone') border-red-500 @enderror">
-                    @error('librarian_phone')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="md:col-span-2">
-                    <label for="librarian_email" class="block text-sm font-medium text-gray-700 mb-2">Email Pustakawan</label>
-                    <input type="email" name="librarian_email" id="librarian_email" value="{{ old('librarian_email') }}" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('librarian_email') border-red-500 @enderror">
-                    @error('librarian_email')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Organization Chart -->
-                <div class="md:col-span-2">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4 mt-6">Struktur Organisasi</h3>
-                </div>
-
-                <div class="md:col-span-2">
-                    <label for="organization_chart" class="block text-sm font-medium text-gray-700 mb-2">Gambar Struktur Organisasi</label>
-                    <input type="file" name="organization_chart" id="organization_chart" accept="image/*" 
-                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('organization_chart') border-red-500 @enderror"
-                           onchange="previewImage(this)">
-                    @error('organization_chart')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                    <div class="mt-2">
-                        <img id="image-preview" src="" alt="Preview" class="h-32 w-auto rounded-lg border-2 border-gray-200 hidden">
+                <!-- Services & Facilities -->
+                <div class="border-t border-gray-200 pt-8">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Layanan & Fasilitas</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="services" class="block text-sm font-medium text-gray-700 mb-2">Layanan Perpustakaan</label>
+                            <textarea id="services" 
+                                      name="services" 
+                                      rows="4" 
+                                      placeholder="Satu layanan per baris" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('services') border-red-300 @enderror">{{ old('services') }}</textarea>
+                            <p class="mt-1 text-xs text-gray-500">Satu layanan per baris</p>
+                            @error('services')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="facilities" class="block text-sm font-medium text-gray-700 mb-2">Fasilitas Perpustakaan</label>
+                            <textarea id="facilities" 
+                                      name="facilities" 
+                                      rows="4" 
+                                      placeholder="Satu fasilitas per baris" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('facilities') border-red-300 @enderror">{{ old('facilities') }}</textarea>
+                            <p class="mt-1 text-xs text-gray-500">Satu fasilitas per baris</p>
+                            @error('facilities')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
                 </div>
 
                 <!-- Additional Information -->
-                <div class="md:col-span-2">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4 mt-6">Informasi Tambahan</h3>
+                <div class="border-t border-gray-200 pt-8">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Informasi Tambahan</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="opening_hours" class="block text-sm font-medium text-gray-700 mb-2">Jam Operasional</label>
+                            <textarea id="opening_hours" 
+                                      name="opening_hours" 
+                                      rows="3" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('opening_hours') border-red-300 @enderror">{{ old('opening_hours') }}</textarea>
+                            @error('opening_hours')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="rules" class="block text-sm font-medium text-gray-700 mb-2">Tata Tertib</label>
+                            <textarea id="rules" 
+                                      name="rules" 
+                                      rows="3" 
+                                      placeholder="Satu aturan per baris" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('rules') border-red-300 @enderror">{{ old('rules') }}</textarea>
+                            <p class="mt-1 text-xs text-gray-500">Satu aturan per baris</p>
+                            @error('rules')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
 
-                <div class="md:col-span-2">
-                    <label for="services" class="block text-sm font-medium text-gray-700 mb-2">Layanan</label>
-                    <textarea name="services" id="services" rows="3" 
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('services') border-red-500 @enderror" 
-                              placeholder="Contoh: Peminjaman buku, Akses internet, Ruang baca, dll">{{ old('services') }}</textarea>
-                    @error('services')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                <!-- Librarian Information -->
+                <div class="border-t border-gray-200 pt-8">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Informasi Pustakawan</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="librarian_name" class="block text-sm font-medium text-gray-700 mb-2">Nama Pustakawan</label>
+                            <input type="text" 
+                                   id="librarian_name" 
+                                   name="librarian_name" 
+                                   value="{{ old('librarian_name') }}" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('librarian_name') border-red-300 @enderror">
+                            @error('librarian_name')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="librarian_phone" class="block text-sm font-medium text-gray-700 mb-2">Telepon Pustakawan</label>
+                            <input type="text" 
+                                   id="librarian_phone" 
+                                   name="librarian_phone" 
+                                   value="{{ old('librarian_phone') }}" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('librarian_phone') border-red-300 @enderror">
+                            @error('librarian_phone')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="librarian_email" class="block text-sm font-medium text-gray-700 mb-2">Email Pustakawan</label>
+                            <input type="email" 
+                                   id="librarian_email" 
+                                   name="librarian_email" 
+                                   value="{{ old('librarian_email') }}" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('librarian_email') border-red-300 @enderror">
+                            @error('librarian_email')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
 
-                <div class="md:col-span-2">
-                    <label for="facilities" class="block text-sm font-medium text-gray-700 mb-2">Fasilitas</label>
-                    <textarea name="facilities" id="facilities" rows="3" 
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('facilities') border-red-500 @enderror" 
-                              placeholder="Contoh: Ruang baca, Komputer, WiFi, AC, dll">{{ old('facilities') }}</textarea>
-                    @error('facilities')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="md:col-span-2">
-                    <label for="collection_info" class="block text-sm font-medium text-gray-700 mb-2">Informasi Koleksi</label>
-                    <textarea name="collection_info" id="collection_info" rows="3" 
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('collection_info') border-red-500 @enderror" 
-                              placeholder="Contoh: Jumlah buku, Jenis koleksi, dll">{{ old('collection_info') }}</textarea>
-                    @error('collection_info')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="md:col-span-2">
-                    <label for="rules" class="block text-sm font-medium text-gray-700 mb-2">Peraturan</label>
-                    <textarea name="rules" id="rules" rows="3" 
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('rules') border-red-500 @enderror" 
-                              placeholder="Contoh: Dilarang makan di dalam, Wajib menjaga ketenangan, dll">{{ old('rules') }}</textarea>
-                    @error('rules')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="md:col-span-2">
-                    <label for="membership_info" class="block text-sm font-medium text-gray-700 mb-2">Informasi Keanggotaan</label>
-                    <textarea name="membership_info" id="membership_info" rows="3" 
-                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 @error('membership_info') border-red-500 @enderror" 
-                              placeholder="Contoh: Syarat keanggotaan, Prosedur pendaftaran, dll">{{ old('membership_info') }}</textarea>
-                    @error('membership_info')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                <!-- Collection & Membership Info -->
+                <div class="border-t border-gray-200 pt-8">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Informasi Koleksi & Keanggotaan</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="collection_info" class="block text-sm font-medium text-gray-700 mb-2">Informasi Koleksi</label>
+                            <textarea id="collection_info" 
+                                      name="collection_info" 
+                                      rows="4" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('collection_info') border-red-300 @enderror">{{ old('collection_info') }}</textarea>
+                            @error('collection_info')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <label for="membership_info" class="block text-sm font-medium text-gray-700 mb-2">Informasi Keanggotaan</label>
+                            <textarea id="membership_info" 
+                                      name="membership_info" 
+                                      rows="4" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 @error('membership_info') border-red-300 @enderror">{{ old('membership_info') }}</textarea>
+                            @error('membership_info')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Status -->
-                <div class="md:col-span-2">
+                <div class="border-t border-gray-200 pt-8">
                     <div class="flex items-center">
-                        <input type="checkbox" name="is_active" id="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }} 
+                        <input type="checkbox" 
+                               id="is_active" 
+                               name="is_active" 
+                               value="1" 
+                               {{ old('is_active', true) ? 'checked' : '' }} 
                                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
                         <label for="is_active" class="ml-2 block text-sm text-gray-900">
                             Aktif
@@ -194,33 +327,20 @@
                     </div>
                 </div>
             </div>
-
-            <div class="flex justify-end space-x-4 mt-6">
-                <a href="{{ route('admin.libraries.index') }}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+            
+            <!-- Footer -->
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+                <a href="{{ route('admin.libraries.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150">
                     Batal
                 </a>
-                <button type="submit" class="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition-colors">
-                    <i class="fas fa-save mr-2"></i>Simpan
+                <button type="submit" class="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-700 focus:bg-primary-700 active:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Simpan
                 </button>
             </div>
         </form>
     </div>
 </div>
-
-<script>
-function previewImage(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const preview = document.getElementById('image-preview');
-            preview.src = e.target.result;
-            preview.classList.remove('hidden');
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-</script>
 @endsection
-
-
-

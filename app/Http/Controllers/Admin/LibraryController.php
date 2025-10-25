@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Library;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\StorageHelper;
 
 class LibraryController extends Controller
 {
@@ -47,30 +48,69 @@ class LibraryController extends Controller
             'facilities' => 'nullable|string',
             'collection_info' => 'nullable|string',
             'membership_info' => 'nullable|string',
+            'vision' => 'nullable|string',
+            'mission' => 'nullable|string',
+            'goals' => 'nullable|string',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:1024',
+            'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_active' => 'boolean'
         ]);
 
         $data = $request->all();
         $data['is_active'] = $request->has('is_active');
 
+        // Handle organization chart upload
         if ($request->hasFile('organization_chart')) {
             $file = $request->file('organization_chart');
-            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $filename = 'organization_chart_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('libraries', $filename, 'public');
+            $data['organization_chart'] = $path;
             
-            // Ensure directory exists
-            $librariesDir = storage_path('app/public/libraries');
-            if (!is_dir($librariesDir)) {
-                mkdir($librariesDir, 0755, true);
+            // Auto copy to public for hosting
+            StorageHelper::copyToPublic($path);
+        }
+
+        // Handle logo upload
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $filename = 'logo_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('libraries', $filename, 'public');
+            $data['logo'] = $path;
+            
+            // Auto copy to public for hosting
+            StorageHelper::copyToPublic($path);
+        }
+
+        // Handle banner image upload
+        if ($request->hasFile('banner_image')) {
+            $file = $request->file('banner_image');
+            $filename = 'banner_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('libraries', $filename, 'public');
+            $data['banner_image'] = $path;
+            
+            // Auto copy to public for hosting
+            StorageHelper::copyToPublic($path);
+        }
+
+        // Handle gallery images upload
+        if ($request->hasFile('gallery_images')) {
+            $galleryImages = [];
+            foreach ($request->file('gallery_images') as $file) {
+                $filename = 'gallery_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('libraries', $filename, 'public');
+                $galleryImages[] = $path;
+                
+                // Auto copy to public for hosting
+                StorageHelper::copyToPublic($path);
             }
-            
-            $file->storeAs('public/libraries', $filename);
-            $data['organization_chart'] = 'libraries/' . $filename;
+            $data['gallery_images'] = $galleryImages;
         }
 
         Library::create($data);
 
         return redirect()->route('admin.libraries.index')
-            ->with('success', 'Data perpustakaan berhasil ditambahkan.');
+            ->with('success', 'Perpustakaan berhasil dibuat!');
     }
 
     /**
@@ -110,38 +150,91 @@ class LibraryController extends Controller
             'facilities' => 'nullable|string',
             'collection_info' => 'nullable|string',
             'membership_info' => 'nullable|string',
+            'vision' => 'nullable|string',
+            'mission' => 'nullable|string',
+            'goals' => 'nullable|string',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:1024',
+            'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_active' => 'boolean'
         ]);
 
         $data = $request->all();
         $data['is_active'] = $request->has('is_active');
 
+        // Handle organization chart upload
         if ($request->hasFile('organization_chart')) {
-            // Delete old organization chart
+            // Delete old file
             if ($library->organization_chart) {
-                $oldPath = str_starts_with($library->organization_chart, 'libraries/') 
-                    ? 'public/' . $library->organization_chart 
-                    : 'public/libraries/' . $library->organization_chart;
-                Storage::delete($oldPath);
+                Storage::disk('public')->delete($library->organization_chart);
             }
-
+            
             $file = $request->file('organization_chart');
-            $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $filename = 'organization_chart_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('libraries', $filename, 'public');
+            $data['organization_chart'] = $path;
             
-            // Ensure directory exists
-            $librariesDir = storage_path('app/public/libraries');
-            if (!is_dir($librariesDir)) {
-                mkdir($librariesDir, 0755, true);
+            // Auto copy to public for hosting
+            StorageHelper::copyToPublic($path);
+        }
+
+        // Handle logo upload
+        if ($request->hasFile('logo')) {
+            // Delete old file
+            if ($library->logo) {
+                Storage::disk('public')->delete($library->logo);
             }
             
-            $file->storeAs('public/libraries', $filename);
-            $data['organization_chart'] = 'libraries/' . $filename;
+            $file = $request->file('logo');
+            $filename = 'logo_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('libraries', $filename, 'public');
+            $data['logo'] = $path;
+            
+            // Auto copy to public for hosting
+            StorageHelper::copyToPublic($path);
+        }
+
+        // Handle banner image upload
+        if ($request->hasFile('banner_image')) {
+            // Delete old file
+            if ($library->banner_image) {
+                Storage::disk('public')->delete($library->banner_image);
+            }
+            
+            $file = $request->file('banner_image');
+            $filename = 'banner_' . time() . '.' . $file->getClientOriginalExtension();
+            $path = $file->storeAs('libraries', $filename, 'public');
+            $data['banner_image'] = $path;
+            
+            // Auto copy to public for hosting
+            StorageHelper::copyToPublic($path);
+        }
+
+        // Handle gallery images upload
+        if ($request->hasFile('gallery_images')) {
+            // Delete old gallery images
+            if ($library->gallery_images) {
+                foreach ($library->gallery_images as $image) {
+                    Storage::disk('public')->delete($image);
+                }
+            }
+            
+            $galleryImages = [];
+            foreach ($request->file('gallery_images') as $file) {
+                $filename = 'gallery_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $path = $file->storeAs('libraries', $filename, 'public');
+                $galleryImages[] = $path;
+                
+                // Auto copy to public for hosting
+                StorageHelper::copyToPublic($path);
+            }
+            $data['gallery_images'] = $galleryImages;
         }
 
         $library->update($data);
 
         return redirect()->route('admin.libraries.index')
-            ->with('success', 'Data perpustakaan berhasil diperbarui.');
+            ->with('success', 'Perpustakaan berhasil diperbarui!');
     }
 
     /**
@@ -149,17 +242,25 @@ class LibraryController extends Controller
      */
     public function destroy(Library $library)
     {
-        // Delete organization chart file
+        // Delete associated files
         if ($library->organization_chart) {
-            $path = str_starts_with($library->organization_chart, 'libraries/') 
-                ? 'public/' . $library->organization_chart 
-                : 'public/libraries/' . $library->organization_chart;
-            Storage::delete($path);
+            Storage::disk('public')->delete($library->organization_chart);
+        }
+        if ($library->logo) {
+            Storage::disk('public')->delete($library->logo);
+        }
+        if ($library->banner_image) {
+            Storage::disk('public')->delete($library->banner_image);
+        }
+        if ($library->gallery_images) {
+            foreach ($library->gallery_images as $image) {
+                Storage::disk('public')->delete($image);
+            }
         }
 
         $library->delete();
 
         return redirect()->route('admin.libraries.index')
-            ->with('success', 'Data perpustakaan berhasil dihapus.');
+            ->with('success', 'Perpustakaan berhasil dihapus!');
     }
 }
