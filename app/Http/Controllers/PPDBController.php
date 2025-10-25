@@ -7,7 +7,6 @@ use App\Models\PPDB;
 use App\Models\PPDBRegistration;
 use App\Models\Notification;
 use Dompdf\Dompdf;
-use Dompdf\Options;
 
 class PPDBController extends Controller
 {
@@ -123,11 +122,7 @@ class PPDBController extends Controller
         // Generate PDF using DomPDF
         $html = view('ppdb.registration-form-pdf', compact('registration'))->render();
         
-        $options = new Options();
-        $options->set('defaultFont', 'Arial');
-        $options->set('isRemoteEnabled', true);
-        
-        $dompdf = new Dompdf($options);
+        $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
