@@ -165,20 +165,14 @@ class PPDBController extends Controller
      */
     private function createStudentAccount(PPDBRegistration $registration)
     {
-        // Jika tidak ada email, gunakan nomor pendaftaran sebagai username
-        $username = $registration->email ?: $registration->registration_number;
+        // Gunakan email sebagai username (email sekarang wajib)
+        $username = $registration->email;
         
         // Generate password acak
         $password = $this->generateRandomPassword();
         
-        // Cek apakah user sudah ada (cek berdasarkan email atau username)
-        $existingUser = null;
-        if ($registration->email) {
-            $existingUser = \App\Models\User::where('email', $registration->email)->first();
-        }
-        if (!$existingUser) {
-            $existingUser = \App\Models\User::where('username', $username)->first();
-        }
+        // Cek apakah user sudah ada berdasarkan email
+        $existingUser = \App\Models\User::where('email', $registration->email)->first();
         
         if ($existingUser) {
             // Update existing user dengan role student
@@ -196,8 +190,9 @@ class PPDBController extends Controller
             ]);
         } else {
             // Buat user baru
-            $userData = [
+            \App\Models\User::create([
                 'name' => $registration->student_name,
+                'email' => $registration->email,
                 'password' => \Hash::make($password),
                 'role' => 'student',
                 'student_id' => $registration->registration_number,
@@ -209,14 +204,7 @@ class PPDBController extends Controller
                 'is_active' => true,
                 'class_level' => 'VII', // Default class level
                 'class_section' => 'A', // Default class section
-            ];
-            
-            // Hanya tambahkan email jika ada
-            if ($registration->email) {
-                $userData['email'] = $registration->email;
-            }
-            
-            \App\Models\User::create($userData);
+            ]);
         }
         
         // Simpan informasi login di PPDB registration
@@ -225,20 +213,18 @@ class PPDBController extends Controller
             'student_password' => $password, // Simpan password plain untuk ditampilkan
         ]);
         
-        // Kirim email notifikasi ke siswa (hanya jika ada email)
-        if ($registration->email) {
-            try {
-                Notification::route('mail', $registration->email)
-                    ->notify(new StudentAccountCreated(
-                        $registration->student_name,
-                        $username,
-                        $password,
-                        url('/login')
-                    ));
-            } catch (\Exception $e) {
-                // Log error jika email gagal dikirim, tapi jangan stop proses
-                \Log::error('Failed to send student account notification: ' . $e->getMessage());
-            }
+        // Kirim email notifikasi ke siswa
+        try {
+            Notification::route('mail', $registration->email)
+                ->notify(new StudentAccountCreated(
+                    $registration->student_name,
+                    $username,
+                    $password,
+                    url('/login')
+                ));
+        } catch (\Exception $e) {
+            // Log error jika email gagal dikirim, tapi jangan stop proses
+            \Log::error('Failed to send student account notification: ' . $e->getMessage());
         }
     }
 

@@ -59,7 +59,7 @@ class PPDBController extends Controller
             'religion' => 'required|string|max:255',
             'address' => 'required|string',
             'phone_number' => 'required|string|max:20',
-            'email' => 'nullable|email|max:255',
+            'email' => 'required|email|max:255',
             'parent_name' => 'required|string|max:255',
             'parent_phone' => 'required|string|max:20',
             'parent_occupation' => 'required|string|max:255',

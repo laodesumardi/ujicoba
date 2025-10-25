@@ -148,12 +148,7 @@
                             </div>
                             <div class="mt-4 p-3 bg-yellow-100 border border-yellow-300 rounded-lg">
                                 <p class="text-yellow-800 text-sm">
-                                    <strong>⚠️ Penting:</strong> 
-                                    @if($registration->email)
-                                        Informasi login ini telah dikirim ke email siswa. 
-                                    @else
-                                        Email siswa tidak tersedia, informasi login hanya dapat dilihat di halaman ini. 
-                                    @endif
+                                    <strong>⚠️ Penting:</strong> Informasi login ini telah dikirim ke email siswa. 
                                     Siswa dapat login menggunakan username dan password di atas.
                                 </p>
                             </div>
