@@ -6,8 +6,9 @@
 <div class="min-h-screen bg-gray-50">
     @if($library)
         <!-- Hero Section -->
-        <div class="relative text-white" style="background-image: url('{{ $library->banner_image_url }}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
-            <div class="absolute inset-0 bg-black opacity-20"></div>
+        <div class="relative text-white h-96 overflow-hidden">
+            <img src="{{ $library->banner_image_url }}" alt="Banner {{ $library->name }}" class="absolute inset-0 w-full h-full object-cover" onerror="this.src='{{ asset('images/default-hero.png') }}'">
+            <div class="absolute inset-0 bg-black bg-opacity-50"></div>
             <div class="relative container mx-auto px-4 py-16">
                 <div class="max-w-4xl mx-auto text-center">
                     <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ $library->name }}</h1>
