@@ -152,8 +152,8 @@
                     <div class="value">{{ $registration->student_name }}</div>
                 </div>
                 <div class="form-group">
-                    <label>NISN</label>
-                    <div class="value">{{ $registration->nisn }}</div>
+                    <label>Nomor Pendaftaran</label>
+                    <div class="value">{{ $registration->registration_number }}</div>
                 </div>
             </div>
             <div class="form-row">
@@ -194,7 +194,7 @@
                 </div>
                 <div class="form-group">
                     <label>Nomor Telepon</label>
-                    <div class="value">{{ $registration->phone }}</div>
+                    <div class="value">{{ $registration->phone_number }}</div>
                 </div>
             </div>
         </div>
@@ -213,13 +213,9 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group">
+                <div class="form-group full-width">
                     <label>Pekerjaan Orang Tua/Wali</label>
                     <div class="value">{{ $registration->parent_occupation }}</div>
-                </div>
-                <div class="form-group">
-                    <label>Pendidikan Orang Tua/Wali</label>
-                    <div class="value">{{ $registration->parent_education }}</div>
                 </div>
             </div>
         </div>
@@ -228,15 +224,27 @@
         <div class="form-section">
             <h3>Informasi Akademik</h3>
             <div class="form-row">
-                <div class="form-group">
+                <div class="form-group full-width">
                     <label>Sekolah Asal</label>
-                    <div class="value">{{ $registration->previous_school }}</div>
-                </div>
-                <div class="form-group">
-                    <label>Kelas Terakhir</label>
-                    <div class="value">{{ $registration->last_class }}</div>
+                    <div class="value">{{ $registration->previous_school ?: 'Tidak diisi' }}</div>
                 </div>
             </div>
+            @if($registration->achievements)
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label>Prestasi</label>
+                    <div class="value">{{ $registration->achievements }}</div>
+                </div>
+            </div>
+            @endif
+            @if($registration->motivation)
+            <div class="form-row">
+                <div class="form-group full-width">
+                    <label>Motivasi Masuk Sekolah</label>
+                    <div class="value">{{ $registration->motivation }}</div>
+                </div>
+            </div>
+            @endif
         </div>
 
         <!-- Footer -->
