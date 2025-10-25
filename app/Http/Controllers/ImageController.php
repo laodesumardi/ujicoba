@@ -51,7 +51,7 @@ class ImageController extends Controller
             return $this->serveDefaultImage();
         }
     }
-    
+
     /**
      * Serve image from specific model
      */
@@ -65,6 +65,16 @@ class ImageController extends Controller
             }
             
             $record = $modelClass::find($id);
+            // Set role-based default override for user photos
+            if ($model === 'user' && $record) {
+                if ($record->role === 'teacher') {
+                    $defaultOverride = 'images/default-teacher.png';
+                } elseif ($record->role === 'student') {
+                    $defaultOverride = 'images/default-student.png';
+                } else {
+                    $defaultOverride = 'images/default-user.png';
+                }
+            }
             if (!$record) {
                 return $this->serveDefaultImage($defaultOverride);
             }
@@ -83,6 +93,39 @@ class ImageController extends Controller
             }
             if ($publicCandidate && file_exists($publicCandidate) && is_readable($publicCandidate)) {
                 return $this->serveImageFile($publicCandidate);
+            }
+            
+            // If the image path is just a filename for user model, infer folder by role
+            if ($model === 'user' && $field === 'photo' && strpos($imagePath, '/') === false) {
+                $roleFolder = 'users/photos';
+                if ($record->role === 'teacher') {
+                    $roleFolder = 'teachers';
+                } elseif ($record->role === 'student') {
+                    $roleFolder = 'students/photos';
+                } elseif ($record->role === 'admin') {
+                    $roleFolder = 'admins/photos';
+                }
+                $guessedPath = $roleFolder . '/' . $imagePath;
+                $storageCandidate = storage_path('app/public/' . $guessedPath);
+                if (file_exists($storageCandidate) && is_readable($storageCandidate)) {
+                    return $this->serveImageFile($storageCandidate);
+                }
+                $publicStorageCandidate = public_path('storage/' . $guessedPath);
+                if (file_exists($publicStorageCandidate) && is_readable($publicStorageCandidate)) {
+                    return $this->serveImageFile($publicStorageCandidate);
+                }
+                // Try alternate for teachers/photos if teacher role
+                if ($record->role === 'teacher') {
+                    $altPath = 'teachers/photos/' . $imagePath;
+                    $storageAlt = storage_path('app/public/' . $altPath);
+                    if (file_exists($storageAlt) && is_readable($storageAlt)) {
+                        return $this->serveImageFile($storageAlt);
+                    }
+                    $publicAlt = public_path('storage/' . $altPath);
+                    if (file_exists($publicAlt) && is_readable($publicAlt)) {
+                        return $this->serveImageFile($publicAlt);
+                    }
+                }
             }
             
             // Clean path
@@ -110,7 +153,7 @@ class ImageController extends Controller
             return $this->serveDefaultImage($defaultOverride ?? null);
         }
     }
-    
+
     /**
      * Serve default image
      */
@@ -133,7 +176,7 @@ class ImageController extends Controller
         $this->createDefaultImage();
         return $this->serveImageFile($defaultPath);
     }
-    
+
     /**
      * Serve image file with proper headers
      */
@@ -156,7 +199,7 @@ class ImageController extends Controller
             'Expires' => gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT',
         ]);
     }
-    
+
     /**
      * Get model class from string
      */
@@ -178,7 +221,7 @@ class ImageController extends Controller
         
         return $models[$model] ?? null;
     }
-    
+
     /**
      * Clean image path for specific model and field
      */
@@ -237,7 +280,7 @@ class ImageController extends Controller
             'gallery-item' => 'gallery-items',
             'headmaster-greeting' => 'headmaster-greetings',
             'school-profile' => 'school-profiles',
-            'user' => 'students/photos',
+            'user' => 'users/photos',
             'library' => 'libraries',
             // Added folder mapping for VisionMission
             'vision-mission' => 'vision-missions',
