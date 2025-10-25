@@ -121,15 +121,9 @@
                             <!-- Profile Dropdown -->
                             <div class="relative">
                                 <button onclick="toggleProfileDropdown()" class="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors">
-                                    @if(auth()->user()->photo)
-                                        <img src="{{ Storage::url(auth()->user()->photo) }}" 
-                                             alt="{{ auth()->user()->name }}" 
-                                             class="w-8 h-8 rounded-full object-cover border-2 border-white shadow-sm">
-                                    @else
-                                        <div class="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center">
-                                            <span class="text-white font-semibold text-sm">{{ substr(auth()->user()->name, 0, 1) }}</span>
-                                        </div>
-                                    @endif
+                                    <img src="{{ auth()->user()->photo_url }}" 
+                                         alt="{{ auth()->user()->name }}" 
+                                         class="w-8 h-8 rounded-full object-cover border-2 border-white shadow-sm">
                                     <div class="text-left hidden sm:block">
                                         <p class="text-sm font-medium text-gray-900">{{ auth()->user()->name }}</p>
                                         <p class="text-xs text-gray-500">{{ auth()->user()->subject ?? 'Guru' }}</p>
@@ -143,15 +137,9 @@
                                 <div id="profile-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
                                     <div class="px-4 py-3 border-b border-gray-100">
                                         <div class="flex items-center space-x-3">
-                                            @if(auth()->user()->photo)
-                                                <img src="{{ Storage::url(auth()->user()->photo) }}" 
-                                                     alt="{{ auth()->user()->name }}" 
-                                                     class="w-10 h-10 rounded-full object-cover border-2 border-gray-200">
-                                            @else
-                                                <div class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center">
-                                                    <span class="text-white font-semibold text-sm">{{ substr(auth()->user()->name, 0, 1) }}</span>
-                                                </div>
-                                            @endif
+                                            <img src="{{ auth()->user()->photo_url }}" 
+                                                 alt="{{ auth()->user()->name }}" 
+                                                 class="w-10 h-10 rounded-full object-cover border-2 border-gray-200">
                                             <div class="flex-1">
                                                 <p class="text-sm font-medium text-gray-900">{{ auth()->user()->name }}</p>
                                                 <p class="text-xs text-gray-500">{{ auth()->user()->email }}</p>
