@@ -195,22 +195,6 @@
                     @endif
                 </div>
 
-                <!-- Gallery Section -->
-                @if($library->gallery_images && count($library->gallery_images) > 0)
-                <div class="bg-white rounded-lg shadow-lg p-8">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-6">Galeri Perpustakaan</h3>
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        @foreach($library->gallery_images_urls as $index => $imageUrl)
-                        <div class="aspect-square overflow-hidden rounded-lg">
-                            <img src="{{ $imageUrl }}" 
-                                 alt="Galeri Perpustakaan {{ $index + 1 }}" 
-                                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300 cursor-pointer"
-                                 onclick="openImageModal('{{ $imageUrl }}', 'Galeri Perpustakaan {{ $index + 1 }}')">
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
             </div>
         </div>
     @else
@@ -227,43 +211,4 @@
     @endif
 </div>
 
-<!-- Image Modal -->
-<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center p-4">
-    <div class="max-w-4xl max-h-full">
-        <img id="modalImage" src="" alt="" class="max-w-full max-h-full object-contain rounded-lg">
-        <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </button>
-    </div>
-</div>
-
-<script>
-function openImageModal(src, alt) {
-    document.getElementById('modalImage').src = src;
-    document.getElementById('modalImage').alt = alt;
-    document.getElementById('imageModal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-}
-
-function closeImageModal() {
-    document.getElementById('imageModal').classList.add('hidden');
-    document.body.style.overflow = 'auto';
-}
-
-// Close modal when clicking outside
-document.getElementById('imageModal').addEventListener('click', function(e) {
-    if (e.target === this) {
-        closeImageModal();
-    }
-});
-
-// Close modal with Escape key
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        closeImageModal();
-    }
-});
-</script>
 @endsection
