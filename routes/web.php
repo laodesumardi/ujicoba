@@ -467,10 +467,6 @@ Route::get('/admin/tools/storage-fix', [SetupController::class, 'setup'])->middl
 Route::get('/preview-student-profile', function () {
     return view('pages.preview-student-profile');
 })->name('preview.student.profile');
-Route::get('/profile/edit', [App\Http\Controllers\Student\ProfileController::class, 'edit'])->name('profile.edit');
-Route::put('/profile', [App\Http\Controllers\Student\ProfileController::class, 'update'])->name('profile.update');
-Route::delete('/profile/photo', [App\Http\Controllers\Student\ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
-});
     
     // Teacher Dashboard
     Route::prefix('teacher')->name('teacher.')->middleware(['auth', 'role:teacher'])->group(function () {
