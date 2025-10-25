@@ -121,9 +121,35 @@ class PPDBController extends Controller
         
         $filename = 'Form_Pendaftaran_' . $registration->registration_number . '.pdf';
         
-        return Pdf::loadView('ppdb.registration-form-pdf', compact('registration'))
-            ->setPaper('A4', 'portrait')
-            ->stream($filename);
+        // Try using the Laravel facade first (preferred)
+        try {
+            if (class_exists(\Barryvdh\DomPDF\Facade\Pdf::class)) {
+                return \Barryvdh\DomPDF\Facade\Pdf::loadView('ppdb.registration-form-pdf', compact('registration'))
+                    ->setPaper('A4', 'portrait')
+                    ->stream($filename);
+            }
+        } catch (\Throwable $e) {
+            \Log::error('PPDB PDF generation via Facade failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+        }
+
+        // Fallback to direct Dompdf usage if available
+        if (class_exists(\Dompdf\Dompdf::class)) {
+            $html = view('ppdb.registration-form-pdf', compact('registration'))->render();
+            $dompdf = new \Dompdf\Dompdf();
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+            return response($dompdf->output(), 200, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            ]);
+        }
+
+        // Final fallback: return the HTML view if PDF generator is unavailable
+        return response()->view('ppdb.registration-form-pdf', compact('registration'));
     }
 
     /**
