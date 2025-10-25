@@ -469,12 +469,15 @@ Route::get("/ppdb/auto-refresh", function() {
 // Admin tools: storage fix route
 Route::get('/admin/tools/storage-fix', [SetupController::class, 'setup'])->middleware(['auth','role:admin'])->name('admin.tools.storage-fix');
 
-
-// ... existing code ...
 // Embed preview of external student profile page
 Route::get('/preview-student-profile', function () {
     return view('pages.preview-student-profile');
 })->name('preview.student.profile');
+
+// Embed preview of external teacher profile page
+Route::get('/preview-teacher-profile', function () {
+    return view('pages.preview-teacher-profile');
+})->name('preview.teacher.profile');
     
     // Teacher Dashboard
     Route::prefix('teacher')->name('teacher.')->middleware(['auth', 'role:teacher'])->group(function () {
