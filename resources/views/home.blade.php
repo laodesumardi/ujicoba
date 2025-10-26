@@ -16,10 +16,6 @@
                 <a href="{{ route('ppdb.index') }}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors">
                     Informasi Pendaftaran
                 </a>
-                <a href="{{ route('ppdb.panitia.dashboard') }}" class="bg-yellow-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition-colors flex items-center justify-center">
-                    <i class="fas fa-graduation-cap mr-2"></i>
-                    Dashboard Panitia PPDB
-                </a>
             </div>
         </div>
     </div>
@@ -98,18 +94,6 @@
                     </a>
                 </div>
 
-                <!-- Dashboard Panitia -->
-                <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-6 text-center">
-                    <div class="bg-yellow-500 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                        <i class="fas fa-graduation-cap text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Dashboard Panitia</h3>
-                    <p class="text-gray-600 mb-4">Akses dashboard untuk mengelola pendaftaran</p>
-                    <a href="{{ route('ppdb.panitia.dashboard') }}" class="inline-flex items-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
-                        <i class="fas fa-tachometer-alt mr-2"></i>
-                        Masuk Dashboard
-                    </a>
-                </div>
             </div>
         </div>
     </div>

@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         // Seed role-based data first
         $this->call([
             RoleBasedDataSeeder::class,
+            PPDBPanitiaSeeder::class,
             HomeSectionSeeder::class,
             SchoolProfileSeeder::class,
             NewsSeeder::class,
