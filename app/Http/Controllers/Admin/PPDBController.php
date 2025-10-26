@@ -165,6 +165,12 @@ class PPDBController extends Controller
      */
     private function createStudentAccount(PPDBRegistration $registration)
     {
+        // Cek apakah email ada, jika tidak ada skip pembuatan akun
+        if (empty($registration->email)) {
+            \Log::warning('PPDB Registration ID ' . $registration->id . ' tidak memiliki email, skip pembuatan akun');
+            return;
+        }
+        
         // Gunakan email sebagai username (email sekarang wajib)
         $username = $registration->email;
         
@@ -331,6 +337,91 @@ class PPDBController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Update PPDB registration data
+     */
+    public function updateRegistration(Request $request, PPDBRegistration $registration)
+    {
+        $request->validate([
+            'student_name' => 'required|string|max:255',
+            'birth_place' => 'required|string|max:255',
+            'birth_date' => 'required|date',
+            'gender' => 'required|in:L,P',
+            'religion' => 'required|string|max:255',
+            'address' => 'required|string',
+            'phone_number' => 'required|string|max:20',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                function ($attribute, $value, $fail) use ($registration) {
+                    // Cek apakah email sudah terdaftar di tabel users (kecuali untuk registration ini)
+                    if (\App\Models\User::where('email', $value)->exists()) {
+                        $fail('Email ' . $value . ' sudah terdaftar. Silakan gunakan email lain atau hubungi admin jika ini adalah email Anda.');
+                    }
+                    
+                    // Cek apakah email sudah terdaftar di PPDB registrations (kecuali untuk registration ini)
+                    if (\App\Models\PPDBRegistration::where('email', $value)->where('id', '!=', $registration->id)->exists()) {
+                        $fail('Email ' . $value . ' sudah digunakan untuk pendaftaran PPDB lainnya. Silakan gunakan email lain.');
+                    }
+                }
+            ],
+            'parent_name' => 'required|string|max:255',
+            'parent_phone' => 'required|string|max:20',
+            'parent_occupation' => 'required|string|max:255',
+            'previous_school' => 'nullable|string|max:255',
+            'achievements' => 'nullable|string',
+            'motivation' => 'nullable|string',
+        ]);
+
+        $registration->update($request->all());
+
+        return redirect()->route('admin.ppdb.show-registration', $registration)
+            ->with('success', 'Data pendaftaran berhasil diperbarui!');
+    }
+
+    /**
+     * Manually create student account for approved PPDB without email
+     */
+    public function createManualAccount(PPDBRegistration $registration)
+    {
+        // Cek apakah sudah ada akun
+        if ($registration->student_username) {
+            return redirect()->route('admin.ppdb.registrations')
+                ->with('error', 'Akun untuk pendaftaran ini sudah dibuat sebelumnya.');
+        }
+        
+        // Generate username dari nama + ID
+        $username = strtolower(str_replace(' ', '', $registration->student_name)) . $registration->id;
+        $password = $this->generateRandomPassword();
+        
+        // Buat user baru
+        $user = \App\Models\User::create([
+            'name' => $registration->student_name,
+            'email' => $username . '@student.local', // Email dummy
+            'password' => \Hash::make($password),
+            'role' => 'student',
+            'student_id' => $registration->registration_number,
+            'phone' => $registration->phone_number,
+            'date_of_birth' => $registration->birth_date,
+            'gender' => $registration->gender,
+            'address' => $registration->address,
+            'username' => $username,
+            'is_active' => true,
+            'class_level' => 'VII',
+            'class_section' => 'A',
+        ]);
+        
+        // Update PPDB registration
+        $registration->update([
+            'student_username' => $username,
+            'student_password' => $password,
+        ]);
+        
+        return redirect()->route('admin.ppdb.registrations')
+            ->with('success', 'Akun berhasil dibuat! Username: ' . $username . ', Password: ' . $password);
     }
 
     /**

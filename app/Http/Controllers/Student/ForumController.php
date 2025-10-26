@@ -3,11 +3,7 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use App\Models\Forum;
-use App\Models\ForumReply;
-use App\Models\Course;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ForumController extends Controller
 {
@@ -16,92 +12,138 @@ class ForumController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        
-        // Get forums from enrolled courses
-        $forums = Forum::whereHas('course', function($query) use ($user) {
-            $query->whereHas('enrollments', function($q) use ($user) {
-                $q->where('student_id', $user->id)
-                  ->where('status', 'approved');
-            });
-        })
-        ->with(['author', 'course', 'latestReply'])
-        ->orderBy('is_pinned', 'desc')
-        ->orderBy('last_activity', 'desc')
-        ->paginate(10);
+        // Ambil semua forum yang tersedia untuk siswa
+        $forums = \App\Models\Forum::with('user')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
         return view('student.forums.index', compact('forums'));
     }
 
     /**
-     * Display the specified forum.
+     * Display the specified forum (from course context).
      */
-    public function show(Forum $forum)
+    public function show($courseId, $forumId)
     {
-        $user = Auth::user();
-        
-        // Check if student is enrolled in the course
-        $enrollment = $user->enrollments()
-            ->where('course_id', $forum->course_id)
-            ->where('status', 'approved')
-            ->first();
-
-        if (!$enrollment) {
-            abort(403, 'Anda tidak terdaftar di kelas ini.');
-        }
-
-        // Load forum with replies
-        $forum->load(['author', 'replies.user']);
-        
-        $replies = $forum->replies()
+        // Ambil balasan dari database untuk forum ini
+        $replies = \App\Models\ForumReply::where('forum_id', $forumId)
             ->with('user')
-            ->orderBy('created_at', 'asc')
-            ->paginate(10);
+            ->orderBy('created_at')
+            ->get();
 
-        return view('student.forums.show', compact('forum', 'replies'));
+        return view('student.forums.show', compact('courseId', 'forumId', 'replies'));
     }
 
     /**
-     * Store a new reply.
+     * Display the specified forum (from general forums).
      */
-    public function storeReply(Request $request, Forum $forum)
+    public function showForum($forumId)
     {
-        $user = Auth::user();
+        // Ambil balasan dari database untuk forum ini
+        $replies = \App\Models\ForumReply::where('forum_id', $forumId)
+            ->with('user')
+            ->orderBy('created_at')
+            ->get();
+
+        $forum = \App\Models\Forum::findOrFail($forumId);
+
+        return view('student.forums.show', [
+            'courseId' => $forum->course_id ?? 0,
+            'forumId' => $forumId,
+            'replies' => $replies,
+            'forum' => $forum
+        ]);
+    }
+
+    /**
+     * Store a newly created reply.
+     */
+    public function storeReply(Request $request, $courseId, $forumId)
+    {
+        $validated = $request->validate([
+            'reply' => 'required|string|max:1000',
+        ]);
+
+        // Simpan balasan ke database
+        $reply = \App\Models\ForumReply::create([
+            'forum_id' => $forumId,
+            'user_id' => auth()->id(),
+            'content' => $validated['reply'],
+        ]);
+
+        // Broadcast pesan ke guru melalui localStorage untuk real-time
+        $broadcastScript = $this->broadcastMessageToTeacher($reply, $courseId, $forumId);
+
+        // Return JSON response for AJAX requests
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Balasan berhasil dikirim!',
+                'reply' => [
+                    'id' => $reply->id,
+                    'content' => $reply->content,
+                    'author' => $reply->user->name,
+                    'timestamp' => $reply->created_at->toISOString(),
+                    'fromStudent' => true
+                ]
+            ]);
+        }
+
+        return redirect()->route('student.courses.forums.show', [$courseId, $forumId])
+            ->with('success', 'Balasan berhasil dikirim!')
+            ->with('broadcast_script', $broadcastScript);
+    }
+
+    /**
+     * Store a newly created reply (from general forums).
+     */
+    public function storeReplyForum(Request $request, $forumId)
+    {
+        $validated = $request->validate([
+            'reply' => 'required|string|max:1000',
+        ]);
+
+        // Simpan balasan ke database
+        $reply = \App\Models\ForumReply::create([
+            'forum_id' => $forumId,
+            'user_id' => auth()->id(),
+            'content' => $validated['reply'],
+        ]);
+
+        // Broadcast pesan ke guru melalui localStorage untuk real-time
+        $broadcastScript = $this->broadcastMessageToTeacher($reply, 0, $forumId);
+
+        return redirect()->route('student.forums.show', $forumId)
+            ->with('success', 'Balasan berhasil dikirim!')
+            ->with('broadcast_script', $broadcastScript);
+    }
+
+    private function broadcastMessageToTeacher($reply, $courseId, $forumId)
+    {
+        // Buat script JavaScript untuk broadcast ke halaman guru
+        $script = "
+        <script>
+        if (typeof(Storage) !== 'undefined') {
+            const messageObj = {
+                message: '" . addslashes($reply->content) . "',
+                author: '" . addslashes($reply->user->name) . "',
+                isOwn: false,
+                timestamp: '" . $reply->created_at->toISOString() . "',
+                fromStudent: true
+            };
+            
+            const broadcastKey = 'student_broadcast_" . $courseId . "_" . $forumId . "';
+            localStorage.setItem(broadcastKey, JSON.stringify(messageObj));
+            
+            // Trigger storage event
+            window.dispatchEvent(new StorageEvent('storage', {
+                key: broadcastKey,
+                newValue: JSON.stringify(messageObj),
+                url: window.location.href
+            }));
+        }
+        </script>";
         
-        // Check if student is enrolled in the course
-        $enrollment = $user->enrollments()
-            ->where('course_id', $forum->course_id)
-            ->where('status', 'approved')
-            ->first();
-
-        if (!$enrollment) {
-            abort(403, 'Anda tidak terdaftar di kelas ini.');
-        }
-
-        // Check if forum is locked
-        if ($forum->is_locked) {
-            return redirect()->back()
-                ->with('error', 'Forum ini dikunci, tidak dapat membalas.');
-        }
-
-        $request->validate([
-            'content' => 'required|string|max:2000',
-        ]);
-
-        // Create reply
-        ForumReply::create([
-            'forum_id' => $forum->id,
-            'user_id' => $user->id,
-            'content' => $request->content,
-        ]);
-
-        // Update forum last activity
-        $forum->update([
-            'last_activity' => now(),
-            'replies_count' => $forum->replies_count + 1
-        ]);
-
-        return redirect()->back()
-            ->with('success', 'Balasan berhasil dikirim!');
+        return $script;
     }
 }

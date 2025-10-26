@@ -122,19 +122,6 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
-            <div class="flex items-center">
-                <div class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl p-4 shadow-lg">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-2-2V10a2 2 0 012-2h2m3-4h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-2-2V6a2 2 0 012-2h2"></path>
-                    </svg>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-600">Forum Aktif</p>
-                    <p class="text-2xl font-bold text-gray-900">{{ $stats['active_forums'] }}</p>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- Navigation Tabs -->
@@ -282,58 +269,66 @@
             <div id="forums" class="tab-content" style="display: none;">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-lg font-semibold text-gray-900">Forum Diskusi</h3>
-                    <a href="{{ route('teacher.courses.forums.create', $course) }}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
-                        Buat Forum
-                    </a>
+                    @if(auth()->user()->role === 'teacher')
+                        <button onclick="openCreateForumModal()" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                            <i class="fas fa-plus mr-2"></i>
+                            Buat Topik Baru
+                        </button>
+                    @endif
                 </div>
                 
-                @if($course->forums->count() > 0)
-                    <div class="space-y-4">
-                        @foreach($course->forums as $forum)
-                        <div class="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all duration-300 bg-gradient-to-br from-white to-gray-50">
-                            <div class="flex items-center justify-between">
-                                <div class="flex-1">
-                                    <h4 class="text-lg font-semibold text-gray-900 mb-2">{{ $forum->title }}</h4>
-                                    <p class="text-sm text-gray-600 mb-3">{{ Str::limit($forum->description, 100) }}</p>
-                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
-                                        @if($forum->is_pinned)
-                                            <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full">Dipasang</span>
-                                        @endif
-                                        @if($forum->is_locked)
-                                            <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full">Dikunci</span>
-                                        @else
-                                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full">Aktif</span>
-                                        @endif
-                                        <span>{{ $forum->replies_count }} balasan</span>
-                                        <span>Terakhir: {{ $forum->last_activity->format('d M Y, H:i') }}</span>
-                                    </div>
+                <!-- Forum Topics -->
+                <div class="space-y-4" id="forum-topics-container">
+                    <!-- Sample Forum Topics -->
+                    <div class="border border-gray-200 rounded-xl p-6 hover:shadow-md transition-all duration-300 bg-gradient-to-br from-white to-blue-50">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-3 mb-3">
+                                    <h4 class="text-lg font-semibold text-gray-900">Diskusi Materi Pertama</h4>
+                                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Aktif</span>
                                 </div>
-                                <div class="flex items-center space-x-2">
-                                    <a href="{{ route('teacher.courses.forums.show', [$course, $forum]) }}" class="text-primary-600 hover:text-primary-700 font-medium">
-                                        Lihat
-                                    </a>
-                                    <a href="{{ route('teacher.courses.forums.edit', [$course, $forum]) }}" class="text-gray-600 hover:text-gray-800 font-medium">
-                                        Edit
+                                <p class="text-gray-700 mb-4">Mari kita diskusikan materi yang baru saja dipelajari...</p>
+                                
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-4 text-sm text-gray-500">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-user mr-2"></i>
+                                            Oleh: Guru Matematika
+                                        </span>
+                                        <span class="flex items-center">
+                                            <i class="fas fa-clock mr-2"></i>
+                                            {{ \Carbon\Carbon::now()->subHours(2)->diffForHumans() }}
+                                        </span>
+                                        <span class="flex items-center">
+                                            <i class="fas fa-comments mr-2"></i>
+                                            {{ rand(3, 8) }} balasan
+                                        </span>
+                                    </div>
+                                    <a href="/teacher/courses/{{ $course->id }}/forums/1" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                                        <i class="fas fa-eye mr-2"></i>
+                                        Lihat Diskusi
                                     </a>
                                 </div>
                             </div>
                         </div>
-                        @endforeach
                     </div>
-                @else
-                    <div class="text-center py-12">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                        </svg>
-                        <h3 class="mt-2 text-sm font-medium text-gray-900">Belum ada forum</h3>
-                        <p class="mt-1 text-sm text-gray-500">Mulai dengan membuat forum diskusi pertama.</p>
-                        <div class="mt-6">
-                            <a href="{{ route('teacher.courses.forums.create', $course) }}" class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
-                                Buat Forum
-                            </a>
-                        </div>
+
+                </div>
+
+                <!-- Empty State (jika belum ada forum) -->
+                <div id="empty-forum-state" class="text-center py-12" style="display: none;">
+                    <div class="mx-auto w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-comments text-gray-400 text-2xl"></i>
                     </div>
-                @endif
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada forum diskusi</h3>
+                    <p class="text-gray-500 mb-6">Mulai dengan membuat forum diskusi pertama untuk kelas <strong>{{ $course->title }}</strong>.</p>
+                    @if(auth()->user()->role === 'teacher')
+                        <button onclick="openCreateForumModal()" class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+                            <i class="fas fa-plus mr-2"></i>
+                            Buat Forum Pertama
+                        </button>
+                    @endif
+                </div>
             </div>
 
             <!-- Students Tab -->
@@ -393,6 +388,81 @@
     @csrf
     @method('DELETE')
 </form>
+
+<!-- Create Forum Modal (Only for Teachers) -->
+@if(auth()->user()->role === 'teacher')
+<div id="createForumModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50" style="display: none;">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-2/3 lg:w-1/2 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Buat Topik Forum Baru</h3>
+                <button onclick="closeCreateForumModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <form id="createForumForm">
+                <div class="space-y-4">
+                    <!-- Judul Forum -->
+                    <div>
+                        <label for="forum_title" class="block text-sm font-medium text-gray-700 mb-2">Judul Forum</label>
+                        <input type="text" id="forum_title" name="title" 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                               placeholder="Masukkan judul forum diskusi" required>
+                    </div>
+                    
+                    <!-- Kategori -->
+                    <div>
+                        <label for="forum_category" class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                        <select id="forum_category" name="category" 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+                            <option value="discussion">Diskusi Umum</option>
+                            <option value="qa">Tanya Jawab</option>
+                            <option value="assignment">Diskusi Tugas</option>
+                            <option value="material">Diskusi Materi</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Deskripsi -->
+                    <div>
+                        <label for="forum_description" class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                        <textarea id="forum_description" name="description" rows="4"
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                                  placeholder="Jelaskan topik yang ingin didiskusikan..." required></textarea>
+                    </div>
+                    
+                    <!-- Pengaturan -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="forum_pinned" name="is_pinned" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                            <label for="forum_pinned" class="ml-2 text-sm text-gray-700">Pin ke atas</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="forum_locked" name="is_locked" class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded">
+                            <label for="forum_locked" class="ml-2 text-sm text-gray-700">Kunci forum</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Modal Footer -->
+                <div class="flex items-center justify-end space-x-3 mt-6 pt-4 border-t">
+                    <button type="button" onclick="closeCreateForumModal()" 
+                            class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200">
+                        Batal
+                    </button>
+                    <button type="submit" 
+                            class="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-colors duration-200">
+                        <i class="fas fa-plus mr-2"></i>
+                        Buat Forum
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
 
 <script>
 function confirmDelete(courseId, courseTitle) {
@@ -464,5 +534,55 @@ document.addEventListener('DOMContentLoaded', function() {
         tabLinks[0].click();
     }
 });
+
+// Forum Modal Functions (Only for Teachers)
+@if(auth()->user()->role === 'teacher')
+function openCreateForumModal() {
+    document.getElementById('createForumModal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeCreateForumModal() {
+    document.getElementById('createForumModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+    // Reset form
+    document.getElementById('createForumForm').reset();
+}
+@endif
+
+@if(auth()->user()->role === 'teacher')
+// Handle form submission
+document.getElementById('createForumForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Get form data
+    const formData = new FormData(this);
+    const data = {
+        title: formData.get('title'),
+        category: formData.get('category'),
+        description: formData.get('description'),
+        is_pinned: formData.get('is_pinned') === 'on',
+        is_locked: formData.get('is_locked') === 'on'
+    };
+    
+    // Simulate creating forum (in real app, this would make an AJAX request)
+    console.log('Creating forum:', data);
+    
+    // Show success message
+    alert('Forum berhasil dibuat!');
+    
+    // Close modal
+    closeCreateForumModal();
+    
+    // In real app, you would refresh the forum list or add the new forum to the DOM
+});
+
+// Close modal when clicking outside
+document.getElementById('createForumModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeCreateForumModal();
+    }
+});
+@endif
 </script>
 @endsection

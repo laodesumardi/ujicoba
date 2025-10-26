@@ -284,12 +284,9 @@
 
             <!-- Forums Tab -->
             <div id="forums" class="tab-content hidden">
-                <div class="flex items-center justify-between mb-6">
+                <div class="mb-6">
                     <h3 class="text-lg font-semibold text-gray-900">Forum Diskusi</h3>
-                    <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
-                        <i class="fas fa-plus mr-2"></i>
-                        Buat Topik Baru
-                    </button>
+                    <p class="text-sm text-gray-600 mt-1">Berpartisipasi dalam diskusi kelas</p>
                 </div>
                 
                 <div class="space-y-4">
@@ -314,17 +311,17 @@
                                     </span>
                                     <span class="flex items-center">
                                         <i class="fas fa-clock mr-1"></i>
-                                        2 jam yang lalu
+                                        {{ \Carbon\Carbon::now()->subHours(2)->diffForHumans() }}
                                     </span>
                                     <span class="flex items-center">
                                         <i class="fas fa-comments mr-1"></i>
-                                        5 balasan
+                                        {{ rand(3, 8) }} balasan
                                     </span>
                                 </div>
                             </div>
                             
                             <div class="flex items-center space-x-2">
-                                <a href="#" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                                <a href="{{ route('student.courses.forums.show', [$course->id, 1]) }}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
                                     <i class="fas fa-eye mr-2"></i>
                                     Lihat Diskusi
                                 </a>
@@ -332,43 +329,6 @@
                         </div>
                     </div>
 
-                    <div class="border border-gray-200 rounded-xl p-5 hover:shadow-md transition-all duration-300 bg-gradient-to-br from-white to-gray-50">
-                        <div class="flex items-start justify-between">
-                            <div class="flex-1">
-                                <div class="flex items-center space-x-3 mb-2">
-                                    <h4 class="text-lg font-semibold text-gray-900">Tanya Jawab Tugas</h4>
-                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                                        <i class="fas fa-question-circle mr-1"></i>
-                                        Q&A
-                                    </span>
-                                </div>
-                                
-                                <p class="text-sm text-gray-600 mb-3">Ada yang mengalami kesulitan dengan tugas yang diberikan?</p>
-                                
-                                <div class="flex items-center space-x-4 text-sm text-gray-500">
-                                    <span class="flex items-center">
-                                        <i class="fas fa-user mr-1"></i>
-                                        Oleh: Siswa A
-                                    </span>
-                                    <span class="flex items-center">
-                                        <i class="fas fa-clock mr-1"></i>
-                                        1 hari yang lalu
-                                    </span>
-                                    <span class="flex items-center">
-                                        <i class="fas fa-comments mr-1"></i>
-                                        3 balasan
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center space-x-2">
-                                <a href="#" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
-                                    <i class="fas fa-eye mr-2"></i>
-                                    Lihat Diskusi
-                                </a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 

@@ -26,6 +26,12 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+// Test route untuk debugging real-time messaging
+Route::get('/test-realtime', function () {
+    return view('test-realtime');
+});
+
+
 
 
 
@@ -127,6 +133,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/courses/{course}/lessons/{lesson}', [App\Http\Controllers\Student\LessonController::class, 'show'])->name('courses.lessons.show');
         Route::post('/courses/{course}/lessons/{lesson}/complete', [App\Http\Controllers\Student\LessonController::class, 'complete'])->name('courses.lessons.complete');
         
+        // Student Forums
+        Route::get('/courses/{course}/forums/{forum}', [App\Http\Controllers\Student\ForumController::class, 'show'])->name('courses.forums.show');
+        Route::post('/courses/{course}/forums/{forum}/replies', [App\Http\Controllers\Student\ForumController::class, 'storeReply'])->name('courses.forums.replies.store');
+        
         // Student Attachments
         Route::get('/courses/{course}/lessons/{lesson}/attachments/{filename}', [App\Http\Controllers\Student\AttachmentController::class, 'downloadLessonAttachment'])->name('courses.lessons.attachments.download');
         Route::get('/assignments/{assignment}/attachments/{filename}', [App\Http\Controllers\Student\AttachmentController::class, 'downloadAssignmentAttachment'])->name('assignments.attachments.download');
@@ -141,8 +151,8 @@ Route::middleware(['auth'])->group(function () {
         
         // Student Forums
         Route::get('/forums', [App\Http\Controllers\Student\ForumController::class, 'index'])->name('forums.index');
-        Route::get('/forums/{forum}', [App\Http\Controllers\Student\ForumController::class, 'show'])->name('forums.show');
-        Route::post('/forums/{forum}/replies', [App\Http\Controllers\Student\ForumController::class, 'storeReply'])->name('forums.replies.store');
+        Route::get('/forums/{forum}', [App\Http\Controllers\Student\ForumController::class, 'showForum'])->name('forums.show');
+        Route::post('/forums/{forum}/replies', [App\Http\Controllers\Student\ForumController::class, 'storeReplyForum'])->name('forums.replies.store');
         
         // Student Grades
         Route::get('/grades', [App\Http\Controllers\Student\GradeController::class, 'index'])->name('grades.index');
@@ -184,6 +194,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('courses/{course}/forums/{forum}/toggle-lock', [App\Http\Controllers\Teacher\ForumController::class, 'toggleLock'])->name('courses.forums.toggle-lock');
         Route::post('courses/{course}/forums/{forum}/replies', [App\Http\Controllers\Teacher\ForumController::class, 'storeReply'])->name('courses.forums.replies.store');
         Route::delete('courses/{course}/forums/{forum}/replies/{reply}', [App\Http\Controllers\Teacher\ForumController::class, 'deleteReply'])->name('courses.forums.replies.delete');
+        Route::delete('courses/{course}/forums/{forum}/replies', [App\Http\Controllers\Teacher\ForumController::class, 'deleteAllReplies'])->name('courses.forums.replies.delete-all');
     });
     
     // Admin Dashboard
@@ -383,6 +394,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
             return redirect()->route('admin.ppdb.show-registration', $registration);
         });
         Route::get('ppdb-registrations/{registration}/download/{type}', [AdminPPDBController::class, 'downloadDocument'])->name('ppdb.download-document');
+        Route::put('ppdb-registrations/{registration}/update', [AdminPPDBController::class, 'updateRegistration'])->name('ppdb.update-registration');
+        Route::post('ppdb-registrations/{registration}/create-account', [AdminPPDBController::class, 'createManualAccount'])->name('ppdb.create-manual-account');
         Route::delete('ppdb-registrations/{registration}', [AdminPPDBController::class, 'deleteRegistration'])->name('ppdb.delete-registration');
         Route::get('ppdb-export', [AdminPPDBController::class, 'exportRegistrations'])->name('ppdb.export');
         
@@ -478,43 +491,7 @@ Route::get('/preview-student-profile', function () {
 Route::get('/preview-teacher-profile', function () {
     return view('pages.preview-teacher-profile');
 })->name('preview.teacher.profile');
-    
-    // Teacher Dashboard
-    Route::prefix('teacher')->name('teacher.')->middleware(['auth', 'role:teacher'])->group(function () {
-        Route::get('/dashboard', [App\Http\Controllers\Teacher\DashboardController::class, 'index'])->name('dashboard');
-        
-        // Profile Routes
-        Route::get('/profile', [App\Http\Controllers\Teacher\ProfileController::class, 'show'])->name('profile');
-        Route::get('/profile/edit', [App\Http\Controllers\Teacher\ProfileController::class, 'edit'])->name('profile.edit');
-        Route::put('/profile', [App\Http\Controllers\Teacher\ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/profile/photo', [App\Http\Controllers\Teacher\ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
-        
-        // LMS Routes
-        Route::resource('courses', App\Http\Controllers\Teacher\CourseController::class);
-        Route::post('courses/{course}/toggle-status', [App\Http\Controllers\Teacher\CourseController::class, 'toggleStatus'])->name('courses.toggle-status');
-        Route::post('courses/{course}/archive', [App\Http\Controllers\Teacher\CourseController::class, 'archive'])->name('courses.archive');
-        
-        // Course Lessons
-        Route::resource('courses.lessons', App\Http\Controllers\Teacher\LessonController::class);
-        Route::post('courses/{course}/lessons/{lesson}/toggle-published', [App\Http\Controllers\Teacher\LessonController::class, 'togglePublished'])->name('courses.lessons.toggle-published');
-        Route::post('courses/{course}/lessons/reorder', [App\Http\Controllers\Teacher\LessonController::class, 'reorder'])->name('courses.lessons.reorder');
-        
-        // Course Assignments
-        Route::resource('courses.assignments', App\Http\Controllers\Teacher\AssignmentController::class);
-        Route::post('courses/{course}/assignments/{assignment}/toggle-published', [App\Http\Controllers\Teacher\AssignmentController::class, 'togglePublished'])->name('courses.assignments.toggle-published');
-        Route::post('courses/{course}/assignments/{assignment}/submissions/{submission}/grade', [App\Http\Controllers\Teacher\AssignmentController::class, 'gradeSubmission'])->name('courses.assignments.submissions.grade');
-        Route::get('courses/{course}/assignments/{assignment}/download-submissions', [App\Http\Controllers\Teacher\AssignmentController::class, 'downloadAllSubmissions'])->name('courses.assignments.download-submissions');
-        
-        // Assignments Overview
-        Route::get('assignments', [App\Http\Controllers\Teacher\AssignmentController::class, 'overview'])->name('assignments.overview');
-        
-        // Course Forums
-        Route::resource('courses.forums', App\Http\Controllers\Teacher\ForumController::class);
-        Route::post('courses/{course}/forums/{forum}/toggle-pin', [App\Http\Controllers\Teacher\ForumController::class, 'togglePin'])->name('courses.forums.toggle-pin');
-        Route::post('courses/{course}/forums/{forum}/toggle-lock', [App\Http\Controllers\Teacher\ForumController::class, 'toggleLock'])->name('courses.forums.toggle-lock');
-        Route::post('courses/{course}/forums/{forum}/replies', [App\Http\Controllers\Teacher\ForumController::class, 'storeReply'])->name('courses.forums.replies.store');
-        Route::delete('courses/{course}/forums/{forum}/replies/{reply}', [App\Http\Controllers\Teacher\ForumController::class, 'deleteReply'])->name('courses.forums.replies.delete');
-    });
+
     
     // Admin Dashboard
     Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
@@ -708,6 +685,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
             return redirect()->route('admin.ppdb.show-registration', $registration);
         });
         Route::get('ppdb-registrations/{registration}/download/{type}', [AdminPPDBController::class, 'downloadDocument'])->name('ppdb.download-document');
+        Route::put('ppdb-registrations/{registration}/update', [AdminPPDBController::class, 'updateRegistration'])->name('ppdb.update-registration');
+        Route::post('ppdb-registrations/{registration}/create-account', [AdminPPDBController::class, 'createManualAccount'])->name('ppdb.create-manual-account');
         Route::delete('ppdb-registrations/{registration}', [AdminPPDBController::class, 'deleteRegistration'])->name('ppdb.delete-registration');
         Route::get('ppdb-export', [AdminPPDBController::class, 'exportRegistrations'])->name('ppdb.export');
         

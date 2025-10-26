@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PPDB;
 use App\Models\PPDBRegistration;
+use App\Models\User;
 use App\Models\Notification;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -60,7 +61,22 @@ class PPDBController extends Controller
             'religion' => 'required|string|max:255',
             'address' => 'required|string',
             'phone_number' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                function ($attribute, $value, $fail) {
+                    // Cek apakah email sudah terdaftar di tabel users
+                    if (\App\Models\User::where('email', $value)->exists()) {
+                        $fail('Email ' . $value . ' sudah terdaftar. Silakan gunakan email lain atau hubungi admin jika ini adalah email Anda.');
+                    }
+                    
+                    // Cek apakah email sudah terdaftar di PPDB registrations
+                    if (\App\Models\PPDBRegistration::where('email', $value)->exists()) {
+                        $fail('Email ' . $value . ' sudah digunakan untuk pendaftaran PPDB sebelumnya. Silakan gunakan email lain.');
+                    }
+                }
+            ],
             'parent_name' => 'required|string|max:255',
             'parent_phone' => 'required|string|max:20',
             'parent_occupation' => 'required|string|max:255',

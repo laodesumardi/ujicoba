@@ -224,6 +224,9 @@
                     </div>
                     
                     <div class="flex items-center space-x-2">
+                        <button onclick="openDetailModal({{ $submission->id }}, '{{ $submission->student->name }}', '{{ $submission->student->email }}', '{{ addslashes($submission->content) }}', {{ $submission->attachments ? json_encode($submission->attachments) : '[]' }}, '{{ $submission->submitted_at->format('d M Y, H:i') }}', {{ $submission->grade ?? 'null' }}, '{{ addslashes($submission->feedback ?? '') }}', '{{ $submission->status }}')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                            Lihat Detail
+                        </button>
                         @if($submission->status === 'submitted')
                         <button onclick="openGradeModal({{ $submission->id }}, '{{ $submission->student->name }}')" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
                             Beri Nilai
@@ -254,6 +257,82 @@
         {{ $submissions->links() }}
     </div>
     @endif
+</div>
+
+<!-- Detail Modal -->
+<div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+    <div class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white rounded-xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900">Detail Pengumpulan Siswa</h3>
+                    <button onclick="closeDetailModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="space-y-6">
+                    <!-- Student Info -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-3">Informasi Siswa</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Nama</label>
+                                <p id="detailStudentName" class="text-gray-900"></p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Email</label>
+                                <p id="detailStudentEmail" class="text-gray-900"></p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Tanggal Pengumpulan</label>
+                                <p id="detailSubmittedAt" class="text-gray-900"></p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Status</label>
+                                <span id="detailStatus" class="px-2 py-1 text-xs font-medium rounded-full"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Submission Content -->
+                    <div class="bg-white border border-gray-200 rounded-lg p-4">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-3">Isi Pengumpulan</h4>
+                        <div id="detailContent" class="prose max-w-none text-gray-700 whitespace-pre-wrap"></div>
+                    </div>
+                    
+                    <!-- Attachments -->
+                    <div id="detailAttachmentsSection" class="bg-white border border-gray-200 rounded-lg p-4" style="display: none;">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-3">Lampiran</h4>
+                        <div id="detailAttachments" class="space-y-2"></div>
+                    </div>
+                    
+                    <!-- Grade & Feedback -->
+                    <div id="detailGradeSection" class="bg-white border border-gray-200 rounded-lg p-4" style="display: none;">
+                        <h4 class="text-lg font-semibold text-gray-900 mb-3">Nilai & Feedback</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Nilai</label>
+                                <p id="detailGrade" class="text-gray-900"></p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Feedback</label>
+                                <p id="detailFeedback" class="text-gray-700 whitespace-pre-wrap"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex items-center justify-end space-x-4">
+                <button onclick="closeDetailModal()" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Grade Modal -->
@@ -297,6 +376,73 @@
 </div>
 
 <script>
+function openDetailModal(submissionId, studentName, studentEmail, content, attachments, submittedAt, grade, feedback, status) {
+    // Set student info
+    document.getElementById('detailStudentName').textContent = studentName;
+    document.getElementById('detailStudentEmail').textContent = studentEmail;
+    document.getElementById('detailSubmittedAt').textContent = submittedAt;
+    
+    // Set status with proper styling
+    const statusElement = document.getElementById('detailStatus');
+    statusElement.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+    statusElement.className = 'px-2 py-1 text-xs font-medium rounded-full';
+    if (status === 'graded') {
+        statusElement.classList.add('bg-green-100', 'text-green-800');
+    } else if (status === 'submitted') {
+        statusElement.classList.add('bg-blue-100', 'text-blue-800');
+    } else {
+        statusElement.classList.add('bg-yellow-100', 'text-yellow-800');
+    }
+    
+    // Set content
+    document.getElementById('detailContent').textContent = content;
+    
+    // Handle attachments
+    const attachmentsSection = document.getElementById('detailAttachmentsSection');
+    const attachmentsContainer = document.getElementById('detailAttachments');
+    
+    if (attachments && attachments.length > 0) {
+        attachmentsContainer.innerHTML = '';
+        attachments.forEach(attachment => {
+            const attachmentDiv = document.createElement('div');
+            attachmentDiv.className = 'flex items-center p-3 bg-gray-50 rounded-lg';
+            attachmentDiv.innerHTML = `
+                <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                </svg>
+                <span class="text-sm text-gray-600 flex-1">${basename(attachment)}</span>
+                <a href="/storage/${attachment}" target="_blank" class="text-primary-600 hover:text-primary-700 text-sm">
+                    Download
+                </a>
+            `;
+            attachmentsContainer.appendChild(attachmentDiv);
+        });
+        attachmentsSection.style.display = 'block';
+    } else {
+        attachmentsSection.style.display = 'none';
+    }
+    
+    // Handle grade and feedback
+    const gradeSection = document.getElementById('detailGradeSection');
+    if (grade !== null && grade !== 'null') {
+        document.getElementById('detailGrade').textContent = `${grade}/{{ $assignment->points }}`;
+        document.getElementById('detailFeedback').textContent = feedback || 'Tidak ada feedback';
+        gradeSection.style.display = 'block';
+    } else {
+        gradeSection.style.display = 'none';
+    }
+    
+    document.getElementById('detailModal').classList.remove('hidden');
+}
+
+function closeDetailModal() {
+    document.getElementById('detailModal').classList.add('hidden');
+}
+
+function basename(path) {
+    return path.split('/').pop();
+}
+
 function openGradeModal(submissionId, studentName, currentGrade = '', currentFeedback = '') {
     document.getElementById('studentName').textContent = studentName;
     document.getElementById('grade').value = currentGrade;

@@ -15,12 +15,13 @@ class AssignmentController extends Controller
     /**
      * Display a listing of assignments.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $filter = $request->get('filter', 'all');
         
-        // Get assignments from enrolled courses
-        $assignments = Assignment::whereHas('course', function($query) use ($user) {
+        // Base query for assignments from enrolled courses
+        $query = Assignment::whereHas('course', function($query) use ($user) {
             $query->whereHas('enrollments', function($q) use ($user) {
                 $q->where('student_id', $user->id)
                   ->where('status', 'approved');
@@ -29,11 +30,31 @@ class AssignmentController extends Controller
         ->where('is_published', true)
         ->with(['course', 'submissions' => function($query) use ($user) {
             $query->where('student_id', $user->id);
-        }])
-        ->orderBy('due_date', 'asc')
-        ->paginate(10);
+        }]);
 
-        return view('student.assignments.index', compact('assignments'));
+        // Apply filter
+        switch ($filter) {
+            case 'upcoming':
+                $query->where('due_date', '>', now());
+                break;
+            case 'overdue':
+                $query->where('due_date', '<', now())
+                      ->whereDoesntHave('submissions', function($q) use ($user) {
+                          $q->where('student_id', $user->id)
+                            ->where('status', 'submitted');
+                      });
+                break;
+            case 'completed':
+                $query->whereHas('submissions', function($q) use ($user) {
+                    $q->where('student_id', $user->id)
+                      ->where('status', 'submitted');
+                });
+                break;
+        }
+
+        $assignments = $query->orderBy('due_date', 'asc')->paginate(10);
+
+        return view('student.assignments.index', compact('assignments', 'filter'));
     }
 
     /**
@@ -166,12 +187,28 @@ class AssignmentController extends Controller
             abort(403, 'Anda tidak terdaftar di kelas ini.');
         }
 
-        $filePath = 'assignments/' . $filename;
-        
-        if (!Storage::disk('public')->exists($filePath)) {
-            abort(404, 'File tidak ditemukan.');
+        // Check if the assignment has attachments
+        if (!$assignment->attachments || !is_array($assignment->attachments)) {
+            abort(404, 'Assignment tidak memiliki attachment.');
         }
 
-        return Storage::disk('public')->download($filePath);
+        // Find the attachment with the matching filename
+        $attachmentPath = null;
+        foreach ($assignment->attachments as $attachment) {
+            if (basename($attachment) === $filename) {
+                $attachmentPath = $attachment;
+                break;
+            }
+        }
+
+        if (!$attachmentPath) {
+            abort(404, 'File attachment tidak ditemukan.');
+        }
+
+        if (!Storage::disk('public')->exists($attachmentPath)) {
+            abort(404, 'File tidak ditemukan di storage.');
+        }
+
+        return Storage::disk('public')->download($attachmentPath);
     }
 }

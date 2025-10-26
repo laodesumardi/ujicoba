@@ -1,261 +1,354 @@
 @extends('layouts.teacher')
 
-@section('title', 'Profile Guru')
-@section('page-title', 'Profile Saya')
-
-@php
-    use Illuminate\Support\Facades\Storage;
-@endphp
+@section('title', 'Profil Guru')
+@section('page-title', 'Profil Guru')
 
 @section('content')
 <div class="space-y-6">
     <!-- Profile Header -->
-    <div class="bg-white rounded-xl shadow-lg border border-gray-100">
-        <div class="px-6 py-8">
-            <div class="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6">
-                <!-- Profile Photo -->
+    <div class="bg-gradient-to-r from-primary-600 to-primary-700 rounded-xl shadow-lg text-white p-6">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <!-- Avatar -->
                 <div class="relative">
-                    @if($teacher->photo)
-                        <img src="{{ $teacher->photo_url }}" 
-                             alt="{{ $teacher->name }}" 
-                             class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
-                    @else
-                        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center border-4 border-white shadow-lg">
-                            <span class="text-4xl font-bold text-white">{{ substr($teacher->name, 0, 1) }}</span>
-                        </div>
+                    @if($user->photo)
+                        <img src="{{ $user->photo_url }}" alt="Foto Profil" 
+                             class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     @endif
-                    <div class="absolute -bottom-2 -right-2">
-                        <a href="{{ route('teacher.profile.edit') }}" 
-                           class="bg-primary-600 hover:bg-primary-700 text-white p-2 rounded-full shadow-lg transition-colors duration-200">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                            </svg>
-                        </a>
+                    <div class="w-20 h-20 bg-primary-200 rounded-full flex items-center justify-center shadow-lg {{ $user->photo ? 'hidden' : 'flex' }}">
+                        <span class="text-primary-600 font-bold text-2xl">{{ substr($user->name, 0, 1) }}</span>
+                    </div>
+                    <!-- Status Badge -->
+                    <div class="absolute -bottom-2 -right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                        <i class="fas fa-chalkboard-teacher mr-1"></i>Guru
                     </div>
                 </div>
-
-                <!-- Profile Info -->
-                <div class="flex-1">
-                    <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ $teacher->name ?? 'Nama tidak tersedia' }}</h1>
-                    <p class="text-lg text-gray-600 mb-1">{{ $teacher->subject ?? 'Mata Pelajaran belum diisi' }}</p>
-                    <p class="text-sm text-gray-500 mb-4">
-                        {{ $teacher->position ?? 'Jabatan belum diisi' }} • 
-                        <span class="px-2 py-1 text-xs font-medium rounded-full 
-                            {{ $teacher->employment_status === 'Aktif' ? 'bg-green-100 text-green-800' : 
-                               ($teacher->employment_status === 'Non-Aktif' ? 'bg-red-100 text-red-800' : 
-                               'bg-yellow-100 text-yellow-800') }}">
-                            {{ $teacher->employment_status ?? 'Status belum diisi' }}
-                        </span>
+                
+                <div>
+                    <h1 class="text-2xl font-bold mb-2">{{ $user->name }}</h1>
+                    <p class="text-primary-100">{{ $user->email }}</p>
+                    <p class="text-sm text-primary-200">
+                        <i class="fas fa-book mr-1"></i>{{ $user->subject ?? 'Mata Pelajaran' }} • 
+                        <i class="fas fa-calendar mr-1"></i>Bergabung {{ $user->created_at->format('d M Y') }}
                     </p>
-                    
-                    @if($teacher->bio)
-                        <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                            <p class="text-gray-700 italic">"{{ $teacher->bio }}"</p>
-                        </div>
-                    @else
-                        <div class="bg-blue-50 rounded-lg p-4 mb-4">
-                            <p class="text-blue-700 text-sm">Bio belum diisi. <a href="{{ route('teacher.profile.edit') }}" class="underline">Tambahkan bio</a> untuk melengkapi profil Anda.</p>
-                        </div>
-                    @endif
+                </div>
+            </div>
+            
+            <div class="hidden md:block">
+                <a href="{{ route('teacher.profile.edit') }}" class="bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                    <i class="fas fa-edit mr-2"></i>Edit Profil
+                </a>
+            </div>
+        </div>
+    </div>
 
-                    <div class="flex flex-wrap gap-3">
-                        <a href="{{ route('teacher.profile.edit') }}" 
-                           class="bg-primary-600 hover:bg-primary-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                            </svg>
-                            Edit Profile
-                        </a>
-                        @if($teacher->photo)
-                            <form action="{{ route('teacher.profile.photo.delete') }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" 
-                                        onclick="return confirm('Apakah Anda yakin ingin menghapus foto profil?')"
-                                        class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                    </svg>
-                                    Hapus Foto
-                                </button>
-                            </form>
-                        @endif
-                    </div>
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Total Courses -->
+        <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+            <div class="flex items-center">
+                <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-4 shadow-lg">
+                    <i class="fas fa-graduation-cap text-white text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Kelas</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ $stats['total_courses'] }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Students -->
+        <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+            <div class="flex items-center">
+                <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-4 shadow-lg">
+                    <i class="fas fa-users text-white text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Siswa</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ $stats['total_students'] }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Assignments -->
+        <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+            <div class="flex items-center">
+                <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-4 shadow-lg">
+                    <i class="fas fa-tasks text-white text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Tugas</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ $stats['total_assignments'] }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Forums -->
+        <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 border border-gray-100">
+            <div class="flex items-center">
+                <div class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl p-4 shadow-lg">
+                    <i class="fas fa-comments text-white text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Forum</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ $stats['total_forums'] }}</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Profile Details -->
+    <!-- Main Content Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Basic Information -->
-        <div class="bg-white rounded-xl shadow-lg border border-gray-100">
-            <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 rounded-t-xl">
-                <h3 class="text-lg font-semibold text-gray-900">Informasi Dasar</h3>
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-900">Informasi Dasar</h2>
+                <a href="{{ route('teacher.profile.edit') }}" class="text-primary-600 hover:text-primary-700 font-medium">
+                    Edit
+                </a>
             </div>
-            <div class="p-6 space-y-4">
-                <div class="flex justify-between">
-                    <span class="text-sm font-medium text-gray-600">Nama Lengkap:</span>
-                    <span class="text-sm text-gray-900">{{ $teacher->name ?? 'Belum diisi' }}</span>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                    <p class="text-gray-900 font-semibold">{{ $user->name }}</p>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-sm font-medium text-gray-600">Email:</span>
-                    <span class="text-sm text-gray-900">{{ $teacher->email ?? 'Belum diisi' }}</span>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                    <p class="text-gray-900">{{ $user->email }}</p>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-sm font-medium text-gray-600">Telepon:</span>
-                    <span class="text-sm {{ $teacher->phone ? 'text-gray-900' : 'text-gray-400' }}">
-                        {{ $teacher->phone ?? 'Belum diisi' }}
-                    </span>
+                
+                @if($user->phone)
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon</label>
+                    <p class="text-gray-900">{{ $user->phone }}</p>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-sm font-medium text-gray-600">Alamat:</span>
-                    <span class="text-sm {{ $teacher->address ? 'text-gray-900' : 'text-gray-400' }}">
-                        {{ $teacher->address ?? 'Belum diisi' }}
-                    </span>
+                @endif
+                
+                @if($user->subject)
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Mata Pelajaran</label>
+                    <p class="text-gray-900">{{ $user->subject }}</p>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-sm font-medium text-gray-600">Tanggal Lahir:</span>
-                    <span class="text-sm {{ $teacher->date_of_birth ? 'text-gray-900' : 'text-gray-400' }}">
-                        {{ $teacher->date_of_birth ? \Carbon\Carbon::parse($teacher->date_of_birth)->format('d M Y') : 'Belum diisi' }}
-                    </span>
+                @endif
+                
+                @if($user->class_level)
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Kelas yang Diampu</label>
+                    <p class="text-gray-900">
+                        Kelas {{ $user->class_level }}
+                        @if($user->class_section)
+                            - {{ $user->class_section }}
+                        @endif
+                    </p>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-sm font-medium text-gray-600">Jenis Kelamin:</span>
-                    <span class="text-sm {{ $teacher->gender ? 'text-gray-900' : 'text-gray-400' }}">
-                        {{ $teacher->gender ?? 'Belum diisi' }}
-                    </span>
+                @endif
+                
+                @if($user->position)
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Jabatan</label>
+                    <p class="text-gray-900">{{ $user->position }}</p>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-sm font-medium text-gray-600">Agama:</span>
-                    <span class="text-sm {{ $teacher->religion ? 'text-gray-900' : 'text-gray-400' }}">
-                        {{ $teacher->religion ?? 'Belum diisi' }}
-                    </span>
-                </div>
+                @endif
             </div>
         </div>
 
         <!-- Professional Information -->
-        <div class="bg-white rounded-xl shadow-lg border border-gray-100">
-            <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 rounded-t-xl">
-                <h3 class="text-lg font-semibold text-gray-900">Informasi Profesional</h3>
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-900">Informasi Profesional</h2>
+                <a href="{{ route('teacher.profile.edit') }}" class="text-primary-600 hover:text-primary-700 font-medium">
+                    Edit
+                </a>
             </div>
-            <div class="p-6 space-y-4">
-                <div class="flex justify-between">
-                    <span class="text-sm font-medium text-gray-600">Mata Pelajaran:</span>
-                    <span class="text-sm {{ $teacher->subject ? 'text-gray-900' : 'text-gray-400' }}">
-                        {{ $teacher->subject ?? 'Belum diisi' }}
-                    </span>
+            
+            <div class="space-y-4">
+                @if($user->employment_status)
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Status Kepegawaian</label>
+                    <p class="text-gray-900">{{ ucfirst(str_replace('-', ' ', $user->employment_status)) }}</p>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-sm font-medium text-gray-600">Jabatan:</span>
-                    <span class="text-sm {{ $teacher->position ? 'text-gray-900' : 'text-gray-400' }}">
-                        {{ $teacher->position ?? 'Belum diisi' }}
-                    </span>
+                @endif
+                
+                @if($user->education)
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Pendidikan</label>
+                    <p class="text-gray-900">{{ $user->education }}</p>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-sm font-medium text-gray-600">Status Kepegawaian:</span>
-                    <span class="text-sm {{ $teacher->employment_status ? 'text-gray-900' : 'text-gray-400' }}">
-                        {{ $teacher->employment_status ?? 'Belum diisi' }}
-                    </span>
+                @endif
+                
+                @if($user->certification)
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Sertifikasi</label>
+                    <p class="text-gray-900 text-sm">{{ $user->certification }}</p>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-sm font-medium text-gray-600">Tanggal Bergabung:</span>
-                    <span class="text-sm {{ $teacher->join_date ? 'text-gray-900' : 'text-gray-400' }}">
-                        {{ $teacher->join_date ? \Carbon\Carbon::parse($teacher->join_date)->format('d M Y') : 'Belum diisi' }}
-                    </span>
+                @endif
+                
+                @if($user->experience_years)
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Pengalaman</label>
+                    <p class="text-gray-900">{{ $user->experience_years }} tahun</p>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-sm font-medium text-gray-600">Pendidikan:</span>
-                    <span class="text-sm {{ $teacher->education ? 'text-gray-900' : 'text-gray-400' }}">
-                        {{ $teacher->education ?? 'Belum diisi' }}
-                    </span>
+                @endif
+                
+                @if($user->bio)
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+                    <p class="text-gray-900 text-sm">{{ $user->bio }}</p>
                 </div>
-                <div class="flex justify-between">
-                    <span class="text-sm font-medium text-gray-600">Sertifikasi:</span>
-                    <span class="text-sm {{ $teacher->certification ? 'text-gray-900' : 'text-gray-400' }}">
-                        {{ $teacher->certification ?? 'Belum diisi' }}
-                    </span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-sm font-medium text-gray-600">Pengalaman:</span>
-                    <span class="text-sm {{ $teacher->experience_years ? 'text-gray-900' : 'text-gray-400' }}">
-                        {{ $teacher->experience_years ? $teacher->experience_years . ' tahun' : 'Belum diisi' }}
-                    </span>
-                </div>
+                @endif
             </div>
         </div>
     </div>
 
-    <!-- Teaching Statistics -->
-    <div class="bg-white rounded-xl shadow-lg border border-gray-100">
-        <div class="px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100 rounded-t-xl">
-            <h3 class="text-lg font-semibold text-gray-900">Statistik Mengajar</h3>
+    <!-- Classes Taught -->
+    <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-gray-900">Kelas yang Diampu</h2>
+            <a href="{{ route('teacher.courses.index') }}" class="text-primary-600 hover:text-primary-700 font-medium">
+                Kelola Kelas
+            </a>
         </div>
-        <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="text-center bg-blue-50 rounded-lg p-6">
-                    <div class="text-3xl font-bold text-blue-600 mb-2">
-                        {{ $teacher->courses ? $teacher->courses->count() : 0 }}
+        
+        @if($courses->count() > 0)
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                @foreach($courses as $course)
+                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all duration-300">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="font-semibold text-gray-900">{{ $course->title }}</h3>
+                        <span class="px-2 py-1 text-xs font-medium rounded-full
+                            @if($course->status === 'active') bg-green-100 text-green-800
+                            @else bg-gray-100 text-gray-800
+                            @endif">
+                            {{ $course->status_label }}
+                        </span>
                     </div>
-                    <div class="text-sm text-blue-700 font-medium">Total Kelas</div>
-                    <div class="text-xs text-blue-600 mt-1">Semua kelas yang dibuat</div>
-                </div>
-                <div class="text-center bg-green-50 rounded-lg p-6">
-                    <div class="text-3xl font-bold text-green-600 mb-2">
-                        {{ $teacher->courses ? $teacher->courses->where('status', 'active')->count() : 0 }}
+                    
+                    <p class="text-sm text-gray-600 mb-2">{{ $course->code }} • {{ $course->subject }}</p>
+                    
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                        <span>
+                            <i class="fas fa-users mr-1"></i>
+                            {{ $course->enrollments_count }} siswa
+                        </span>
+                        <a href="{{ route('teacher.courses.show', $course) }}" class="text-primary-600 hover:text-primary-700 font-medium">
+                            Kelola
+                        </a>
                     </div>
-                    <div class="text-sm text-green-700 font-medium">Kelas Aktif</div>
-                    <div class="text-xs text-green-600 mt-1">Kelas yang sedang berjalan</div>
                 </div>
-                <div class="text-center bg-purple-50 rounded-lg p-6">
-                    <div class="text-3xl font-bold text-purple-600 mb-2">
-                        {{ $teacher->courses ? $teacher->courses->sum(function($course) { return $course->enrollments->count(); }) : 0 }}
-                    </div>
-                    <div class="text-sm text-purple-700 font-medium">Total Siswa</div>
-                    <div class="text-xs text-purple-600 mt-1">Siswa yang terdaftar</div>
-                </div>
+                @endforeach
             </div>
-            
-            @if($teacher->courses && $teacher->courses->count() > 0)
-            <div class="mt-8">
-                <h4 class="text-lg font-semibold text-gray-900 mb-4">Kelas Terbaru</h4>
-                <div class="space-y-3">
-                    @foreach($teacher->courses->take(3) as $course)
-                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+        @else
+            <div class="text-center py-8">
+                <i class="fas fa-graduation-cap text-4xl text-gray-300 mb-4"></i>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada kelas</h3>
+                <p class="text-gray-600 mb-4">Buat kelas untuk memulai mengajar</p>
+                <a href="{{ route('teacher.courses.index') }}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                    Kelola Kelas
+                </a>
+            </div>
+        @endif
+    </div>
+
+    <!-- Recent Assignments -->
+    <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-gray-900">Tugas Terbaru</h2>
+            <a href="{{ route('teacher.assignments.overview') }}" class="text-primary-600 hover:text-primary-700 font-medium">
+                Lihat Semua
+            </a>
+        </div>
+        
+        @if($recentAssignments->count() > 0)
+            <div class="space-y-3">
+                @foreach($recentAssignments as $assignment)
+                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all duration-300">
+                    <div class="flex items-center justify-between">
                         <div class="flex-1">
-                            <h5 class="font-medium text-gray-900">{{ $course->title }}</h5>
-                            <p class="text-sm text-gray-600">{{ $course->subject }} - {{ $course->class_level }}</p>
+                            <h3 class="font-semibold text-gray-900">{{ $assignment->title }}</h3>
+                            <p class="text-sm text-gray-600">{{ $assignment->course->title }}</p>
+                            <div class="flex items-center mt-2 space-x-2">
+                                <span class="text-xs text-gray-500">
+                                    <i class="fas fa-clock mr-1"></i>
+                                    {{ $assignment->due_date ? $assignment->due_date->format('d M Y') : 'Tidak ada deadline' }}
+                                </span>
+                                @if($assignment->is_published)
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                        Published
+                                    </span>
+                                @else
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
+                                        Draft
+                                    </span>
+                                @endif
+                            </div>
                         </div>
-                        <div class="flex items-center space-x-2">
-                            <span class="px-2 py-1 text-xs font-medium rounded-full 
-                                {{ $course->status === 'active' ? 'bg-green-100 text-green-800' : 
-                                   ($course->status === 'draft' ? 'bg-yellow-100 text-yellow-800' : 
-                                   'bg-gray-100 text-gray-800') }}">
-                                {{ ucfirst($course->status) }}
-                            </span>
-                            <span class="text-sm text-gray-500">{{ $course->enrollments ? $course->enrollments->count() : 0 }} siswa</span>
-                        </div>
+                        <a href="{{ route('teacher.courses.assignments.show', [$assignment->course, $assignment]) }}" class="text-primary-600 hover:text-primary-700 font-medium">
+                            Lihat
+                        </a>
                     </div>
-                    @endforeach
                 </div>
+                @endforeach
             </div>
-            @else
-            <div class="mt-8 text-center py-8">
-                <div class="bg-blue-50 rounded-lg p-6">
-                    <svg class="w-12 h-12 text-blue-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                    </svg>
-                    <h3 class="text-lg font-semibold text-blue-900 mb-2">Belum ada kelas</h3>
-                    <p class="text-blue-700 mb-4">Anda belum membuat kelas apapun.</p>
-                    <a href="{{ route('teacher.courses.create') }}" 
-                       class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
-                        Buat Kelas Pertama
-                    </a>
-                </div>
+        @else
+            <div class="text-center py-8">
+                <i class="fas fa-tasks text-4xl text-gray-300 mb-4"></i>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada tugas</h3>
+                <p class="text-gray-600">Tugas akan muncul setelah Anda membuat kelas</p>
             </div>
-            @endif
+        @endif
+    </div>
+
+    <!-- Recent Forums -->
+    <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-gray-900">Forum Terbaru</h2>
+            <a href="{{ route('teacher.courses.index') }}" class="text-primary-600 hover:text-primary-700 font-medium">
+                Kelola Kelas
+            </a>
         </div>
+        
+        @if($recentForums->count() > 0)
+            <div class="space-y-3">
+                @foreach($recentForums as $forum)
+                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all duration-300">
+                    <div class="flex items-center justify-between">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-900">{{ $forum->title }}</h3>
+                            <p class="text-sm text-gray-600">{{ $forum->course->title }}</p>
+                            <div class="flex items-center mt-2 space-x-4">
+                                <span class="text-xs text-gray-500">
+                                    <i class="fas fa-user mr-1"></i>
+                                    {{ $forum->author->name }}
+                                </span>
+                                <span class="text-xs text-gray-500">
+                                    <i class="fas fa-clock mr-1"></i>
+                                    {{ $forum->created_at->format('d M Y, H:i') }}
+                                </span>
+                                @if($forum->is_pinned)
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
+                                        <i class="fas fa-thumbtack mr-1"></i>
+                                        Pinned
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        <a href="{{ route('teacher.courses.forums.show', [$forum->course, $forum]) }}" class="text-primary-600 hover:text-primary-700 font-medium">
+                            Lihat
+                        </a>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        @else
+            <div class="text-center py-8">
+                <i class="fas fa-comments text-4xl text-gray-300 mb-4"></i>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada forum</h3>
+                <p class="text-gray-600">Forum akan muncul setelah Anda membuat kelas</p>
+            </div>
+        @endif
     </div>
 </div>
 @endsection

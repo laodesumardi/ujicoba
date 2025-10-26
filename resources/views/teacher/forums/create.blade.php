@@ -67,10 +67,9 @@
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 @error('type') border-red-500 @enderror"
                         required>
                     <option value="">Pilih Jenis Forum</option>
-                    <option value="general" {{ old('type') == 'general' ? 'selected' : '' }}>Umum</option>
+                    <option value="discussion" {{ old('type') == 'discussion' ? 'selected' : '' }}>Diskusi Umum</option>
                     <option value="announcement" {{ old('type') == 'announcement' ? 'selected' : '' }}>Pengumuman</option>
-                    <option value="discussion" {{ old('type') == 'discussion' ? 'selected' : '' }}>Diskusi</option>
-                    <option value="qna" {{ old('type') == 'qna' ? 'selected' : '' }}>Tanya Jawab</option>
+                    <option value="question" {{ old('type') == 'question' ? 'selected' : '' }}>Pertanyaan</option>
                 </select>
                 @error('type')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
