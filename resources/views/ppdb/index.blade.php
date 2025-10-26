@@ -12,7 +12,7 @@
                     Penerimaan Peserta Didik Baru (PPDB)
                 </h1>
                 <p class="text-base sm:text-lg lg:text-xl text-white opacity-90 leading-relaxed">
-                    SMP Negeri 01 Namrole Tahun Ajaran 2024/2025
+                    SMP Negeri 01 Namrole Tahun Ajaran 2025/2026
                 </p>
             </div>
         </div>
@@ -86,7 +86,7 @@
                                 <span class="text-green-600 font-semibold">Pendaftaran Dibuka</span>
                             </div>
                             <p class="text-sm text-gray-600 mb-4">
-                                Periode: {{ $ppdb->registration_start ? $ppdb->registration_start->format('d M Y') : 'TBA' }} - 
+                                Periode: {{ $ppdb->registration_start ? $ppdb->registration_start->format('d M Y') : 'TBA' }} -
                                 {{ $ppdb->registration_end ? $ppdb->registration_end->format('d M Y') : 'TBA' }}
                             </p>
                             @if($ppdb->quota)
@@ -94,7 +94,7 @@
                                 Kuota: {{ number_format($ppdb->quota) }} siswa
                             </p>
                             @endif
-                            <a href="{{ route('ppdb.register') }}" 
+                            <a href="{{ route('ppdb.register') }}"
                                class="w-full bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold text-center block hover:bg-primary-700 transition-colors">
                                 Daftar Sekarang
                             </a>
@@ -146,7 +146,7 @@
                     <div class="bg-white rounded-lg shadow-lg p-6">
                         <h3 class="text-xl font-bold text-gray-900 mb-4">Aksi Cepat</h3>
                         <div class="space-y-3">
-                            <a href="{{ route('ppdb.check-status') }}" 
+                            <a href="{{ route('ppdb.check-status') }}"
                                class="w-full bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-center block hover:bg-gray-200 transition-colors">
                                 Cek Status Pendaftaran
                             </a>
@@ -169,10 +169,10 @@
                     </svg>
                     <h2 class="text-2xl font-bold text-gray-900 mb-2">Informasi PPDB Belum Tersedia</h2>
                     <p class="text-gray-600 mb-6">
-                        Informasi Penerimaan Peserta Didik Baru (PPDB) akan segera diumumkan. 
+                        Informasi Penerimaan Peserta Didik Baru (PPDB) akan segera diumumkan.
                         Silakan kembali lagi nanti atau hubungi sekolah untuk informasi lebih lanjut.
                     </p>
-                    <a href="{{ route('profil') }}" 
+                    <a href="{{ route('profil') }}"
                        class="bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors">
                         Lihat Profil Sekolah
                     </a>
