@@ -426,6 +426,10 @@
                                     <a href="{{ route('student.dashboard') }}" class="bg-primary-700 hover:bg-primary-800 text-white block px-4 py-3 rounded-lg text-base font-medium mb-3 transition-colors">
                                         <i class="fas fa-user-graduate mr-3"></i>Dashboard Siswa
                                     </a>
+                                @elseif(auth()->user()->role === 'ppdb_panitia')
+                                    <a href="{{ route('ppdb.panitia.dashboard') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white block px-4 py-3 rounded-lg text-base font-medium mb-3 transition-colors">
+                                        <i class="fas fa-graduation-cap mr-3"></i>Dashboard Panitia PPDB
+                                    </a>
                                 @endif
                                 <form method="POST" action="{{ route('logout') }}" class="block">
                                     @csrf
