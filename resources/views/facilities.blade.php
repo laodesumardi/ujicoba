@@ -26,11 +26,23 @@
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($featuredFacilities as $facility)
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                @if($facility->image)
-                <div class="h-48 relative overflow-hidden">
-                    <img src="{{ route('image.serve.model', ['model' => 'facility', 'id' => $facility->id, 'field' => 'image', 'v' => ($facility->updated_at ? $facility->updated_at->timestamp : time())]) }}" alt="{{ $facility->name }}" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="h-48 bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center hidden">
+            <a href="{{ route('facilities.show', $facility) }}" class="block group">
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                    @if($facility->image)
+                    <div class="h-48 relative overflow-hidden">
+                        <img src="{{ route('image.serve.model', ['model' => 'facility', 'id' => $facility->id, 'field' => 'image', 'v' => ($facility->updated_at ? $facility->updated_at->timestamp : time())]) }}" alt="{{ $facility->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="h-48 bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center hidden">
+                            @if($facility->icon)
+                            <i class="{{ $facility->icon }} text-6xl text-white"></i>
+                            @else
+                            <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                            </svg>
+                            @endif
+                        </div>
+                    </div>
+                    @else
+                    <div class="h-48 bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
                         @if($facility->icon)
                         <i class="{{ $facility->icon }} text-6xl text-white"></i>
                         @else
@@ -39,44 +51,39 @@
                         </svg>
                         @endif
                     </div>
-                </div>
-                @else
-                <div class="h-48 bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
-                    @if($facility->icon)
-                    <i class="{{ $facility->icon }} text-6xl text-white"></i>
-                    @else
-                    <svg class="w-16 h-16 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                    </svg>
-                    @endif
-                </div>
-                @endif
-                
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-xl font-semibold text-gray-900">{{ $facility->name }}</h3>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                            </svg>
-                            Unggulan
-                        </span>
-                    </div>
-                    
-                    @if($facility->description)
-                    <p class="text-gray-600 mb-4">{{ $facility->description }}</p>
                     @endif
                     
-                    <div class="flex items-center justify-between">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
-                            {{ $facility->category_label }}
-                        </span>
-                        @if($facility->icon)
-                        <i class="{{ $facility->icon }} text-2xl text-primary-600"></i>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-xl font-semibold text-gray-900 group-hover:text-primary-600 transition-colors duration-200">{{ $facility->name }}</h3>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                </svg>
+                                Unggulan
+                            </span>
+                        </div>
+                        
+                        @if($facility->description)
+                        <p class="text-gray-600 mb-4">{{ $facility->description }}</p>
                         @endif
+                        
+                        <div class="flex items-center justify-between">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800">
+                                {{ $facility->category_label }}
+                            </span>
+                            <div class="flex items-center">
+                                @if($facility->icon)
+                                <i class="{{ $facility->icon }} text-2xl text-primary-600 mr-2"></i>
+                                @endif
+                                <svg class="w-4 h-4 text-gray-400 group-hover:text-primary-600 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
             @endforeach
         </div>
     </div>
@@ -94,62 +101,69 @@
         @if($facilities->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @foreach($facilities as $facility)
-            <div class="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-                @if($facility->image)
-                <div class="h-32 relative overflow-hidden">
-                    <img src="{{ route('image.serve.model', ['model' => 'facility', 'id' => $facility->id, 'field' => 'image', 'v' => ($facility->updated_at ? $facility->updated_at->timestamp : time())]) }}" alt="{{ $facility->name }}" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="h-32 bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center hidden">
-                        @if($facility->icon)
-                        <i class="{{ $facility->icon }} text-4xl text-white"></i>
-                        @else
-                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                        </svg>
-                        @endif
-                    </div>
-                </div>
-                @endif
-                <div class="p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        @if($facility->icon)
-                        <i class="{{ $facility->icon }} text-3xl text-primary-600"></i>
-                        @else
-                        <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
-                            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ route('facilities.show', $facility) }}" class="block group">
+                <div class="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                    @if($facility->image)
+                    <div class="h-32 relative overflow-hidden">
+                        <img src="{{ route('image.serve.model', ['model' => 'facility', 'id' => $facility->id, 'field' => 'image', 'v' => ($facility->updated_at ? $facility->updated_at->timestamp : time())]) }}" alt="{{ $facility->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="h-32 bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center hidden">
+                            @if($facility->icon)
+                            <i class="{{ $facility->icon }} text-4xl text-white"></i>
+                            @else
+                            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                             </svg>
+                            @endif
                         </div>
+                    </div>
+                    @endif
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            @if($facility->icon)
+                            <i class="{{ $facility->icon }} text-3xl text-primary-600"></i>
+                            @else
+                            <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                </svg>
+                            </div>
+                            @endif
+                            
+                            @if($facility->is_featured)
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                </svg>
+                                Unggulan
+                            </span>
+                            @endif
+                        </div>
+                        
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors duration-200">{{ $facility->name }}</h3>
+                        
+                        @if($facility->description)
+                        <p class="text-gray-600 text-sm mb-4">{{ Str::limit($facility->description, 100) }}</p>
                         @endif
                         
-                        @if($facility->is_featured)
-                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                            </svg>
-                            Unggulan
-                        </span>
-                        @endif
-                    </div>
-                    
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ $facility->name }}</h3>
-                    
-                    @if($facility->description)
-                    <p class="text-gray-600 text-sm mb-4">{{ Str::limit($facility->description, 100) }}</p>
-                    @endif
-                    
-                    <div class="flex items-center justify-between">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                            {{ $facility->category_label }}
-                        </span>
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                            </svg>
-                            Aktif
-                        </span>
+                        <div class="flex items-center justify-between">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                {{ $facility->category_label }}
+                            </span>
+                            <div class="flex items-center">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mr-2">
+                                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                    </svg>
+                                    Aktif
+                                </span>
+                                <svg class="w-4 h-4 text-gray-400 group-hover:text-primary-600 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
             @endforeach
         </div>
         @else

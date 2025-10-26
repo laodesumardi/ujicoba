@@ -42,6 +42,7 @@ Route::post('/kontak', [ContactController::class, 'store'])->name('contact.store
 Route::get('/perpustakaan', [App\Http\Controllers\LibraryController::class, 'index'])->name('library');
 Route::get('/tenaga-pendidik', [App\Http\Controllers\StaffController::class, 'index'])->name('staff');
 Route::get('/fasilitas', [App\Http\Controllers\FacilityController::class, 'index'])->name('facilities');
+Route::get('/fasilitas/{facility}', [App\Http\Controllers\FacilityController::class, 'show'])->name('facilities.show');
 
 /* Disabled: /test-password debug route */
 
