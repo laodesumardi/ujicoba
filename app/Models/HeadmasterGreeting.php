@@ -23,28 +23,19 @@ class HeadmasterGreeting extends Model
             return asset('images/default-headmaster.png');
         }
         
-        if (filter_var($this->photo, FILTER_VALIDATE_URL)) {
+        if (filter_var($this->photo, FILTER_VALIDATE_URL) ||
+            str_starts_with($this->photo, 'http://') ||
+            str_starts_with($this->photo, 'https://')) {
             return $this->photo;
         }
         
-        if (str_starts_with($this->photo, 'http://') || str_starts_with($this->photo, 'https://')) {
-            return $this->photo;
-        }
-        
-        if (str_starts_with($this->photo, 'headmaster-greetings/')) {
-            return asset('storage/' . $this->photo);
-        }
-        
-        if (str_starts_with($this->photo, 'storage/')) {
-            return asset($this->photo);
-        }
-        
-        if (!str_starts_with($this->photo, 'headmaster-greetings/') && 
-            !str_starts_with($this->photo, 'storage/')) {
-            return asset('storage/' . $this->photo);
-        }
-        
-        return asset('images/default-headmaster.png');
+        $version = $this->updated_at ? $this->updated_at->timestamp : time();
+        return route('image.serve.model', [
+            'model' => 'headmaster-greeting',
+            'id' => $this->id,
+            'field' => 'photo',
+            'v' => $version,
+        ], false);
     }
 
     public function scopeActive($query)

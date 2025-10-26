@@ -86,8 +86,19 @@ class Gallery extends Model
     public function getCoverImageUrlAttribute()
     {
         if ($this->cover_image) {
-            $path = str_replace('public/', '', $this->cover_image);
-            return StorageHelper::getImageUrl($path, 'images/default-gallery.jpg');
+            // Absolute URLs
+            if (filter_var($this->cover_image, FILTER_VALIDATE_URL) ||
+                str_starts_with($this->cover_image, 'http://') ||
+                str_starts_with($this->cover_image, 'https://')) {
+                return $this->cover_image;
+            }
+            $version = $this->updated_at ? $this->updated_at->timestamp : time();
+            return route('image.serve.model', [
+                'model' => 'gallery',
+                'id' => $this->id,
+                'field' => 'cover_image',
+                'v' => $version,
+            ], false);
         }
         return asset('images/default-gallery.jpg');
     }

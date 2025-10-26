@@ -60,28 +60,19 @@ class GalleryItem extends Model
             return asset('images/default-gallery-item.png');
         }
         
-        if (filter_var($this->file_path, FILTER_VALIDATE_URL)) {
+        if (filter_var($this->file_path, FILTER_VALIDATE_URL) ||
+            str_starts_with($this->file_path, 'http://') ||
+            str_starts_with($this->file_path, 'https://')) {
             return $this->file_path;
         }
         
-        if (str_starts_with($this->file_path, 'http://') || str_starts_with($this->file_path, 'https://')) {
-            return $this->file_path;
-        }
-        
-        if (str_starts_with($this->file_path, 'gallery-items/')) {
-            return asset('storage/' . $this->file_path);
-        }
-        
-        if (str_starts_with($this->file_path, 'storage/')) {
-            return asset($this->file_path);
-        }
-        
-        if (!str_starts_with($this->file_path, 'gallery-items/') && 
-            !str_starts_with($this->file_path, 'storage/')) {
-            return asset('storage/' . $this->file_path);
-        }
-        
-        return asset('images/default-gallery-item.png');
+        $version = $this->updated_at ? $this->updated_at->timestamp : time();
+        return route('image.serve.model', [
+            'model' => 'gallery-item',
+            'id' => $this->id,
+            'field' => 'file_path',
+            'v' => $version,
+        ], false);
     }
 
     public function getTypeLabelAttribute()
