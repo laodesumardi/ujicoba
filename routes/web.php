@@ -52,6 +52,28 @@ Route::get('/login', function () {
     return view('auth.universal-login');
 })->name('login');
 
+// Redirect after login based on role
+Route::get('/dashboard', function () {
+    $user = auth()->user();
+    
+    if (!$user) {
+        return redirect()->route('login');
+    }
+    
+    switch ($user->role) {
+        case 'admin':
+            return redirect()->route('admin.dashboard');
+        case 'teacher':
+            return redirect()->route('teacher.dashboard');
+        case 'student':
+            return redirect()->route('student.dashboard');
+        case 'ppdb_panitia':
+            return redirect()->route('ppdb.panitia.dashboard');
+        default:
+            return redirect()->route('login');
+    }
+})->middleware('auth')->name('dashboard');
+
 Route::post('/login', function (Illuminate\Http\Request $request) {
     $credentials = $request->validate([
         'email' => 'required|email',
@@ -89,6 +111,12 @@ Route::post('/login', function (Illuminate\Http\Request $request) {
             return response()->view('auth.redirect', [
                 'url' => '/student/dashboard',
                 'message' => 'Login berhasil! Selamat datang di Student Dashboard.'
+            ]);
+        } elseif ($user->role === 'ppdb_panitia') {
+            Log::info('Redirecting panitia PPDB to dashboard');
+            return response()->view('auth.redirect', [
+                'url' => '/ppdb/panitia/dashboard',
+                'message' => 'Login berhasil! Selamat datang di Dashboard Panitia PPDB.'
             ]);
         } else {
             Log::info('Redirecting to fallback dashboard');
@@ -356,7 +384,24 @@ Route::get('/image/{model}/{id}/{field?}', [App\Http\Controllers\ImageController
 /* Disabled: /test-upload-detailed route */
 
 Route::get('/dashboard', function () {
-    return redirect()->route('home');
+    $user = auth()->user();
+    
+    if (!$user) {
+        return redirect()->route('login');
+    }
+    
+    switch ($user->role) {
+        case 'admin':
+            return redirect()->route('admin.dashboard');
+        case 'teacher':
+            return redirect()->route('teacher.dashboard');
+        case 'student':
+            return redirect()->route('student.dashboard');
+        case 'ppdb_panitia':
+            return redirect()->route('ppdb.panitia.dashboard');
+        default:
+            return redirect()->route('home');
+    }
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Removed conflicting profile routes - using role-specific profile routes instead
@@ -647,7 +692,24 @@ Route::get('/image/{model}/{id}/{field?}', [App\Http\Controllers\ImageController
 /* Disabled: /test-upload-detailed route */
 
 Route::get('/dashboard', function () {
-    return redirect()->route('home');
+    $user = auth()->user();
+    
+    if (!$user) {
+        return redirect()->route('login');
+    }
+    
+    switch ($user->role) {
+        case 'admin':
+            return redirect()->route('admin.dashboard');
+        case 'teacher':
+            return redirect()->route('teacher.dashboard');
+        case 'student':
+            return redirect()->route('student.dashboard');
+        case 'ppdb_panitia':
+            return redirect()->route('ppdb.panitia.dashboard');
+        default:
+            return redirect()->route('home');
+    }
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Removed conflicting profile routes - using role-specific profile routes instead
@@ -774,3 +836,22 @@ Route::get("/ppdb/auto-refresh", function() {
 
 // Admin tools: storage fix route
 Route::get('/admin/tools/storage-fix', [SetupController::class, 'setup'])->middleware(['auth','role:admin'])->name('admin.tools.storage-fix');
+
+
+    // PPDB Panitia Routes
+    Route::middleware(['auth', 'ppdb.panitia'])->prefix('ppdb/panitia')->name('ppdb.panitia.')->group(function () {
+        Route::get('/dashboard', [App\Http\Controllers\PPDB\PanitiaController::class, 'dashboard'])->name('dashboard');
+        Route::get('/registrations', [App\Http\Controllers\PPDB\PanitiaController::class, 'index'])->name('index');
+        Route::get('/registrations/{registration}', [App\Http\Controllers\PPDB\PanitiaController::class, 'show'])->name('show');
+        Route::patch('/registrations/{registration}/status', [App\Http\Controllers\PPDB\PanitiaController::class, 'updateStatus'])->name('update-status');
+        Route::put('/registrations/{registration}', [App\Http\Controllers\PPDB\PanitiaController::class, 'update'])->name('update');
+        Route::post('/registrations/{registration}/create-account', [App\Http\Controllers\PPDB\PanitiaController::class, 'createManualAccount'])->name('create-manual-account');
+        Route::get('/export', [App\Http\Controllers\PPDB\PanitiaController::class, 'export'])->name('export');
+        Route::delete('/registrations/{registration}', [App\Http\Controllers\PPDB\PanitiaController::class, 'destroy'])->name('destroy');
+        
+        // Profile Routes
+        Route::get('/profile', [App\Http\Controllers\PPDB\ProfileController::class, 'show'])->name('profile.show');
+        Route::get('/profile/edit', [App\Http\Controllers\PPDB\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [App\Http\Controllers\PPDB\ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile/photo', [App\Http\Controllers\PPDB\ProfileController::class, 'deletePhoto'])->name('profile.photo.delete');
+    });

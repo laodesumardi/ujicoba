@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
             'student.registered' => \App\Http\Middleware\EnsureStudentRegistered::class,
+            'ppdb.panitia' => \App\Http\Middleware\PanitiaPPDBMiddleware::class,
         ]);
         
         // Add security headers middleware globally

@@ -67,4 +67,16 @@ class PPDBRegistration extends Model
     {
         return $query->where('status', 'rejected');
     }
+
+    // Relationship dengan User (jika ada user yang terkait)
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    // Relationship dengan User berdasarkan email
+    public function userByEmail()
+    {
+        return $this->belongsTo(User::class, 'email', 'email');
+    }
 }

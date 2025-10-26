@@ -13,8 +13,12 @@
                 <a href="{{ route('profil') }}" class="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors">
                     Lihat Profil Sekolah
                 </a>
-                <a href="#" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors">
+                <a href="{{ route('ppdb.index') }}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors">
                     Informasi Pendaftaran
+                </a>
+                <a href="{{ route('ppdb.panitia.dashboard') }}" class="bg-yellow-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-yellow-600 transition-colors flex items-center justify-center">
+                    <i class="fas fa-graduation-cap mr-2"></i>
+                    Dashboard Panitia PPDB
                 </a>
             </div>
         </div>
@@ -52,6 +56,59 @@
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 mb-2">Fasilitas Lengkap</h3>
                     <p class="text-gray-600">Fasilitas pembelajaran yang modern dan memadai</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PPDB Section -->
+    <div class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Penerimaan Peserta Didik Baru (PPDB)</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Bergabunglah dengan keluarga besar SMP Negeri 01 Namrole. Daftarkan putra-putri Anda untuk menjadi bagian dari sekolah unggul berkarakter.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Pendaftaran Online -->
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 text-center">
+                    <div class="bg-blue-500 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-laptop text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Pendaftaran Online</h3>
+                    <p class="text-gray-600 mb-4">Daftar secara online dengan mudah dan praktis</p>
+                    <a href="{{ route('ppdb.index') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        Daftar Sekarang
+                    </a>
+                </div>
+
+                <!-- Informasi PPDB -->
+                <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 text-center">
+                    <div class="bg-green-500 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-info-circle text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Informasi Lengkap</h3>
+                    <p class="text-gray-600 mb-4">Pelajari syarat dan ketentuan pendaftaran</p>
+                    <a href="{{ route('ppdb.index') }}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                        <i class="fas fa-book mr-2"></i>
+                        Lihat Informasi
+                    </a>
+                </div>
+
+                <!-- Dashboard Panitia -->
+                <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-6 text-center">
+                    <div class="bg-yellow-500 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                        <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Dashboard Panitia</h3>
+                    <p class="text-gray-600 mb-4">Akses dashboard untuk mengelola pendaftaran</p>
+                    <a href="{{ route('ppdb.panitia.dashboard') }}" class="inline-flex items-center px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
+                        <i class="fas fa-tachometer-alt mr-2"></i>
+                        Masuk Dashboard
+                    </a>
                 </div>
             </div>
         </div>

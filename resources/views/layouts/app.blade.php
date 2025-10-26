@@ -278,6 +278,10 @@
                                 <a href="{{ route('student.dashboard') }}" class="bg-primary-700 hover:bg-primary-800 text-white px-4 py-2 rounded-md text-base font-bold transition-colors">
                                     <i class="fas fa-user-graduate mr-2"></i>Dashboard Siswa
                                 </a>
+                            @elseif(auth()->user()->role === 'ppdb_panitia')
+                                <a href="{{ route('ppdb.panitia.dashboard') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-md text-base font-bold transition-colors">
+                                    <i class="fas fa-graduation-cap mr-2"></i>Dashboard Panitia PPDB
+                                </a>
                             @endif
                             <form method="POST" action="{{ route('logout') }}" class="inline">
                                 @csrf
@@ -286,6 +290,9 @@
                                 </button>
                             </form>
                         @else
+                            <a href="{{ route('ppdb.panitia.dashboard') }}" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center">
+                                <i class="fas fa-graduation-cap mr-2"></i>Dashboard Panitia PPDB
+                            </a>
                             <a href="{{ route('login') }}" class="bg-white text-primary-600 hover:bg-primary-50 hover:text-primary-700 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center border-2 border-primary-600">
                                 <i class="fas fa-sign-in-alt mr-2"></i>Login
                             </a>
