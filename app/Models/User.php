@@ -170,57 +170,17 @@ class User extends Authenticatable
     {
         // Cache-busting versi berdasarkan updated_at
         $version = $this->updated_at ? $this->updated_at->timestamp : time();
-
-        // Fallback default berdasarkan role
-        if (!$this->photo || trim($this->photo) === '') {
-            if ($this->role === 'student') {
-                return asset('images/default-student.png');
-            } elseif ($this->role === 'teacher') {
-                return asset('images/default-teacher.png');
-            } else {
-                return asset('images/default-user.png');
-            }
-        }
-        
-        // URL eksternal
-        if (filter_var($this->photo, FILTER_VALIDATE_URL) ||
+    
+        // Jika URL eksternal, kembalikan langsung
+        if ($this->photo && (
+            filter_var($this->photo, FILTER_VALIDATE_URL) ||
             str_starts_with($this->photo, 'http://') ||
-            str_starts_with($this->photo, 'https://')) {
+            str_starts_with($this->photo, 'https://')
+        )) {
             return $this->photo;
         }
-        
-        // Normalisasi path
-        $path = $this->photo;
-        if (str_starts_with($path, 'public/')) {
-            $path = substr($path, 7);
-        }
-        if (str_starts_with($path, 'storage/')) {
-            $path = substr($path, 8);
-        }
-        
-        $folder = '';
-        $filename = '';
-        
-        // Folder yang diketahui
-        if (str_starts_with($path, 'teachers/')) {
-            $folder = 'teachers';
-            $filename = basename($path);
-        } elseif (str_starts_with($path, 'students/photos/')) {
-            $folder = 'students/photos';
-            $filename = basename($path);
-        } else {
-            // Split generik
-            $filename = basename($path);
-            $dir = trim(dirname($path), '.');
-            $dir = str_replace('\\', '/', $dir);
-            if ($dir && $dir !== '') {
-                $folder = $dir;
-            } else {
-                $folder = $this->role === 'teacher' ? 'teachers' : ($this->role === 'student' ? 'students/photos' : 'users/photos');
-            }
-        }
-        
-        // Bangun route direct serve model dengan cache-busting (RELATIVE URL)
+    
+        // Selalu gunakan rute serve model (RELATIVE URL) agar fallback default berdasarkan role ditangani controller
         return route('image.serve.model', [
             'model' => 'user',
             'id' => $this->id,

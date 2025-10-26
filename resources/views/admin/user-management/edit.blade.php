@@ -131,7 +131,7 @@
                     <div class="flex items-center justify-center">
                         <div class="text-center">
                             <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2 overflow-hidden">
-                                <img src="{{ $user->photo_url }}" alt="{{ $user->name }}" class="w-full h-full object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <img src="{{ $user->photo_url }}" alt="{{ $user->name }}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='{{ $user->role === 'teacher' ? asset('images/default-teacher.png') : ($user->role === 'student' ? asset('images/default-student.png') : asset('images/default-user.png')) }}'">
                                 <svg class="w-8 h-8 text-gray-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                 </svg>

@@ -102,7 +102,7 @@
                     <h2 class="text-lg font-medium text-gray-900">Foto Profil</h2>
                 </div>
                 <div class="px-6 py-4 text-center">
-                    <img src="{{ $user->photo_url }}" alt="{{ $user->name }}" class="mx-auto h-24 w-24 rounded-full object-cover" onerror="this.src='{{ asset('images/default-user.png') }}'">
+                    <img src="{{ $user->photo_url }}" alt="{{ $user->name }}" class="mx-auto h-24 w-24 rounded-full object-cover" onerror="this.onerror=null; this.src='{{ $user->role === 'teacher' ? asset('images/default-teacher.png') : ($user->role === 'student' ? asset('images/default-student.png') : asset('images/default-user.png')) }}'">
                     <p class="mt-2 text-sm text-gray-500">Foto profil</p>
                 </div>
             </div>
