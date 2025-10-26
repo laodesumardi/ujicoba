@@ -183,11 +183,17 @@
                                 @endphp
                                 {!! nl2br(e($message)) !!}
                             </div>
-                            <div class="mt-6 flex items-center text-primary-600">
-                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                                </svg>
-                                <span class="font-semibold text-sm">SMP Negeri 01 Namrole</span>
+                            <div class="mt-6 flex items-center justify-between">
+                                <div class="flex items-center text-primary-600">
+                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                    </svg>
+                                    <span class="font-semibold text-sm">SMP Negeri 01 Namrole</span>
+                                </div>
+                                <a href="{{ route('headmaster-greeting.show') }}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200 flex items-center">
+                                    <i class="fas fa-book-open mr-2"></i>
+                                    Baca Selengkapnya
+                                </a>
                             </div>
                         </div>
                     </div>

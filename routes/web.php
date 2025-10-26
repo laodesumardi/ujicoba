@@ -43,6 +43,7 @@ Route::get('/perpustakaan', [App\Http\Controllers\LibraryController::class, 'ind
 Route::get('/tenaga-pendidik', [App\Http\Controllers\StaffController::class, 'index'])->name('staff');
 Route::get('/fasilitas', [App\Http\Controllers\FacilityController::class, 'index'])->name('facilities');
 Route::get('/fasilitas/{facility}', [App\Http\Controllers\FacilityController::class, 'show'])->name('facilities.show');
+Route::get('/sambutan-kepala-sekolah', [App\Http\Controllers\HeadmasterGreetingController::class, 'show'])->name('headmaster-greeting.show');
 
 
 /* Disabled: /test-password debug route */
