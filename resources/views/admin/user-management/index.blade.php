@@ -94,7 +94,8 @@
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-10 w-10">
-                                        <img src="{{ $user->photo_url }}" alt="{{ $user->name }}" class="h-10 w-10 rounded-full object-cover" onerror="this.onerror=null; this.src='{{ $user->role === 'teacher' ? asset('images/default-teacher.png') : ($user->role === 'student' ? asset('images/default-student.png') : asset('images/default-user.png')) }}'">
+                                        <img src="{{ $user->photo_url }}" alt="{{ $user->name }}" class="h-10 w-10 rounded-full object-cover" 
+                                             onerror="this.onerror=null; this.src='{{ $user->role === 'teacher' ? asset('images/default-teacher.png') : ($user->role === 'student' ? asset('images/default-student.png') : asset('images/default-user.png')) }}'">
                                     </div>
                                     <div class="ml-4">
                                         <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>

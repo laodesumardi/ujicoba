@@ -44,6 +44,7 @@ Route::get('/tenaga-pendidik', [App\Http\Controllers\StaffController::class, 'in
 Route::get('/fasilitas', [App\Http\Controllers\FacilityController::class, 'index'])->name('facilities');
 Route::get('/fasilitas/{facility}', [App\Http\Controllers\FacilityController::class, 'show'])->name('facilities.show');
 
+
 /* Disabled: /test-password debug route */
 
 // Universal Login Routes (for all roles)
