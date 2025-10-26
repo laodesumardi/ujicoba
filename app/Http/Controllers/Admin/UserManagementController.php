@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class UserManagementController extends Controller
@@ -80,11 +81,20 @@ class UserManagementController extends Controller
             'employment_status' => 'nullable|in:PNS,Honorer,Kontrak',
             'subject_specialization' => 'nullable|string|max:255',
             'education_level' => 'nullable|string|max:100',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $userData = $request->all();
+        $userData = $request->except('photo');
         $userData['password'] = Hash::make($request->password);
         $userData['is_active'] = $request->has('is_active');
+
+        // Handle photo upload
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $filename = time() . '_' . $photo->getClientOriginalName();
+            $path = $photo->storeAs('public/users/photos', $filename);
+            $userData['photo'] = 'users/photos/' . $filename;
+        }
 
         User::create($userData);
 
@@ -124,13 +134,27 @@ class UserManagementController extends Controller
             'employment_status' => 'nullable|in:PNS,Honorer,Kontrak',
             'subject_specialization' => 'nullable|string|max:255',
             'education_level' => 'nullable|string|max:100',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $userData = $request->except('password');
+        $userData = $request->except(['password', 'photo']);
         $userData['is_active'] = $request->has('is_active');
 
         if ($request->filled('password')) {
             $userData['password'] = Hash::make($request->password);
+        }
+
+        // Handle photo upload
+        if ($request->hasFile('photo')) {
+            // Delete old photo if exists
+            if ($user->photo && Storage::exists('public/' . $user->photo)) {
+                Storage::delete('public/' . $user->photo);
+            }
+
+            $photo = $request->file('photo');
+            $filename = time() . '_' . $photo->getClientOriginalName();
+            $path = $photo->storeAs('public/users/photos', $filename);
+            $userData['photo'] = 'users/photos/' . $filename;
         }
 
         $user->update($userData);
