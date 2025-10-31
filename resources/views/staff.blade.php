@@ -43,14 +43,14 @@
                     @foreach($teachers as $teacher)
                     <div class="bg-gray-50 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                         <!-- Photo Section -->
-                        <div class="relative h-48 bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center">
+                        <div class="relative h-64 bg-red-600 overflow-hidden">
                             @if($teacher->photo && \Storage::disk('public')->exists($teacher->photo))
                                 <img src="{{ \Storage::url($teacher->photo) }}" 
                                      alt="{{ $teacher->name }}" 
-                                     class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg">
+                                     class="w-full h-full object-cover object-center">
                             @else
-                                <div class="w-24 h-24 rounded-full bg-white bg-opacity-20 flex items-center justify-center">
-                                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <div class="w-full h-full bg-white bg-opacity-20 flex items-center justify-center">
+                                    <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
                                     </svg>
                                 </div>
