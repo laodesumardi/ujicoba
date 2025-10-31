@@ -476,9 +476,9 @@
                         <ul class="space-y-2">
                             <li><a href="{{ route('home') }}" class="text-primary-100 hover:text-white transition-colors">Beranda</a></li>
                             <li><a href="{{ route('profil') }}" class="text-primary-100 hover:text-white transition-colors">Profil Sekolah</a></li>
-                            <li><a href="#" class="text-primary-100 hover:text-white transition-colors">Visi & Misi</a></li>
-                            <li><a href="#" class="text-primary-100 hover:text-white transition-colors">Struktur Organisasi</a></li>
-                            <li><a href="#" class="text-primary-100 hover:text-white transition-colors">Prestasi</a></li>
+                            <li><a href="{{ route('profil') }}#visi-misi" class="text-primary-100 hover:text-white transition-colors">Visi & Misi</a></li>
+                            <li><a href="{{ route('profil') }}#struktur" class="text-primary-100 hover:text-white transition-colors">Struktur Organisasi</a></li>
+                            <li><a href="{{ route('profil') }}#akreditasi" class="text-primary-100 hover:text-white transition-colors">Prestasi</a></li>
                         </ul>
                     </div>
 

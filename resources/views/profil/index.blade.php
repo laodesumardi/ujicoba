@@ -374,7 +374,7 @@ let currentScale = 1;
 let currentTranslateX = 0;
 let currentTranslateY = 0;
 
-function showSection(sectionId) {
+function showSection(sectionId, buttonElement = null) {
     // Hide all content sections
     const sections = document.querySelectorAll('.content-section');
     sections.forEach(section => {
@@ -389,11 +389,29 @@ function showSection(sectionId) {
     });
 
     // Show selected section
-    document.getElementById(sectionId).classList.remove('hidden');
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.classList.remove('hidden');
 
-    // Add active class to clicked tab
-    event.target.classList.add('active', 'border-primary-500', 'text-primary-600');
-    event.target.classList.remove('border-transparent', 'text-gray-500');
+        // Add active class to clicked tab or find by section ID
+        if (buttonElement) {
+            buttonElement.classList.add('active', 'border-primary-500', 'text-primary-600');
+            buttonElement.classList.remove('border-transparent', 'text-gray-500');
+        } else if (window.event && window.event.target) {
+            window.event.target.classList.add('active', 'border-primary-500', 'text-primary-600');
+            window.event.target.classList.remove('border-transparent', 'text-gray-500');
+        } else {
+            // Find button by section ID
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(btn => {
+                const onclick = btn.getAttribute('onclick');
+                if (onclick && onclick.includes(sectionId)) {
+                    btn.classList.add('active', 'border-primary-500', 'text-primary-600');
+                    btn.classList.remove('border-transparent', 'text-gray-500');
+                }
+            });
+        }
+    }
 }
 
 function openImageModal(url, caption) {
@@ -661,5 +679,42 @@ function openImageModal(url, caption) {
     // Prevent body scroll
     document.body.style.overflow = 'hidden';
 }
+
+// Handle hash anchor navigation
+function handleHashNavigation() {
+    const hash = window.location.hash.substring(1); // Remove the # symbol
+    if (hash) {
+        const validSections = ['sejarah', 'visi-misi', 'struktur', 'akreditasi'];
+        if (validSections.includes(hash)) {
+            // Show the section (this will also update the active tab)
+            showSection(hash);
+            
+            // Scroll to the section
+            setTimeout(() => {
+                const element = document.getElementById(hash);
+                if (element) {
+                    const navHeight = document.querySelector('.bg-white.shadow-sm')?.offsetHeight || 0;
+                    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+                    const offsetPosition = elementPosition - navHeight - 20;
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 100);
+        }
+    }
+}
+
+// Call on page load
+document.addEventListener('DOMContentLoaded', function() {
+    handleHashNavigation();
+});
+
+// Handle hash change when clicking links with hash
+window.addEventListener('hashchange', function() {
+    handleHashNavigation();
+});
+
 </script>
 @endsection
