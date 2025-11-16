@@ -226,7 +226,7 @@
 
                     <a href="{{ route('ppdb.index') }}" class="text-white hover:text-primary-200 px-3 py-2 text-base font-bold transition-colors {{ request()->routeIs('ppdb.*') ? 'text-primary-200' : '' }}">PPDB</a>
                     
-                    <a href="https://aplikasujian.odetune.shop/login" target="_blank" class="text-white hover:text-primary-200 px-3 py-2 text-base font-bold transition-colors">CBT Sekolah</a>
+                <a href="https://cbt.smpnegeri01namrole.sch.id/login" target="_blank" class="text-white hover:text-primary-200 px-3 py-2 text-base font-bold transition-colors">CBT Sekolah</a>
                     
                     <!-- Informasi Dropdown -->
                     <div class="relative group">
@@ -355,9 +355,9 @@
                             <i class="fas fa-user-plus mr-3"></i>PPDB
                         </a>
                         
-                        <a href="https://aplikasujian.odetune.shop/login" target="_blank" class="text-white hover:text-primary-200 hover:bg-primary-700 block px-4 py-3 rounded-lg text-base font-medium transition-colors">
-                            <i class="fas fa-laptop-code mr-3"></i>CBT Sekolah
-                        </a>
+                <a href="https://cbt.smpnegeri01namrole.sch.id/login" target="_blank" class="text-white hover:text-primary-200 hover:bg-primary-700 block px-4 py-3 rounded-lg text-base font-medium transition-colors">
+                    <i class="fas fa-laptop-code mr-3"></i>CBT Sekolah
+                </a>
                         
                         <!-- Informasi Section -->
                         <div class="space-y-1">
