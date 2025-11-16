@@ -38,6 +38,8 @@ Route::get('/test-realtime', function () {
 
 Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
 Route::get('/kontak', [ContactController::class, 'index'])->name('contact.index');
+Route::get('/nota-penawaran/preview', [App\Http\Controllers\NotaPenawaranController::class, 'preview'])->name('nota-penawaran.preview');
+Route::get('/nota-penawaran/download', [App\Http\Controllers\NotaPenawaranController::class, 'download'])->name('nota-penawaran.download');
 Route::post('/kontak', [ContactController::class, 'store'])->name('contact.store');
 Route::get('/perpustakaan', [App\Http\Controllers\LibraryController::class, 'index'])->name('library');
 Route::get('/tenaga-pendidik', [App\Http\Controllers\StaffController::class, 'index'])->name('staff');
