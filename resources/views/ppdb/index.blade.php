@@ -27,7 +27,7 @@
                     <!-- Description -->
                     @if($ppdb->description)
                     <div class="p-6 bg-white rounded-lg shadow-lg">
-                        <h2 class="mb-4 text-2xl font-bold text-gray-900">Tentang PPDB.</h2>
+                        <h2 class="mb-4 text-2xl font-bold text-gray-900">Tentang PPDB</h2>
                         <div class="prose max-w-none">
                             {!! nl2br(e($ppdb->description)) !!}
                         </div>
